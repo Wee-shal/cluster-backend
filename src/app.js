@@ -26,13 +26,13 @@ const server = http.createServer(app)
 app.use(cookieParser())
 app.use(cors({ origin: '*' }))
 app.use(routers)
-//app.use(authRouter); 
+//app.use(authRouter);
 app.use('/stripe-webhook', express.raw({ type: 'application/json' }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 let users = require('./users')
 
-app.use(express.static(path.join(__dirname, '..', 'frontend', 'dist')))
+app.use(express.static(path.join(__dirname, 'frontend', 'dist')))
 
 server.listen(process.env.PORT || 3000, () => {
 	console.log(`Server running at ${process.env.PORT || 3000}`)
@@ -265,8 +265,8 @@ app.get('/getUser', async (req, res) => {
 	} catch (e) {
 		console.log(e)
 	}
-}) 
+})
 
 app.get('*', (req, res) => {
-	res.sendFile(path.join(__dirname, '..', 'frontend', 'dist', 'index.html'))
+	res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'))
 })
