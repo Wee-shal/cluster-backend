@@ -14,6 +14,9 @@ const EndCallButton = styled.button`
 	}
 `
 export function EndCall({ onClick }) {
+
+	
+
 	return (
 		<EndCallButton>
 			<img src={dial} onClick={onClick} width={'70%'} />
