@@ -158,7 +158,7 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
 					<Name>{name}</Name>					
 					<Description>{description.slice(0, 26)}…</Description>
 					<Price>
-						<b>Price</b> - {user?.currency}
+						<b>Price</b> - {hit.currency}
 						{rates} /min
 					</Price>
 				</ProfileWrapper>
