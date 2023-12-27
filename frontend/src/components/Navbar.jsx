@@ -42,7 +42,7 @@ const Navbar = () => {
         <nav style={{ backgroundColor: '#333', padding: '1rem', color: 'white', position: 'sticky', top: '0', zIndex: '1000' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         {/* Dummy Logo Text */}
-        <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>konnect</div>
+        <div style={{ fontSize: '1.5rem', fontWeight: 'bold', cursor:'pointer' }} onClick={() => (window.location.href = '/')}>konnect</div>
         {/* Search Bar */}
         {/* User Icon and Menu */}
         {id ?(
@@ -71,8 +71,6 @@ const Navbar = () => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem style={{ fontSize: '1.3rem', marginRight: '10px', marginLeft: '10px' }} onClick={() => handleMenuItemClick('Profile')}>Profile</MenuItem>
-            <MenuItem style={{ fontSize: '1.3rem', marginRight: '10px', marginLeft: '10px' }} onClick={() => handleMenuItemClick('Logs')}>Logs</MenuItem>
             <MenuItem style={{ fontSize: '1.3rem', marginRight: '10px', marginLeft: '10px' }} onClick={() => handleMenuItemClick('Logout')}>Logout</MenuItem>
           </Menu>
         </div>

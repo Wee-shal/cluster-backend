@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import BackButton from "./components/buttons/BackButton";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 const Triangle = styled.div`
@@ -106,9 +105,12 @@ const ContactNumberAndVerifyWrapper = styled.div`
 export default function LoginPage() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
+  const [isPhoneVerified, setIsPhoneVerified] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Highlighted: Loading state
   const navigate = useNavigate();
   const handleVerify = async (e) => {
     e.preventDefault();
+    setIsLoading(true); {/** */}
     try {
       const response = await fetch("/send-otp", {
         method: "POST",
@@ -120,12 +122,16 @@ export default function LoginPage() {
 
       const data = await response.json();
       console.log(data);
-      if (data.success) alert(`${data.message}`);
+      if (data.success){
+      alert(`${data.message}`);
+      setIsPhoneVerified(true);
+    }
       else alert(`${data.message}\nCheck the number or country code!`);
       // Handle success or error response from the server
       // ...
     } catch (error) {
       console.error("Error sending OTP:", error.message);
+      setIsLoading(false);{/** */}
     }
   };
 
@@ -166,23 +172,28 @@ export default function LoginPage() {
     <>
       <Triangle></Triangle>
       <Container>
-        <BackButton />
         <SignHeading>Sign In/Sign Up</SignHeading>
         <Form onSubmit={handleSubmit}>
+        {!isPhoneVerified && (
           <ContactNumberAndVerifyWrapper>
             <ContactNumberContainer
               placeholder="Contact Number"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
             ></ContactNumberContainer>
-            <Verify onClick={handleVerify}>Verify</Verify>
+            <Verify onClick={handleVerify} disabled={isLoading}> {isLoading ? "Verifying..." : "Verify"}</Verify>
           </ContactNumberAndVerifyWrapper>
+        )}
+        {isPhoneVerified && (
+          <>
           <OTPContainer
             placeholder="Confirm your OTP"
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
           ></OTPContainer>
           <Button>Submit</Button>
+          </>
+        )}
         </Form>
       </Container>
     </>

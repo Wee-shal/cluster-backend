@@ -33,26 +33,6 @@ export default function Profile(){
 		})()
 	}, [])
 console.log("expert outside",expert)
-  const user1 = {
-    name: "Hagemaru",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
-    picture: userImage,
-    skills: [
-      "logo-design",
-      "graphic design",
-      "branding",
-      "takendown",
-      "adobe photoshop",
-      "adobe-illustrator",
-      "poster design",
-      "icon design",
-    ],
-    role: "web designer",
-    username: "@johndoe",
-    rating: "1K+ reviews 4.5★",
-    location: "India",
-  };
-
   
 	const makePhoneCall = async () => {
 		if (!user.balance) {
@@ -106,13 +86,13 @@ console.log("expert outside",expert)
 			)}
     <Navbar />
     <div style={{ textAlign: 'center', margin: '60px auto' }}>
-      <img style={{ width: '150px', height: '150px', borderRadius: '50%', marginBottom: '20px', marginTop: '40px' }} src={expert.profilePic} alt={expert.name} />
+      <img style={{ width: '150px', height: '150px', borderRadius: '50%', marginBottom: '20px', marginTop: '40px' }} src={expert?.profilePic} alt={expert?.name} />
       <div style={{ marginRight: '20%', marginLeft: '20%' }}>
-        <h2>{expert.name?expert.name:user1.name}</h2>
-        <p>{expert.role}</p>
-        <p>{expert.username}</p>
-        <p>{user1.rating}</p>
-        <p>{expert.location}</p>
+        <h2>{expert?.name}</h2>
+        <p>{expert?.role}</p>
+        <p>{expert?.username}</p>
+        <p>1K+ reviews 4.5★</p>
+        <p>{expert?.location}</p>
 		<div>
 		
         <Button variant="contained" style={{ backgroundColor: 'black', color: 'white', fontWeight: 'bold', borderRadius: '0' }} onClick={id ?makePhoneCall:()=>navigate(`/login`)}>Contact me</Button>

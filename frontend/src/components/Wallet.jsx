@@ -6,8 +6,8 @@ import { userContext } from '../state/userState'
 
 const Container = styled.div`
 	position: absolute;
-	top: 0.5rem;
-	right: 2rem;
+	top: 1.5rem;
+	right: 7rem;
 	background-color: #dedede;
 	padding: 0.5rem 0.5rem;
 	color: #080808;
