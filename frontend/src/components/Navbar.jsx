@@ -52,6 +52,7 @@ const Navbar = () => {
             aria-controls="menu-appbar"
             aria-haspopup="true"
             onClick={handleMenuClick}
+            style={{ color: 'white' }}
           >
             <AccountCircleRoundedIcon fontSize="large" />
           </IconButton>

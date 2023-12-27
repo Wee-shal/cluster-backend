@@ -131,7 +131,6 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
 				console.log('POST request successful')
 				setIsCallButtonPressed(false)
 				setIsCallInitiated(true)
-				alert('Call has been initiated')
 			} else {
 				console.error('POST request failed')
 				alert('Failed to make a call')

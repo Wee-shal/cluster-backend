@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
 	isHelper: Boolean,
 	profilePic: String,
 	description: String,
-	skills: {
+	skills: { 
 		type: Array,
 		default: [],
 	},
