@@ -9,7 +9,7 @@
 		"prepare": "husky install",
 		"format": "prettier --check",
 		"lint": "eslint \"**/*.js\" --quiet",
-		"start": "cd frontend && npm i && npm run build && copy -r dist ../src/public && cd .. && node src/app.js"
+		"start": "cd frontend && npm i && npm run build && cp -r dist ../src/public && cd .. && node src/app.js"
 	},
 	"author": "",
 	"license": "UNLICENSED",
