@@ -14,12 +14,23 @@ const EndCallButton = styled.button`
 	}
 `
 export function EndCall({ onClick }) {
-
+	const handleEndCall = () => {
+		// Perform any logic you need when ending the call
+	
+		// Call the provided onClick function
+		if (onClick) {
+		onClick();
+		}
+	
+		// Navigate to the homepage using window.location
+		window.location.href = '/';
+ };
+	
 	
 
 	return (
-		<EndCallButton>
-			<img src={dial} onClick={onClick} width={'70%'} />
+		<EndCallButton onClick={handleEndCall}>
+			<img src={dial} alt="End Call" width={'70%'} />
 		</EndCallButton>
 	)
 }
