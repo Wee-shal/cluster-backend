@@ -35,8 +35,6 @@ export default function Wallet() {
 		(async () => {
 			const userId = 'abcd1'
 			const user = await getUser(userId)
-			console.log("user",user)
-			console.log('userBalance: ', user.balance)
 			setUser(user)
 		})()
 	}, [])

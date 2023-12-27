@@ -92,7 +92,6 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
 	const [isCallButtonPressed, setIsCallButtonPressed] = useState(false)
 	const { user } = useContext(userContext)
 	const id = window.localStorage.getItem("id")
-	console.log('userBalance: is', user.balance)
 	const [notification, setNotification] = useState(false)
 	const navigate = useNavigate()
 
@@ -159,7 +158,7 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
 					<Name>{name}</Name>					
 					<Description>{description.slice(0, 26)}…</Description>
 					<Price>
-						<b>Price</b> - {user.currency}
+						<b>Price</b> - {user?.currency}
 						{rates} /min
 					</Price>
 				</ProfileWrapper>
