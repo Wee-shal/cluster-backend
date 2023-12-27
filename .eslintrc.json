@@ -1,0 +1,32 @@
+{
+	"env": {
+		"browser": true,
+		"commonjs": true,
+		"es2021": true,
+		"node": true,
+		"jquery": true
+	},
+	"extends": ["airbnb-base", "plugin:prettier/recommended"],
+	"parserOptions": {
+		"ecmaVersion": 12
+	},
+	"rules": {
+		"linebreak-style": "off",
+		"prefer-const": "off",
+		"prefer-arrow-callback": "warn",
+		"no-param-reassign": "warn",
+		"one-var": "off",
+		"one-var-declaration-per-line": "off",
+		"no-use-before-define": "warn",
+		"operator-linebreak": "off",
+		"no-plusplus": "off",
+		"no-lonely-if": "off",
+		"no-else-return": "off",
+		"no-prototype-builtins": "off",
+		"no-mixed-operators": "off",
+		"arrow-parens": ["error", "as-needed"],
+		"no-console": "warn",
+		"import/no-extraneous-dependencies": "off"
+	},
+	"plugins": ["react"]
+}

@@ -1,0 +1,181 @@
+[{
+    "userId": "abcd1",
+    "name": "abcd",
+    "price": 10,
+    "role":"Full Stack Development",
+    "description":"HTML,CSS,JavaScript,React,MongoDb. I'm a full-stack developer. In the world of technology, I'm the bridge between what users see and what happens behind the scenes. On the front end, I craft engaging and responsive user interfaces using HTML, CSS, and JavaScript. I love creating seamless and visually appealing experiences for users.Moving to the back end, I'm all about server-side logic and database management. Whether it's handling requests, processing data, or managing the application's business logic, I enjoy building the backbone of applications. I work with languages like Node.js and Python, and databases like MySQL and MongoDB",
+    "country": "usa",
+    "balance": 98675,
+    "phoneNumber": "+919483053414",
+    "__v": 1,
+    "registrationDate": {
+      "$date": "2023-12-22T07:12:33.652Z"
+    },
+    "skills": ["HTML","CSS","JavaScript","React","MongoDb"],
+    "currency": "$",
+    "rates": 20,
+    "profilePic":"https://i.ibb.co/PxtQs3H/sam.png"
+  },
+  {
+    "userId": "johndoe1",
+    "name": "John Doe",
+    "price": 10,
+    "role":"Front End Development",
+    "description":"HTML,CSS,JavaScript I'm a frontend developer. In the world of technology, I'm the bridge between what users see and what happens behind the scenes. On the front end, I craft engaging and responsive user interfaces using HTML, CSS, and JavaScript. I love creating seamless and visually appealing experiences for users.Moving to the back end, I'm all about server-side logic and database management. Whether it's handling requests, processing data, or managing the application's business logic, I enjoy building the backbone of applications. I work with languages like Node.js and Python, and databases like MySQL and MongoDB",
+    "country": "usa",
+    "balance": 98675,
+    "phoneNumber": "+919483053414",
+    "__v": 1,
+    "registrationDate": {
+      "$date": "2023-12-22T07:12:33.652Z"
+    },
+    "skills": ["HTML","CSS","JavaScript","React"],
+    "currency": "$",
+    "rates": 30,
+    "profilePic":"https://i.ibb.co/Kq8p77F/english-Lady.png"
+  },
+  {
+    "userId": "janeSmith",
+    "name": "Jane Smith",
+    "price": 10,
+    "role":"Back End Development",
+    "description":"NoSQL,MongoDb. I'm a backend developer. In the world of technology, I'm the bridge between what users see and what happens behind the scenes. On the front end, I craft engaging and responsive user interfaces using HTML, CSS, and JavaScript. I love creating seamless and visually appealing experiences for users.Moving to the back end, I'm all about server-side logic and database management. Whether it's handling requests, processing data, or managing the application's business logic, I enjoy building the backbone of applications. I work with languages like Node.js and Python, and databases like MySQL and MongoDB",
+    "country": "usa",
+    "balance": 98675,
+    "phoneNumber": "+919483053414",
+    "__v": 1,
+    "registrationDate": {
+      "$date": "2023-12-22T07:12:33.652Z"
+    },
+    "skills": ["NoSql","MongoDb"],
+    "currency": "$",
+    "rates": 20,
+    "profilePic":"https://i.ibb.co/PxtQs3H/sam.png"
+  },
+  {
+    "userId": "vivek123",
+    "name": "Vivek",
+    "price": 10,
+    "role":"Full Stack Development",
+    "description":"TypeScript,TailWind,React,MongoDb. I'm a full-stack developer. In the world of technology, I'm the bridge between what users see and what happens behind the scenes. On the front end, I craft engaging and responsive user interfaces using HTML, CSS, and JavaScript. I love creating seamless and visually appealing experiences for users.Moving to the back end, I'm all about server-side logic and database management. Whether it's handling requests, processing data, or managing the application's business logic, I enjoy building the backbone of applications. I work with languages like Node.js and Python, and databases like MySQL and MongoDB",
+    "country": "usa",
+    "balance": 98675,
+    "phoneNumber": "+919483053414",
+    "__v": 1,
+    "registrationDate": {
+      "$date": "2023-12-22T07:12:33.652Z"
+    },
+    "skills": ["TypeScript","React","MongoDb"],
+    "currency": "$",
+    "rates": 20,
+    "profilePic":"https://i.ibb.co/Kq8p77F/english-Lady.png"
+  },
+  {
+    "userId": "william2",
+    "name": "William",
+    "price": 10,
+    "role":"Graphic Designer",
+    "description":"Figma, Framer, WebFlow, I'm a Graphic designer. In the world of technology, I'm the bridge between what users see and what happens behind the scenes. On the front end, I craft engaging and responsive user interfaces using HTML, CSS, and JavaScript. I love creating seamless and visually appealing experiences for users.Moving to the back end, I'm all about server-side logic and database management. Whether it's handling requests, processing data, or managing the application's business logic, I enjoy building the backbone of applications. I work with languages like Node.js and Python, and databases like MySQL and MongoDB",
+    "country": "usa",
+    "balance": 98675,
+    "phoneNumber": "+919483053414",
+    "__v": 1,
+    "registrationDate": {
+      "$date": "2023-12-22T07:12:33.652Z"
+    },
+    "skills": ["Figma","Framer","Webflow","WordPress"],
+    "currency": "$",
+    "rates": 50,
+    "profilePic":"https://i.ibb.co/fCmGS2z/seema.png"
+  },
+  {
+    "userId": "chris2",
+    "name": "Chris",
+    "price": 10,
+    "role":"Digital Marketer",
+    "description":"Apollo. I'm a digital marketer. In the world of technology, I'm the bridge between what users see and what happens behind the scenes. On the front end, I craft engaging and responsive user interfaces using HTML, CSS, and JavaScript. I love creating seamless and visually appealing experiences for users.Moving to the back end, I'm all about server-side logic and database management. Whether it's handling requests, processing data, or managing the application's business logic, I enjoy building the backbone of applications. I work with languages like Node.js and Python, and databases like MySQL and MongoDB",
+    "country": "usa",
+    "balance": 98675,
+    "phoneNumber": "+919483053414",
+    "__v": 1,
+    "registrationDate": {
+      "$date": "2023-12-22T07:12:33.652Z"
+    },
+    "skills": ["Apollo"],
+    "currency": "$",
+    "rates": 60,
+    "profilePic":"https://i.ibb.co/PxtQs3H/sam.png"
+  },
+  {
+    "userId": "test1",
+    "name": "Test User",
+    "price": 10,
+    "role":"Full Stack Development",
+    "description":"NodeJs,React,PostgreSql. I'm a full-stack developer. In the world of technology, I'm the bridge between what users see and what happens behind the scenes. On the front end, I craft engaging and responsive user interfaces using HTML, CSS, and JavaScript. I love creating seamless and visually appealing experiences for users.Moving to the back end, I'm all about server-side logic and database management. Whether it's handling requests, processing data, or managing the application's business logic, I enjoy building the backbone of applications. I work with languages like Node.js and Python, and databases like MySQL and MongoDB",
+    "country": "usa",
+    "balance": 98675,
+    "phoneNumber": "+919483053414",
+    "__v": 1,
+    "registrationDate": {
+      "$date": "2023-12-22T07:12:33.652Z"
+    },
+    "skills": ["NodeJs","PostgreSql","React","MongoDb"],
+    "currency": "$",
+    "rates": 15,
+    "profilePic":"https://i.ibb.co/Kq8p77F/english-Lady.png"
+  },
+  {
+    "userId": "taylor1",
+    "name": "Taylor",
+    "price": 10,
+    "role":"Full Stack Development",
+    "description":"HTML,CSS,JavaScript,React,MongoDb. I'm a full-stack developer. In the world of technology, I'm the bridge between what users see and what happens behind the scenes. On the front end, I craft engaging and responsive user interfaces using HTML, CSS, and JavaScript. I love creating seamless and visually appealing experiences for users.Moving to the back end, I'm all about server-side logic and database management. Whether it's handling requests, processing data, or managing the application's business logic, I enjoy building the backbone of applications. I work with languages like Node.js and Python, and databases like MySQL and MongoDB",
+    "country": "usa",
+    "balance": 98675,
+    "phoneNumber": "+919483053414",
+    "__v": 1,
+    "registrationDate": {
+      "$date": "2023-12-22T07:12:33.652Z"
+    },
+    "skills": ["HTML","CSS","JavaScript","React","MongoDb"],
+    "currency": "$",
+    "rates": 20,
+    "profilePic":"https://i.ibb.co/PxtQs3H/sam.png"
+  },
+  {
+    "userId": "shawn3",
+    "name": "Shawn",
+    "price": 10,
+    "role":"Wordpress Development",
+    "description":"Wordpress. I'm a wordpress developer. In the world of technology, I'm the bridge between what users see and what happens behind the scenes. On the front end, I craft engaging and responsive user interfaces using HTML, CSS, and JavaScript. I love creating seamless and visually appealing experiences for users.Moving to the back end, I'm all about server-side logic and database management. Whether it's handling requests, processing data, or managing the application's business logic, I enjoy building the backbone of applications. I work with languages like Node.js and Python, and databases like MySQL and MongoDB",
+    "country": "usa",
+    "balance": 98675,
+    "phoneNumber": "+919483053414",
+    "__v": 1,
+    "registrationDate": {
+      "$date": "2023-12-22T07:12:33.652Z"
+    },
+    "skills": ["Wordpress"],
+    "currency": "$",
+    "rates": 20,
+    "profilePic":"https://i.ibb.co/fCmGS2z/seema.png"
+  },
+  {
+    "userId": "sasha1",
+    "name": "Sasha",
+    "price": 10,
+    "role":"Full Stack Development",
+    "description":"HTML,CSS,JavaScript,React,MongoDb. I'm a full-stack developer. In the world of technology, I'm the bridge between what users see and what happens behind the scenes. On the front end, I craft engaging and responsive user interfaces using HTML, CSS, and JavaScript. I love creating seamless and visually appealing experiences for users.Moving to the back end, I'm all about server-side logic and database management. Whether it's handling requests, processing data, or managing the application's business logic, I enjoy building the backbone of applications. I work with languages like Node.js and Python, and databases like MySQL and MongoDB",
+    "country": "usa",
+    "balance": 98675,
+    "phoneNumber": "+919483053414",
+    "__v": 1,
+    "registrationDate": {
+      "$date": "2023-12-22T07:12:33.652Z"
+    },
+    "skills": ["HTML","CSS","JavaScript","React","MongoDb"],
+    "currency": "$",
+    "rates": 20,
+    "profilePic":"https://i.ibb.co/Kq8p77F/english-Lady.png"
+  }
+]

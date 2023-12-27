@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Payment Success</title>
+		<style>
+			.container {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				flex-direction: column;
+				text-align: center;
+			}
+			#redirect {
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<p>Payment Successful</p>
+			<br />
+			<br />
+			<p id="redirect">Redirecting to the home page<span>...</span></p>
+		</div>
+		<script>
+			;(async () => {
+				setTimeout(() => {
+					window.location.replace('/?success=true')
+				}, 4000)
+
+				const spanSelector = document.querySelector('span')
+				spanSelector.innerText = ''
+				const redirectSelector = document.querySelector('#redirect')
+
+				for (let i = 0; i < 10; i++) {
+					spanSelector.innerText += '.'
+					document.body.append(spanSelector)
+					if (spanSelector.innerText === '....') {
+						spanSelector.innerText = ''
+					}
+					redirectSelector.append(spanSelector)
+					document.body.append(redirectSelector)
+					await new Promise(resolve => setTimeout(resolve, 700))
+				}
+			})()
+		</script>
+	</body>
+</html>

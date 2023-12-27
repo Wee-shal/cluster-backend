@@ -1,0 +1,10 @@
+.husky
+.editorconfig
+.gitignore
+.prettierignore
+package-lock.json
+frontend/yarn.lock
+frontend/src/assets
+frontend/package.json
+frontend/yarn.lock
+yarn.lock
