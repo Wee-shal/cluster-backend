@@ -1,12 +1,19 @@
 const express = require('express')
 
 const router = express.Router()
-
-const { makePhoneCall, createVideoRoom } = require('../logic')
+const User = require('../db/models/users')
+const Transaction = require('../db/models/transaction')
+const {
+	disconnectCallWithExistMessage,
+	makePhoneCall,
+	makeConferenceCall,
+	endAudioCall,
+	getAudioCallStatus,
+} = require('../logic')
 
 // POST /calls/connect
 router.post('/connect', async (req, res) => {
-	console.log('/calls/connect hit...') 
+	console.log('/calls/connect hit...')
 	console.log('req?.body: ', req?.body)
 	try {
 		// create phone call and join room
@@ -22,6 +29,110 @@ router.post('/connect', async (req, res) => {
 	} catch (e) {
 		console.log(e)
 	}
+})
+
+router.post('/makeConferenceCall', async (req, res) => {
+	try {
+		console.log(req?.body)
+		console.log('makeConferenceCall route hit...')
+		const helperPhoneNumber = process.env.HELPER_PHONE_NUMBER
+		const userPhoneNumber = process.env.USER_PHONE_NUMBER
+		const user = await User.findOne({ phoneNumber: userPhoneNumber })
+		const helper = await User.findOne({
+			phoneNumber: helperPhoneNumber,
+		})
+		console.log('user', user, 'helper', helper)
+		let userBalance
+		if (user?.currency !== helper?.currency) {
+			if (user?.currency === '$') {
+				userBalance = user?.balance
+			} else if (user?.currency === '₹') {
+				userBalance = user?.balance * 0.012 // to convert rupee into dollar
+			}
+		} else {
+			userBalance = user?.balance
+		}
+
+		/** calculate call end time */
+		const time = Math.floor(userBalance) / helper?.rates
+		const sid = await makeConferenceCall([helperPhoneNumber, userPhoneNumber])
+		/** end call based on balance */
+		setTimeout(async () => {
+			/** check if call is in progress */
+			const callStatus = await getAudioCallStatus(sid)
+			if (callStatus) {
+				await endAudioCall(sid)
+				/** making balance zero for user */
+				try {
+					user.balance = 0
+					await user.save()
+				} catch (e) {
+					console.log(e)
+				}
+			}
+		}, time)
+
+		res.sendStatus(200)
+	} catch (e) {
+		console.log(e)
+		res.send(500)
+	}
+})
+
+const processedTransactions = new Set()
+router.post('/status-callback', async (req, res) => {
+	console.log('/status-callback hit...')
+	// eslint-disable-next-line no-unused-vars
+	const { uniqueId } = req?.query
+	console.log('unique', uniqueId)
+	const callStatus = req?.body?.CallStatus
+	console.log('call Sid: ', req.body)
+	const caller = await User.findOne({
+		phoneNumber: process.env.USER_PHONE_NUMBER,
+	})
+	const helper = await User.findOne({
+		phoneNumber: process.env.HELPER_PHONE_NUMBER,
+	})
+	console.log('caller', caller, 'helper', helper)
+	if (callStatus === 'completed' || callStatus === 'failed') {
+		console.log('\n inside completed or faileds')
+		if (req?.body?.CallDuration * 10 < caller.balance) {
+			caller.balance -= req?.body?.CallDuration * helper.rates
+			await caller.save()
+		}
+		if (!processedTransactions.has(uniqueId)) {
+			const transaction = new Transaction({
+				timeStamp: req?.body?.Timestamp,
+				caller: caller.userId,
+				helper: helper.userId,
+				duration: req?.body?.CallDuration,
+				rate: helper.rates,
+				amount: `- ${req?.body?.CallDuration * helper.rates}`,
+			})
+			await transaction.save()
+			processedTransactions.add(uniqueId)
+		} else {
+			console.log('already added')
+		}
+	} else if (callStatus === 'canceled' || callStatus === 'no-answer' || callStatus === 'busy') {
+		/**
+		 *  whatever the id received check its value (phoneNumber) and get other key which has same value
+		 */
+
+		// eslint-disable-next-line no-restricted-syntax
+		for (const id of Object.entries(users)) {
+			try {
+				await disconnectCallWithExistMessage(id[0])
+				delete users[id[0]]
+			} catch (e) {
+				console.log(e)
+			}
+		}
+	}
+
+	console.log('Users objects: ', users)
+
+	res.sendStatus(200)
 })
 
 module.exports = router

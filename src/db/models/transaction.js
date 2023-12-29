@@ -4,8 +4,8 @@ const User = require('./users')
 const transactionSchema = new mongoose.Schema({
 	transactid: String,
 	timeStamp: String,
-	caller: {type: String, ref:User},
-	helper:{type:String,ref:User},
+	caller: { type: String, ref: User },
+	helper: { type: String, ref: User },
 	duration: String,
 	rate: Number,
 	amount: String,

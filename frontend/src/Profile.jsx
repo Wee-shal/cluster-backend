@@ -4,9 +4,66 @@ import userImage from './assets/user.png';
 import {useState, useEffect, useContext } from 'react';
 import { getUser } from './services/helpers'
 import {userContext} from "./state/userState"
-import NotificationMessage from './components/NotificationMsg'
 import {useNavigate,useLocation} from 'react-router-dom'
 import SearchBar from './components/SearchBar';
+import styled from 'styled-components'
+
+const BlurredBackground = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(128, 128, 128, 0.5);
+  filter: blur(5px); /* Adjust the blur amount as needed */
+  z-index: 999; /* Ensure it's below the notification but above other elements */
+`;
+
+const NotificationContainer = styled.div`
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: #e7e7e7;
+	color: black
+	padding: 1rem;
+	border-radius: 0.5rem;
+	text-align: center;
+	z-index: 1000; /* Ensure it's above other elements */
+	margin-bottom: 10px;
+	max-width: 300px;
+`;
+const CloseButton = styled.button`
+	position: absolute;
+	top: 0.2rem;
+	right: 0.2rem;
+	background: #e7e7e7;;
+	border: none;
+	color: black;
+	font-size: 1rem;
+	cursor: pointer;
+`
+const RechargeMessage = styled.p`
+  margin-bottom: 10px; /* Add margin to create space from the bottom */
+`;
+
+const WalletButton = styled.button`
+background-color: black; /* Updated background color to black */
+color: white;
+border: none;
+padding: 0.5rem 0.2rem;
+border-radius: 0.2rem;
+margin-top: 0.5rem; /* Adjusted margin-top to position the button a little above the bottom border */
+cursor: pointer;
+margin-bottom: 10px;
+`;
+
+
+
+
+
+
+
 export default function Profile(){
   const {user, setUser} = useContext(userContext)
   const [expert,setExpert] = useState({})
@@ -35,12 +92,12 @@ export default function Profile(){
 console.log("expert outside",expert)
   
 	const makePhoneCall = async () => {
-		if (!user.balance) {
+		if (user.balance === 0) {
 			setNotification(true)
 
-			setInterval(() => {
-				setNotification(false)
-			}, 3000)
+			setNotification(true)
+			console.log('notifi', notification)
+
 			return null
 		}
 		console.log('function makePhone Call triggered')
@@ -55,7 +112,7 @@ console.log("expert outside",expert)
 			return null
 		}
 		try {
-			const response = await fetch(`/makeConferenceCall`, {
+			const response = await fetch(`/calls/makeConferenceCall`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -78,12 +135,12 @@ console.log("expert outside",expert)
 			console.error('Error occurred during POST request:', error)
 		}
 	}
+	const closeNotification = () => {
+		setNotification(false)
+	}
   return (
     
     <div>
-      {notification && (
-				<NotificationMessage message="Please recharge your wallet to continue❗" />
-			)}
     <Navbar />
     <div style={{ textAlign: 'center', margin: '60px auto' }}>
       <img style={{ width: '150px', height: '150px', borderRadius: '50%', marginBottom: '20px', marginTop: '40px' }} src={expert?.profilePic} alt={expert?.name} />
@@ -98,6 +155,16 @@ console.log("expert outside",expert)
         <Button variant="contained" style={{ backgroundColor: 'black', color: 'white', fontWeight: 'bold', borderRadius: '0' }} onClick={id ?makePhoneCall:()=>navigate(`/login`)}>Contact me</Button>
 		
 		</div>
+		{notification && (
+				<>
+				<BlurredBackground />
+				<NotificationContainer  style={{ padding: "10px" }}>
+					<CloseButton onClick={closeNotification}>&times;</CloseButton>
+					<RechargeMessage>Please recharge your wallet to continue❗</RechargeMessage>
+                    <WalletButton onClick={() => navigate('/payment')}>Recharge Wallet</WalletButton>
+				</NotificationContainer>
+				</>
+			)}
         <h2>Description</h2>
         <p>{expert.description}</p>
         <h2>Skills</h2>

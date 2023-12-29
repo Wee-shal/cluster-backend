@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken")
-const User = require("../db/models/users")
+const jwt = require('jsonwebtoken')
+const User = require('../db/models/users')
 
 const requireAuth = (req, res, next) => {
 	const token = req.cookies.jwt
@@ -15,7 +15,7 @@ const requireAuth = (req, res, next) => {
 			}
 		})
 	} else {
-		console.log("no token found")
+		console.log('no token found')
 	}
 }
 

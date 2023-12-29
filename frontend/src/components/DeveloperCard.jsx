@@ -5,7 +5,29 @@ import callIcon from '../assets/icons/call.svg'
 import { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { userContext } from '../state/userState'
-import NotificationMessage from './NotificationMsg'
+
+const WalletButton = styled.button`
+background-color: black; /* Updated background color to black */
+color: white;
+border: none;
+padding: 0.5rem 0.2rem;
+border-radius: 0.2rem;
+margin-top: 0.5rem; /* Adjusted margin-top to position the button a little above the bottom border */
+cursor: pointer;
+margin-bottom: 10px;
+`;
+
+const BlurredBackground = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(128, 128, 128, 0.5);
+  filter: blur(5px); /* Adjust the blur amount as needed */
+  z-index: 999; /* Ensure it's below the notification but above other elements */
+`;
+
 
 const Card = styled.div`
 	margin-top: 1rem;
@@ -19,6 +41,36 @@ const Card = styled.div`
 	-webkit-box-shadow: 8px 9px 12px -12px rgba(0, 0, 0, 0.75);
 	-moz-box-shadow: 8px 9px 12px -12px rgba(0, 0, 0, 0.75);
 	box-shadow: 8px 9px 12px -12px rgba(0, 0, 0, 0.75);
+`
+const CloseButton = styled.button`
+	position: absolute;
+	top: 0.2rem;
+	right: 0.2rem;
+	background: #e7e7e7;;
+	border: none;
+	color: black;
+	font-size: 1rem;
+	cursor: pointer;
+`
+
+const RechargeMessage = styled.p`
+  margin-bottom: 10px; /* Add margin to create space from the bottom */
+`;
+
+const NotificationContainer = styled.div`
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: #e7e7e7;
+	color: black
+	padding: 100px;
+	border-radius: 0.5rem;
+	text-align: center;
+	z-index: 1000; /* Ensure it's above other elements */
+	margin: 10px;
+	max-width: 300px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); 
 `
 const Name = styled.h3`
 	margin-top: 0.4rem;
@@ -64,7 +116,6 @@ const TwilioPhoneCall = styled.div`
 	padding: 2rem auto;
 `
 
-
 const Icon = styled.img.attrs(({ src }) => ({
 	src,
 }))`
@@ -91,17 +142,14 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
 	const [isCallInitiated, setIsCallInitiated] = useState(false)
 	const [isCallButtonPressed, setIsCallButtonPressed] = useState(false)
 	const { user } = useContext(userContext)
-	const id = window.localStorage.getItem("id")
+	const id = window.localStorage.getItem('id')
 	const [notification, setNotification] = useState(false)
 	const navigate = useNavigate()
-
 	const makePhoneCall = async () => {
-		if (!user.balance) {
+		if (user.balance === 0) {
 			setNotification(true)
+			console.log('notifi', notification)
 
-			setInterval(() => {
-				setNotification(false)
-			}, 3000)
 			return null
 		}
 		console.log('function makePhone Call triggered')
@@ -116,7 +164,7 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
 			return null
 		}
 		try {
-			const response = await fetch(`/makeConferenceCall`, {
+			const response = await fetch(`/calls/makeConferenceCall`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -138,14 +186,20 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
 			console.error('Error occurred during POST request:', error)
 		}
 	}
-
-
-	
-
+	const closeNotification = () => {
+		setNotification(false)
+	}
 	return (
 		<>
 			{notification && (
-				<NotificationMessage message="Please recharge your wallet to continue❗" />
+				<>
+				<BlurredBackground />
+				<NotificationContainer style={{ padding: "10px" }}>
+					<CloseButton onClick={closeNotification}>&times;</CloseButton>
+					<RechargeMessage>Please recharge your wallet to continue❗</RechargeMessage>
+                    <WalletButton onClick={() => navigate('/payment')}>Recharge Wallet</WalletButton>
+				</NotificationContainer>
+				</>
 			)}
 			<Card>
 				<ProfileWrapper onClick={() => navigate(`/profile/${hit.userId}`)}>
@@ -155,7 +209,7 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
 						</CallStatusContainer>
 					)}
 					<ProfileImage src={profilePic} />
-					<Name>{name}</Name>					
+					<Name>{name}</Name>
 					<Description>{description.slice(0, 26)}…</Description>
 					<Price>
 						<b>Price</b> - {hit.currency}
@@ -163,11 +217,10 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
 					</Price>
 				</ProfileWrapper>
 				<Container>
-					<TwilioPhoneCall onClick={id?makePhoneCall:()=>navigate(`/login`)}>
+					<TwilioPhoneCall onClick={id ? makePhoneCall : () => navigate(`/login`)}>
 						<Icon src={callIcon} />
 						Phone Call
 					</TwilioPhoneCall>
-					
 				</Container>
 			</Card>
 		</>

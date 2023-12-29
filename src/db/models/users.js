@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
 	isHelper: Boolean,
 	profilePic: String,
 	description: String,
-	skills: { 
+	skills: {
 		type: Array,
 		default: [],
 	},
@@ -37,14 +37,5 @@ const userSchema = new mongoose.Schema({
 	phoneNumber: String,
 	rates: Number,
 })
-
-userSchema.statics.login = async function (phoneNo) {
-	const user = await this.findOne({ phoneNumber:phoneNo})
-	if (user) {
-		
-			return user
-		}
-		throw Error("incorrect auth")
-}
 
 module.exports = mongoose.model('User', userSchema)
