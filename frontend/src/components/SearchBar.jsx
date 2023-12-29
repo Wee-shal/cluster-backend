@@ -14,7 +14,7 @@ import Wallet from './Wallet'
 import Signin from './buttons/Signin'
 
 const searchClient = algoliasearch(algoliaAppId, algoliaSearchApiKey)
-const idFromUrl = window.localStorage.getItem('id') ? true : false
+const idFromUrl = window.localStorage.getItem('id')
 console.log('id', idFromUrl)
 const TopHeader = styled.header`
 	background-color: #333;

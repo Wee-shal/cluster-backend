@@ -30,11 +30,10 @@ const Container = styled.div`
 export default function Wallet() {
 	const { user, setUser } = useContext(userContext)
 	const navigate = useNavigate()
-
+const id = window.localStorage.getItem("id")
 	useEffect(() => {
 		(async () => {
-			const userId = 'abcd1'
-			const user = await getUser(userId)
+			const user = await getUser(id)
 			setUser(user)
 		})()
 	}, [])

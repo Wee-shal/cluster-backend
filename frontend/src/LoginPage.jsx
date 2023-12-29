@@ -208,7 +208,7 @@ export default function LoginPage() {
 
       if (result.success) {
         console.log("OTP verification successful");
-        window.localStorage.setItem("id", "abcd1");
+        window.localStorage.setItem("id", result.userId);
         navigate("/");
         window.location.reload();
       } else {

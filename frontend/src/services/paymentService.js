@@ -2,8 +2,7 @@ import serverUrl from '../config'
 async function getPaymentLink(amount, userId) {
 	try {
 		const response = await fetch(
-			`${serverUrl}/getPaymentLink?amount=${amount}&userId=${userId}`,
-			{}
+			`${serverUrl}/getPaymentLink?amount=${amount}&userId=${userId}`
 		)
 		if (response.ok) { 
 			const data = await response.json()

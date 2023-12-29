@@ -66,6 +66,7 @@ async function stripeWebhookHandler(request, response) {
 			data = request.body.data
 			eventType = request.body.type
 		}
+		console.log(eventType)
 		switch (eventType) {
 			case 'customer.created':
 				// console.log(data)

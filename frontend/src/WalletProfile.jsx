@@ -12,6 +12,7 @@ export default function WalletProfile() {
     useEffect(() => {
       const fetchBalance = async () => {
         try {
+          console.log("serverurl",serverUrl)
           const response = await fetch(`${serverUrl}/getUser?userId=${id}`);
           const data = await response.json();
   
@@ -41,7 +42,7 @@ export default function WalletProfile() {
     }, [error])
     useEffect(() => {
         (async () => {
-            const user = await getUser('abcd1')
+            const user = await getUser(id)
             setUser(user)
         })()
     }, [])
@@ -56,7 +57,8 @@ export default function WalletProfile() {
             const inputElement = document.getElementById('creditAmt')
             console.log(inputElement.value)
             console.log('generating payment link for credits: ', price)
-            const response = await getPaymentLink(price, 'abcd1')
+            console.log('id inside walletprofile',id)
+            const response = await getPaymentLink(price, id)
             console.log(response.link)
             window.location.href = response.link
         } catch (e) {

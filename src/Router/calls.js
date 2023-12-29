@@ -83,12 +83,27 @@ router.post('/makeConferenceCall', async (req, res) => {
 const processedTransactions = new Set()
 router.post('/status-callback', async (req, res) => {
 	console.log('/status-callback hit...')
+	console.log(processedTransactions)
 	// eslint-disable-next-line no-unused-vars
 	const { uniqueId } = req?.query
 	console.log('unique', uniqueId)
 	const callStatus = req?.body?.CallStatus
 	console.log('call Sid: ', req.body)
-	c?
+	const caller = await User.findOne({
+		phoneNumber: process.env.USER_PHONE_NUMBER,
+	})
+	const helper = await User.findOne({
+		phoneNumber: process.env.HELPER_PHONE_NUMBER,
+	})
+	console.log('caller', caller, 'helper', helper)
+	if (callStatus === 'completed' || callStatus === 'failed') {
+		console.log('\n inside completed or faileds')
+		if (req?.body?.CallDuration * helper.rates <= caller.balance) {
+			console.log("inside first if")
+			caller.balance -= req?.body?.CallDuration * helper.rates
+			await caller.save()
+		}
+		if (!processedTransactions.has(uniqueId)) {
 			const transaction = new Transaction({
 				timeStamp: req?.body?.Timestamp,
 				caller: caller.userId,

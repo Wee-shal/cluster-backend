@@ -88,7 +88,7 @@ app.post('/verify-otp', async (req, res) => {
 	} else {
 		if (otpStore.has(otp)) {
 			const userId = await getUniqueId()
-			const newUser = new User({ userId, phoneNumber })
+			const newUser = new User({ userId, phoneNumber, balance: 0 })
 			newUser.save()
 			return res.json({ success: true, userId })
 		} else {

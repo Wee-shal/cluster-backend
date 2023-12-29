@@ -11,6 +11,19 @@ let users = require('./users')
 /**
  * @param {Array} phoneNumbers
  */
+
+async function getUniqueId() {
+	const characters = '0123456789abcdefghijklmnopqrstuvwxyz'
+	let id = ''
+
+	for (let i = 0; i < 4; i++) {
+		const index = Math.floor(Math.random() * characters.length)
+		id += characters[index]
+	}
+
+	return id
+}
+
 async function makeConferenceCall(phoneNumbers) {
 	try {
 		console.log('making phone call...')
@@ -28,7 +41,7 @@ async function makeConferenceCall(phoneNumbers) {
 					</Response>`,
 				to: number,
 				from: process.env.TWILIO_PHONE_NUMBER,
-				statusCallback: `${process.env.CALLBACK_URL}/calls/status-callback`,
+				statusCallback: `${process.env.CALLBACK_URL}/calls/status-callback?uniqueId=${uniqueId}`,
 				statusCallbackMethod: 'POST',
 			})
 			SID = call.callSid
@@ -51,17 +64,6 @@ async function makeConferenceCall(phoneNumbers) {
 	}
 }
 
-async function getUniqueId() {
-	const characters = '0123456789abcdefghijklmnopqrstuvwxyz'
-	let id = ''
-
-	for (let i = 0; i < 4; i++) {
-		const index = Math.floor(Math.random() * characters.length)
-		id += characters[index]
-	}
-
-	return id
-}
 async function getCurrentConferenceCalls() {
 	try {
 		client.conferences
