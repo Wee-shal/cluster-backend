@@ -1,8 +1,8 @@
-
+import serverUrl from '../config'
 async function getUser(userId) {
   try {
     const response = await fetch(
-      `/getUser?userId=${userId}`
+      `${serverUrl}/getUser?userId=${userId}`
     );
 
     if (response.ok) {

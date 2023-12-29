@@ -3,10 +3,7 @@ const bodyParser = require('body-parser')
 
 const router = express.Router()
 let calls = require('./calls')
-const {
-	getPaymentLink,
-	stripeWebhookHandler,
-} = require('../Payment/index')
+const { getPaymentLink, stripeWebhookHandler } = require('../Payment/index')
 
 /** stripe needs raw headers that's why its place above express.json() */
 router.post('/stripePayment', bodyParser.raw({ type: 'application/json' }), stripeWebhookHandler)

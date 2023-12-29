@@ -3,14 +3,16 @@ import TableComponent from './components/TableComponent';
 import { useEffect, useState, useContext } from 'react';
 import { userContext } from './state/userState'
 import { getUser } from './services/helpers'
-import { getPaymentLink } from './services/paymentService'  /*new 23/12/23 */
+import { getPaymentLink } from './services/paymentService'
+import serverUrl from './config'  /*new 23/12/23 */
 export default function WalletProfile() {
+  const id = window.localStorage.getItem("id")
   const [balance, setBalance] = useState(0);
   
     useEffect(() => {
       const fetchBalance = async () => {
         try {
-          const response = await fetch('/getUser?userId=abcd1');
+          const response = await fetch(`${serverUrl}/getUser?userId=${id}`);
           const data = await response.json();
   
           if (response.ok) {

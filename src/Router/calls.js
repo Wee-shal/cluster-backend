@@ -55,23 +55,24 @@ router.post('/makeConferenceCall', async (req, res) => {
 
 		/** calculate call end time */
 		const time = Math.floor(userBalance) / helper?.rates
-		const sid = await makeConferenceCall([helperPhoneNumber, userPhoneNumber])
-		/** end call based on balance */
-		setTimeout(async () => {
-			/** check if call is in progress */
-			const callStatus = await getAudioCallStatus(sid)
-			if (callStatus) {
-				await endAudioCall(sid)
-				/** making balance zero for user */
-				try {
-					user.balance = 0
-					await user.save()
-				} catch (e) {
-					console.log(e)
+		if (userBalance > helper?.rates) {
+			const sid = await makeConferenceCall([helperPhoneNumber, userPhoneNumber])
+			/** end call based on balance */
+			setTimeout(async () => {
+				/** check if call is in progress */
+				const callStatus = await getAudioCallStatus(sid)
+				if (callStatus) {
+					await endAudioCall(sid)
+					/** making balance zero for user */
+					try {
+						user.balance = 0
+						await user.save()
+					} catch (e) {
+						console.log(e)
+					}
 				}
-			}
-		}, time)
-
+			}, time)
+		}
 		res.sendStatus(200)
 	} catch (e) {
 		console.log(e)
@@ -87,20 +88,7 @@ router.post('/status-callback', async (req, res) => {
 	console.log('unique', uniqueId)
 	const callStatus = req?.body?.CallStatus
 	console.log('call Sid: ', req.body)
-	const caller = await User.findOne({
-		phoneNumber: process.env.USER_PHONE_NUMBER,
-	})
-	const helper = await User.findOne({
-		phoneNumber: process.env.HELPER_PHONE_NUMBER,
-	})
-	console.log('caller', caller, 'helper', helper)
-	if (callStatus === 'completed' || callStatus === 'failed') {
-		console.log('\n inside completed or faileds')
-		if (req?.body?.CallDuration * 10 < caller.balance) {
-			caller.balance -= req?.body?.CallDuration * helper.rates
-			await caller.save()
-		}
-		if (!processedTransactions.has(uniqueId)) {
+	c?
 			const transaction = new Transaction({
 				timeStamp: req?.body?.Timestamp,
 				caller: caller.userId,
@@ -120,7 +108,7 @@ router.post('/status-callback', async (req, res) => {
 		 */
 
 		// eslint-disable-next-line no-restricted-syntax
-		console.log("Call disconnected")
+		console.log('Call disconnected')
 	}
 
 	res.sendStatus(200)

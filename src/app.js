@@ -111,15 +111,6 @@ app.get('/getPaymentLink', async (req, res) => {
 	}
 })
 
-app.post('/stripe-webhook', async (req, res) => {
-	try {
-		await stripeWebhookHandler(req, res)
-	} catch (err) {
-		console.error('Error handling webhook:', err.message)
-		res.status(500).send('Webhook Error')
-	}
-})
-
 app.get('/success.html', async (req, res) => {
 	res.sendFile(path.join(__dirname, 'views', 'success.html'))
 })

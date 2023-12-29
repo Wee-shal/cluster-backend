@@ -1,12 +1,11 @@
 import Navbar from './components/Navbar';
 import Button from '@mui/material/Button';
-import userImage from './assets/user.png';
 import {useState, useEffect, useContext } from 'react';
 import { getUser } from './services/helpers'
 import {userContext} from "./state/userState"
 import {useNavigate,useLocation} from 'react-router-dom'
-import SearchBar from './components/SearchBar';
 import styled from 'styled-components'
+import serverUrl from './config'
 
 const BlurredBackground = styled.div`
   position: fixed;
@@ -112,7 +111,7 @@ console.log("expert outside",expert)
 			return null
 		}
 		try {
-			const response = await fetch(`/calls/makeConferenceCall`, {
+			const response = await fetch(`${serverUrl}/calls/makeConferenceCall`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

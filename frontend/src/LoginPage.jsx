@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import serverUrl from "./config"
 
 const Triangle = styled.div`
   width: 0px;
@@ -159,7 +160,7 @@ export default function LoginPage() {
         throw new Error(validationError);
       }
 
-      const response = await fetch("/send-otp", {
+      const response = await fetch(`${serverUrl}/send-otp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -188,7 +189,7 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
-      const response = await fetch("/verify-otp", {
+      const response = await fetch(`${serverUrl}/verify-otp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

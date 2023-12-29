@@ -5,6 +5,20 @@ import callIcon from '../assets/icons/call.svg'
 import { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { userContext } from '../state/userState'
+import serverUrl from '../config'
+
+const CallStatusContainer = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 0 1rem;
+  width: auto;
+  margin: auto;
+  background-color: #515151;
+  color: white;
+  z-index: 3;
+  display: ${props => (props.isCallInitiated ? 'none' : 'block')};
+`
 
 const WalletButton = styled.button`
 background-color: black; /* Updated background color to black */
@@ -122,17 +136,17 @@ const Icon = styled.img.attrs(({ src }) => ({
 	width: ${props => props.iconwidth || '15px'};
 `
 
-const CallStatusContainer = styled.div`
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	padding: 0 1rem;
-	width: auto;
-	margin: auto;
-	background-color: #515151;
-	color: white;
-	z-index: 3;
-`
+// const CallStatusContainer = styled.div`
+// 	position: absolute;
+// 	bottom: 0;
+// 	left: 0;
+// 	padding: 0 1rem;
+// 	width: auto;
+// 	margin: auto;
+// 	background-color: #515151;
+// 	color: white;
+// 	z-index: 3;
+// `
 const ProfileWrapper = styled.div`
 	cursor: pointer;
 	padding: 0.5rem 1rem;
@@ -164,7 +178,7 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
 			return null
 		}
 		try {
-			const response = await fetch(`/calls/makeConferenceCall`, {
+			const response = await fetch(`${serverUrl}/calls/makeConferenceCall`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -204,7 +218,7 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
 			<Card>
 				<ProfileWrapper onClick={() => navigate(`/profile/${hit.userId}`)}>
 					{isCallButtonPressed && (
-						<CallStatusContainer>
+						<CallStatusContainer isCallInitiated={isCallInitiated}>
 							<p>Please wait, Your call is in progress</p>
 						</CallStatusContainer>
 					)}
