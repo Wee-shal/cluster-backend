@@ -71,10 +71,6 @@ async function stripeWebhookHandler(request, response) {
 			case 'customer.created':
 				// console.log(data)
 				break
-			case 'checkout.session.completed':
-				//	console.log('customer payment ID: ', data?.object?.id)
-
-				break
 			case 'charge.succeeded':
 				// eslint-disable-next-line no-case-declarations
 				const sessionId = data.object.id
