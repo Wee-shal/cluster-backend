@@ -73,7 +73,6 @@ async function stripeWebhookHandler(request, response) {
 				break
 			case 'charge.succeeded':
 				//	console.log('customer payment ID: ', data?.object?.id)
-
 				break
 			case 'checkout.session.completed':
 				// eslint-disable-next-line no-case-declarations

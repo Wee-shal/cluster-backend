@@ -120,17 +120,8 @@ router.post('/status-callback', async (req, res) => {
 		 */
 
 		// eslint-disable-next-line no-restricted-syntax
-		for (const id of Object.entries(users)) {
-			try {
-				await disconnectCallWithExistMessage(id[0])
-				delete users[id[0]]
-			} catch (e) {
-				console.log(e)
-			}
-		}
+		console.log("Call disconnected")
 	}
-
-	console.log('Users objects: ', users)
 
 	res.sendStatus(200)
 })
