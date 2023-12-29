@@ -20,19 +20,17 @@ async function makeConferenceCall(phoneNumbers) {
 		console.log(process.env.CALLBACK_URL)
 		let SID
 		const callPromises = phoneNumbers.map(async number => {
-			const call = await client
-				.conferences('CFXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-				.participants.create({
-					twiml: `<Response>
+			await client.conferences('CFXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX').participants.create({
+				twiml: `<Response>
 					<Connect>
 						<Room>roomName</Room>
 					</Connect>
 					</Response>`,
-					to: number,
-					from: process.env.TWILIO_PHONE_NUMBER,
-					statusCallback: `${process.env.CALLBACK_URL}/calls/status-callback`,
-					statusCallbackMethod: 'POST',
-				})
+				to: number,
+				from: process.env.TWILIO_PHONE_NUMBER,
+				statusCallback: `${process.env.CALLBACK_URL}/calls/status-callback`,
+				statusCallbackMethod: 'POST',
+			})
 			SID = call.callSid
 			process.stdout.write(`Called ${number} - call.sid ${call.callSid} \n`)
 			if (!users[call.callSid]) {
