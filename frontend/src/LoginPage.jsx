@@ -51,6 +51,10 @@ const ContactNumberContainer = styled.input`
   max-width: 25vw;
   z-index: 1;
 
+  &::placeholder {
+    font-size: 1.2rem; /* Adjust the font size as needed */
+  }
+
   @media (max-width: 768px) {
     min-width: 70vw;
     max-width: 80vw;
@@ -75,10 +79,14 @@ const Verify = styled.button`
 const OTPContainer = styled.input`
   outline: 2px solid black;
   border-radius: 24px;
-  padding: 1rem 1rem;
+  padding: 0.5rem 0.5rem;
   border: none;
   display: flex; /* Add this line */
   align-items: center;
+
+  &::placeholder {
+    font-size: 1rem; /* Adjust the font size as needed */
+  }
 
   width: 140px !important;
   height: 30px !important;

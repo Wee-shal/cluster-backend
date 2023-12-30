@@ -29,7 +29,6 @@ const NotificationContainer = styled.div`
 	border-radius: 0.5rem;
 	text-align: center;
 	z-index: 1000; /* Ensure it's above other elements */
-	margin-bottom: 10px;
 	max-width: 300px;
 `
 const CloseButton = styled.button`
@@ -98,14 +97,13 @@ export default function Profile() {
 
 		if (isCallInitiated) {
 			setIsCallButtonPressed(false)
-			alert('Please try again later...')
 			setTimeout(() => {
 				setIsCallInitiated(false)
 			}, 4000)
 			return null
 		}
 		try {
-			const response = await fetch(`${serverUrl}/calls/makeConferenceCall`, {
+			const response = await fetch(`${serverUrl}/calls/makeConferenceCall?expertId=${expert.userId}&userId=${id}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -119,13 +117,25 @@ export default function Profile() {
 				console.log('POST request successful')
 				setIsCallButtonPressed(false)
 				setIsCallInitiated(true)
-				//alert('Call has been initiated')
+				setNotification(true)
+				setTimeout(() => {
+					setNotification(false)
+				}, 4000)
 			} else {
 				console.error('POST request failed')
-				//alert('Failed to make a call')
+				setNotification(true)
+				setTimeout(() => {
+					setNotification(false)
+				}, 4000)
 			}
 		} catch (error) {
 			console.error('Error occurred during POST request:', error)
+			setNotification(true)
+			setTimeout(() => {
+				setNotification(false)
+			}, 4000)
+		}finally {
+			setIsCallButtonPressed(false);
 		}
 	}
 	const closeNotification = () => {
@@ -171,13 +181,21 @@ export default function Profile() {
 							<BlurredBackground />
 							<NotificationContainer style={{ padding: '10px' }}>
 								<CloseButton onClick={closeNotification}>&times;</CloseButton>
-								<RechargeMessage>
-									Please recharge your wallet to continue❗
-								</RechargeMessage>
-								<WalletButton onClick={() => navigate('/payment')}>
+								{isCallInitiated ? (
+									<>
+										<RechargeMessage>Call has been initiated❗</RechargeMessage>
+									</>
+								) : (
+									<>
+										<RechargeMessage>Failed to make a call❗</RechargeMessage>
+										<WalletButton onClick={() => navigate('/payment')}>
 									Recharge Wallet
 								</WalletButton>
+									</>
+								)}
+								
 							</NotificationContainer>
+							
 						</>
 					)}
 					<h2>Description</h2>

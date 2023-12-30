@@ -32,15 +32,20 @@ router.post('/connect', async (req, res) => {
 })
 
 router.post('/makeConferenceCall', async (req, res) => {
+	const { userId } = req?.query
+	const { expertId } = req?.query
 	try {
 		console.log(req?.body)
 		console.log('makeConferenceCall route hit...')
-		const helperPhoneNumber = process.env.HELPER_PHONE_NUMBER
-		const userPhoneNumber = process.env.USER_PHONE_NUMBER
-		const user = await User.findOne({ phoneNumber: userPhoneNumber })
+
+		const user = await User.findOne({ userId })
 		const helper = await User.findOne({
-			phoneNumber: helperPhoneNumber,
+			userId: expertId,
 		})
+		const helperPhoneNumber = helper.phoneNumber
+			? helper.phoneNumber
+			: process.env.HELPER_PHONE_NUMBER
+		const userPhoneNumber = user.phoneNumber ? user.phoneNumber : process.env.USER_PHONE_NUMBER
 		console.log('user', user, 'helper', helper)
 		let userBalance
 		if (user?.currency !== helper?.currency) {
@@ -55,7 +60,7 @@ router.post('/makeConferenceCall', async (req, res) => {
 
 		/** calculate call end time */
 		const time = Math.floor(userBalance) / helper?.rates
-		if (userBalance > helper?.rates) {
+		if (userBalance >= helper?.rates) {
 			const sid = await makeConferenceCall([helperPhoneNumber, userPhoneNumber])
 			/** end call based on balance */
 			setTimeout(async () => {
@@ -98,9 +103,9 @@ router.post('/status-callback', async (req, res) => {
 	console.log('caller', caller, 'helper', helper)
 	if (callStatus === 'completed' || callStatus === 'failed') {
 		console.log('\n inside completed or faileds')
-		if ((req?.body?.CallDuration) * helper.rates <= caller.balance) {
+		if ((req?.body?.CallDuration / 60) * helper.rates <= caller.balance) {
 			console.log('inside first if')
-			caller.balance -= (req?.body?.CallDuration) * helper.rates
+			caller.balance -= (req?.body?.CallDuration / 60) * helper.rates
 			await caller.save()
 		}
 		if (!processedTransactions.has(uniqueId)) {
@@ -110,7 +115,7 @@ router.post('/status-callback', async (req, res) => {
 				helper: helper.userId,
 				duration: req?.body?.CallDuration,
 				rate: helper.rates,
-				amount: `- ${(req?.body?.CallDuration ) * helper.rates}`,
+				amount: `- ${(req?.body?.CallDuration / 60) * helper.rates}`,
 			})
 			await transaction.save()
 			processedTransactions.add(uniqueId)

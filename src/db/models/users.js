@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
 			},
 		}), 
 	},
-	registrationDate: {
+	registrationDate: { 
 		type: Date,
 		default: Date.now(), 
 	},

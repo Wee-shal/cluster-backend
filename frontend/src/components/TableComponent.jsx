@@ -27,7 +27,7 @@ const TableComponent = () => {
         {/*Dynamic table rows*/}
         {data.map(item => (
             <tr key={item._id}>
-              <td style={tdStyle}>{item.transactId ? item.transactId : item._id}</td>
+              <td style={tdStyle}>{item.transactid ? item.transactid : item._id}</td>
               <td style={tdStyle}>{item.timeStamp}</td>
               <td style={tdStyle}>{item.helper}</td>
               <td style={tdStyle}>{item.duration}</td>
