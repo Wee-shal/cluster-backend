@@ -91,31 +91,35 @@ router.post('/status-callback', async (req, res) => {
 	console.log(processedTransactions)
 	// eslint-disable-next-line no-unused-vars
 	const { uniqueId } = req?.query
-	console.log('unique', uniqueId)
+	const { helperphoneNumber } = req?.query
+	const { callerphoneNumber } = req?.query
+	const fullCaller = `+${callerphoneNumber.trim()}`
+	console.log('unique', uniqueId, helperphoneNumber, fullCaller)
 	const callStatus = req?.body?.CallStatus
 	console.log('call Sid: ', req.body)
 	const caller = await User.findOne({
-		phoneNumber: process.env.USER_PHONE_NUMBER,
+		phoneNumber: `+${callerphoneNumber.trim()}`,
 	})
 	const helper = await User.findOne({
-		phoneNumber: process.env.HELPER_PHONE_NUMBER,
+		phoneNumber: `+${helperphoneNumber.trim()}`,
 	})
 	console.log('caller', caller, 'helper', helper)
 	if (callStatus === 'completed' || callStatus === 'failed') {
 		console.log('\n inside completed or faileds')
-		if ((req?.body?.CallDuration / 60) * helper.rates <= caller.balance) {
+		if ((req?.body?.CallDuration / 60) * helper?.rates <= caller?.balance) {
 			console.log('inside first if')
-			caller.balance -= (req?.body?.CallDuration / 60) * helper.rates
+			caller.balance -= (req?.body?.CallDuration / 60) * helper?.rates
 			await caller.save()
 		}
+		console.log('amount', (req?.body?.CallDuration / 60) * helper?.rates)
 		if (!processedTransactions.has(uniqueId)) {
 			const transaction = new Transaction({
 				timeStamp: req?.body?.Timestamp,
-				caller: caller.userId,
-				helper: helper.userId,
+				caller: caller?.userId,
+				helper: helper?.userId,
 				duration: req?.body?.CallDuration,
-				rate: helper.rates,
-				amount: `- ${(req?.body?.CallDuration / 60) * helper.rates}`,
+				rate: helper?.rates,
+				amount: `- ${(req?.body?.CallDuration / 60) * helper?.rates}`,
 			})
 			await transaction.save()
 			processedTransactions.add(uniqueId)

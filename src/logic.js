@@ -41,7 +41,7 @@ async function makeConferenceCall(phoneNumbers) {
 					</Response>`,
 				to: number,
 				from: process.env.TWILIO_PHONE_NUMBER,
-				statusCallback: `${process.env.CALLBACK_URL}/calls/status-callback`,
+				statusCallback: `${process.env.CALLBACK_URL}/calls/status-callback?uniqueId=${uniqueId}&helperphoneNumber=${phoneNumbers[0]}&callerphoneNumber=${phoneNumbers[1]}`,
 				statusCallbackMethod: 'POST',
 			})
 			SID = call.callSid

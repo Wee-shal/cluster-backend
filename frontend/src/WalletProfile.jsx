@@ -83,7 +83,7 @@ export default function WalletProfile() {
         <div  style={{textAlign:'center'}}>
           <div>{/*new 23/12/2023 type-submit, form*/}
           <form onSubmit={generatePaymentLink}>
-                        {user.currency}{' '}
+                        {user?.currency}{' '}
                         <input
                             style={{ padding: '3px 10px' }}
                             id="creditAmt"
