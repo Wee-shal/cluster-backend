@@ -66,7 +66,7 @@ export default function WalletProfile() {
         }
     }
   {/*end update */}
-  return (
+  return (id &&(
     
     <div>
       
@@ -114,5 +114,5 @@ export default function WalletProfile() {
         
       </div>
     </div>
-  );
+  ));
 }
