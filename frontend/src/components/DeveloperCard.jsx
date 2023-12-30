@@ -160,7 +160,7 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
 	const [notification, setNotification] = useState(false)
 	const navigate = useNavigate()
 	const makePhoneCall = async () => {
-		if (user.balance === 0) {
+		if (user.balance === 0 || user.balance < rates) {
 			setNotification(true)
 			console.log('notifi', notification)
 

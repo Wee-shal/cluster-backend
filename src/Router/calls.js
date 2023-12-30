@@ -98,9 +98,9 @@ router.post('/status-callback', async (req, res) => {
 	console.log('caller', caller, 'helper', helper)
 	if (callStatus === 'completed' || callStatus === 'failed') {
 		console.log('\n inside completed or faileds')
-		if (req?.body?.CallDuration * helper.rates <= caller.balance) {
-			console.log("inside first if")
-			caller.balance -= req?.body?.CallDuration * helper.rates
+		if ((req?.body?.CallDuration / 60) * helper.rates <= caller.balance) {
+			console.log('inside first if')
+			caller.balance -= (req?.body?.CallDuration / 60) * helper.rates
 			await caller.save()
 		}
 		if (!processedTransactions.has(uniqueId)) {
@@ -110,7 +110,7 @@ router.post('/status-callback', async (req, res) => {
 				helper: helper.userId,
 				duration: req?.body?.CallDuration,
 				rate: helper.rates,
-				amount: `- ${req?.body?.CallDuration * helper.rates}`,
+				amount: `- ${(req?.body?.CallDuration / 60) * helper.rates}`,
 			})
 			await transaction.save()
 			processedTransactions.add(uniqueId)

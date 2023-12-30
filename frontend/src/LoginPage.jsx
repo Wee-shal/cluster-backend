@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import serverUrl from "./config"
+import serverUrl from "./config";
 
 const Triangle = styled.div`
   width: 0px;
@@ -77,9 +77,10 @@ const OTPContainer = styled.input`
   border-radius: 24px;
   padding: 1rem 1rem;
   border: none;
-  alignItems:center;
+  display: flex; /* Add this line */
+  align-items: center;
 
-  width: 140px !important; /* Force override */
+  width: 140px !important;
   height: 30px !important;
   @media (max-width: 768px) {
     min-width: 70vw;
@@ -119,10 +120,10 @@ const ErrorMessage = styled.div`
 `;
 
 const OTPErrorMessage = styled(ErrorMessage)`
-  color:red;
+  color: red;
   font-size: 0.9rem;
-  margin-top:0;
-  margin-bottom:0;
+  margin-top: 0;
+  margin-bottom: 0;
 `;
 
 export default function LoginPage() {
