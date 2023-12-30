@@ -138,7 +138,7 @@ export default function LoginPage() {
   const validatePhoneNumber = (input) => {
     // Check if the phone number starts with + followed by the area code
     if (!/^\+\d{2}/.test(input)) {
-      return " Number should start with + the area code.";
+      return " Number should start with + the country code";
     }
 
     // Check if the phone number has at least 10 digits

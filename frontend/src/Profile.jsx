@@ -119,10 +119,10 @@ export default function Profile() {
 				console.log('POST request successful')
 				setIsCallButtonPressed(false)
 				setIsCallInitiated(true)
-				alert('Call has been initiated')
+				//alert('Call has been initiated')
 			} else {
 				console.error('POST request failed')
-				alert('Failed to make a call')
+				//alert('Failed to make a call')
 			}
 		} catch (error) {
 			console.error('Error occurred during POST request:', error)

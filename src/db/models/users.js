@@ -1,3 +1,4 @@
+const { Double } = require('mongodb')
 const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
@@ -26,11 +27,11 @@ const userSchema = new mongoose.Schema({
 				type: Date,
 				default: Date.now(),
 			},
-		}),
+		}), 
 	},
 	registrationDate: {
 		type: Date,
-		default: Date.now(),
+		default: Date.now(), 
 	},
 	balance: Number,
 	currency: String,
