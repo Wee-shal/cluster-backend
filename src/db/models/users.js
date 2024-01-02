@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
 		min: 0,
 		max: 5,
 	},
-	country: String,
+	country: { type: String, default: 'usa' },
 	reviews: {
 		type: Map,
 		of: new mongoose.Schema({
@@ -27,16 +27,16 @@ const userSchema = new mongoose.Schema({
 				type: Date,
 				default: Date.now(),
 			},
-		}), 
+		}),
 	},
-	registrationDate: { 
+	registrationDate: {
 		type: Date,
-		default: Date.now(), 
+		default: Date.now(),
 	},
-	balance: Number,
-	currency: String,
+	balance: { type: Number, default: 0 },
+	currency: { type: String, default: '$' },
 	phoneNumber: String,
 	rates: Number,
 })
 
-module.exports = mongoose.model('User', userSchema)
+module.exports = mongoose.model('User', userSchema) 

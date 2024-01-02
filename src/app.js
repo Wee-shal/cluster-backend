@@ -36,9 +36,10 @@ app.get('/status', (req, res) => {
 })
 
 app.get('/api/data', async (req, res) => {
+	const { userId } = req?.query
 	try {
 		// Fetch data from MongoDB collection
-		const data = await Transaction.find()
+		const data = await Transaction.find({ caller: userId }).sort({ _id: -1 })
 		console.log('data', data)
 		res.json(data)
 	} catch (error) {

@@ -11,7 +11,7 @@ router.use(express.urlencoded({ extended: false }))
 router.use('/calls', calls)
 router.post('/getPaymentLink', getPaymentLink)
 router.post('/stripePayment', async (req, res) => {
-	try { console.log("req in payment",req)
+	try { 
 		await stripeWebhookHandler(req, res)
 	} catch (err) {
 		console.error('Error handling webhook:', err.message)

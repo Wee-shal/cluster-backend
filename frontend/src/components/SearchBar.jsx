@@ -40,19 +40,19 @@ const TextLogo = styled.div`
 	padding: 0 16px;
 	color: white;
 `
-
 const SearchBarContainer = styled.div`
 	display: flex;
 	align-items: center;
-	justify-content: center; /* Center the search bar */
+	justify-content: center;
 	border: 1px solid #d8d8d8;
 	border-radius: 8px;
 	padding: 6px;
 	margin: auto;
-	max-width: 500px; /* Set the maximum width to 500px */
-	width: 100%; /* Take up full width on smaller screens */
-	background-color: white; /* Set the background color to white */
+	max-width: 500px;
+	width: 100%;
+	background-color: white;
 
+	/* Remove styles that change appearance on interaction */
 	.ais-SearchBox-form {
 		display: flex;
 		justify-content: space-between;
@@ -68,15 +68,57 @@ const SearchBarContainer = styled.div`
 		flex: 1;
 	}
 
-	.ais-SearchBox-resetIcon {
-		padding: 0.5rem 1rem;
-		cursor: pointer;
-	}
+	
 
+	/* Ensure consistent styling for input[type='search'] */
 	.ais-SearchBox-input[type='search']::-webkit-search-cancel-button {
 		display: none;
 	}
-`
+
+	/* Add any additional styles you want to keep consistent */
+
+	/* Sidebar styling (if applicable) should be defined separately */
+
+	/* Add any other styles for maintaining consistency */
+`;
+
+
+// const SearchBarContainer = styled.div`
+// 	display: flex;
+// 	align-items: center;
+// 	justify-content: center; /* Center the search bar */
+// 	border: 1px solid #d8d8d8;
+// 	border-radius: 8px;
+// 	padding: 6px;
+// 	margin: auto;
+// 	max-width: 500px; /* Set the maximum width to 500px */
+// 	width: 100%; /* Take up full width on smaller screens */
+// 	background-color: white; /* Set the background color to white */
+
+// 	.ais-SearchBox-form {
+// 		display: flex;
+// 		justify-content: space-between;
+// 	}
+
+// 	.ais-SearchBox-submit {
+// 		display: none;
+// 	}
+
+// 	.ais-SearchBox-input {
+// 		border: none;
+// 		outline: none;
+// 		flex: 1;
+// 	}
+
+// 	.ais-SearchBox-resetIcon {
+// 		padding: 0.5rem 1rem;
+// 		cursor: pointer;
+// 	}
+
+// 	.ais-SearchBox-input[type='search']::-webkit-search-cancel-button {
+// 		display: none;
+// 	}
+// `
 
 const AlgoliaSearchBar = styled(SearchBox)`
 	width: 100%;

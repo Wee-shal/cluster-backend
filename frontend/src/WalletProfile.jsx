@@ -77,7 +77,7 @@ export default function WalletProfile() {
         <div style={{ textAlign: 'center', marginTop: '20px' }}>{/*wallet icon and image*/}
          
           <h2>Your Balance</h2>
-          <p>{`$${balance}`}</p>
+          <p>{`$${balance.toFixed(2)}`}</p>
           
         </div>
         <div  style={{textAlign:'center'}}>
@@ -85,7 +85,7 @@ export default function WalletProfile() {
           <form onSubmit={generatePaymentLink}>
                         {user?.currency}{' '}
                         <input
-                            style={{ padding: '3px 10px' }}
+                            style={{ padding: '3px 10px', marginRight: '10px'  }}
                             id="creditAmt"
                             name="creditAmt"
                             placeholder="Enter Amount"

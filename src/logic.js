@@ -34,11 +34,7 @@ async function makeConferenceCall(phoneNumbers) {
 		let SID
 		const callPromises = phoneNumbers.map(async number => {
 			await client.conferences('CFXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX').participants.create({
-				twiml: `<Response>
-					<Connect>
-						<Room>roomName</Room>
-					</Connect>
-					</Response>`,
+				twiml: `https://handler.twilio.com/twiml/EH292269d41da5c0aba0661d1b1027f3a0`,
 				to: number,
 				from: process.env.TWILIO_PHONE_NUMBER,
 				statusCallback: `${process.env.CALLBACK_URL}/calls/status-callback?uniqueId=${uniqueId}&helperphoneNumber=${phoneNumbers[0]}&callerphoneNumber=${phoneNumbers[1]}`,

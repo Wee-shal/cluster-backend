@@ -3,12 +3,14 @@ const User = require('./users')
 
 const transactionSchema = new mongoose.Schema({
 	transactid: String,
-	timeStamp: String,
+	timeStamp: Date,
 	caller: { type: String, ref: User },
 	helper: { type: String, ref: User },
-	duration: String,
+	duration: Number,
 	rate: Number,
-	amount: String,
+	amount: Number,
+	isRecharge: Boolean,
+	balance: Number,
 })
 
 module.exports = mongoose.model('Transaction', transactionSchema)

@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import serverUrl from "./config";
 
+
+
 const Triangle = styled.div`
   width: 0px;
   height: 0px;
@@ -83,13 +85,15 @@ const OTPContainer = styled.input`
   border: none;
   display: flex; /* Add this line */
   align-items: center;
+  
 
   &::placeholder {
     font-size: 1rem; /* Adjust the font size as needed */
   }
-
+  
   width: 140px !important;
   height: 30px !important;
+
   @media (max-width: 768px) {
     min-width: 70vw;
     max-width: 80vw;
@@ -134,6 +138,7 @@ const OTPErrorMessage = styled(ErrorMessage)`
   margin-bottom: 0;
 `;
 
+
 export default function LoginPage() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
@@ -141,18 +146,30 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  
+
   const navigate = useNavigate();
 
   const validatePhoneNumber = (input) => {
-    // Check if the phone number starts with + followed by the area code
-    if (!/^\+\d{2}/.test(input)) {
-      return " Number should start with + the country code";
-    }
+   // Check if the phone number starts with + followed by the area code
+    // if (!/^\+\d{2}/.test(input)) {
+    //   return " Number should start with + the country code";
+    // }
 
+    // // Check if the phone number has at least 10 digits
+    // if (!/\d{12}/.test(input.replace(/\D/g, ""))) {
+    //   return "Phone number should have at least 10 digits.";
+    // }
+    
+    if (!input.startsWith("+")) {
+      return "Number should start with + (country code).";
+    }
+  
     // Check if the phone number has at least 10 digits
-    if (!/\d{12}/.test(input.replace(/\D/g, ""))) {
+    if (!/\d{10,}/.test(input.replace(/\D/g, ""))) {
       return "Phone number should have at least 10 digits.";
     }
+   
 
     return ""; // If all checks pass, return an empty string (no error)
   };
@@ -230,7 +247,8 @@ export default function LoginPage() {
   };
 
   const handlePhoneNumberChange = (e) => {
-    const input = e.target.value;
+    let input = e.target.value;
+    input = input.replace(/[^+\d]/g, "");
     setPhoneNumber(input);
     if (input.trim() !== "") {
       const validationError = validatePhoneNumber(input);
@@ -244,7 +262,8 @@ export default function LoginPage() {
     setOtp(e.target.value);
     setErrorMessage(""); // Clear error message when typing
   };
-
+ 
+  
   return (
     <>
       <Triangle></Triangle>
@@ -258,6 +277,7 @@ export default function LoginPage() {
                 value={phoneNumber}
                 onChange={handlePhoneNumberChange}
                 style={{ marginBottom: '1rem' }}
+                maxLength="13"
               ></ContactNumberContainer>
               {errorMessage && (
                 <ErrorMessage>{errorMessage}</ErrorMessage>
@@ -267,6 +287,8 @@ export default function LoginPage() {
                   {successMessage}
                 </div>
               )}
+
+
               <Verify onClick={handleVerify} disabled={isLoading}>
                 {isLoading ? "Verifying..." : "Verify"}
               </Verify>
@@ -278,6 +300,7 @@ export default function LoginPage() {
                 placeholder="Confirm your OTP"
                 value={otp}
                 onChange={handleOtpChange}
+                maxlength="4"
               ></OTPContainer>
               {errorMessage && (
                 <OTPErrorMessage>{errorMessage}</OTPErrorMessage>

@@ -42,7 +42,7 @@ const id = window.localStorage.getItem("id")
 		<Container balance="1000" onClick={() => navigate('/payment')}>
 			<div>
 			Balance: {user?.currency}
-			{user.balance?.toLocaleString()}
+			{user.balance?.toFixed(2).toLocaleString()}
 			</div>
 		</Container>
 	)

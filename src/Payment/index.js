@@ -97,24 +97,17 @@ async function stripeWebhookHandler(request, response) {
 							},
 						}
 					)
-					const date = new Date(parseInt(data.object.created, 10) * 1000)
-					const options = {
-						weekday: 'long',
-						year: 'numeric',
-						month: 'long',
-						day: 'numeric',
-						hour: 'numeric',
-						minute: 'numeric',
-						second: 'numeric',
-						timeZoneName: 'short',
-					}
+					const user = await User.findOne({ userId })
+					const timeStamp = new Date(parseInt(data.object.created, 10) * 1000)
+					console.log('result', result)
 					// Create the formatted date string
-					const timeStamp = `${new Intl.DateTimeFormat('en-US', options).format(date)}`
 					const transact = new Transaction({
 						transactid: data.object.balance_transaction,
 						timeStamp,
 						caller: userId,
-						amount: `+ ${parseInt(retrievedSession.amount_total / 100, 10)}`,
+						amount: parseFloat(retrievedSession.amount_total / 100, 10),
+						isRecharge: true,
+						balance: user.balance,
 					})
 					transact.save()
 					if (result.modifiedCount === 1) {

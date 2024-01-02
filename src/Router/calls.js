@@ -3,13 +3,7 @@ const express = require('express')
 const router = express.Router()
 const User = require('../db/models/users')
 const Transaction = require('../db/models/transaction')
-const {
-	disconnectCallWithExistMessage,
-	makePhoneCall,
-	makeConferenceCall,
-	endAudioCall,
-	getAudioCallStatus,
-} = require('../logic')
+const { makePhoneCall, makeConferenceCall, endAudioCall, getAudioCallStatus } = require('../logic')
 
 // POST /calls/connect
 router.post('/connect', async (req, res) => {
@@ -93,8 +87,7 @@ router.post('/status-callback', async (req, res) => {
 	const { uniqueId } = req?.query
 	const { helperphoneNumber } = req?.query
 	const { callerphoneNumber } = req?.query
-	const fullCaller = `+${callerphoneNumber.trim()}`
-	console.log('unique', uniqueId, helperphoneNumber, fullCaller)
+	console.log('unique', uniqueId, helperphoneNumber)
 	const callStatus = req?.body?.CallStatus
 	console.log('call Sid: ', req.body)
 	const caller = await User.findOne({
@@ -106,24 +99,27 @@ router.post('/status-callback', async (req, res) => {
 	console.log('caller', caller, 'helper', helper)
 	if (callStatus === 'completed' || callStatus === 'failed') {
 		console.log('\n inside completed or faileds')
-		if ((req?.body?.CallDuration / 60) * helper?.rates <= caller?.balance) {
-			console.log('inside first if')
-			caller.balance -= (req?.body?.CallDuration / 60) * helper?.rates
-			await caller.save()
-		}
-		console.log('amount', (req?.body?.CallDuration / 60) * helper?.rates)
-		if (!processedTransactions.has(uniqueId)) {
+		if (processedTransactions.has(uniqueId)) {
+			if ((req?.body?.CallDuration / 60) * helper?.rates <= caller?.balance) {
+				console.log('inside first if')
+				caller.balance -= (req?.body?.CallDuration / 60) * helper?.rates
+				await caller.save()
+			}
+			console.log('amount', (req?.body?.CallDuration / 60) * helper?.rates)
+			const timeStamp = new Date(req?.body?.Timestamp)
 			const transaction = new Transaction({
-				timeStamp: req?.body?.Timestamp,
+				timeStamp,
 				caller: caller?.userId,
 				helper: helper?.userId,
-				duration: req?.body?.CallDuration,
+				duration: parseInt(req?.body?.CallDuration, 10),
 				rate: helper?.rates,
-				amount: `- ${(req?.body?.CallDuration / 60) * helper?.rates}`,
+				amount: (req?.body?.CallDuration / 60) * helper?.rates,
+				isRecharge: false,
+				balance: caller.balance,
 			})
 			await transaction.save()
-			processedTransactions.add(uniqueId)
 		} else {
+			processedTransactions.add(uniqueId)
 			console.log('already added')
 		}
 	} else if (callStatus === 'canceled' || callStatus === 'no-answer' || callStatus === 'busy') {
