@@ -69,7 +69,7 @@ const TableComponent = () => {
 								</a>
 							</td>
 							<td style={tdStyle}>
-								{formatDuration(item?.duration) ? item.duration : ''}
+								{formatDuration(item?.duration) ? formatDuration(item?.duration) : ''}
 							</td>
 							<td style={tdStyle}>{item.rate}</td>
 							<td style={tdStyle}>{formatAmount(item.amount)}</td>
