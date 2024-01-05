@@ -40,7 +40,6 @@ app.get('/api/data', async (req, res) => {
 	try {
 		// Fetch data from MongoDB collection
 		const data = await Transaction.find({ caller: userId }).sort({ _id: -1 })
-		console.log('data', data)
 		res.json(data)
 	} catch (error) {
 		console.error('Error fetching data from MongoDB:', error)
@@ -74,7 +73,8 @@ app.post('/send-otp', async (req, res) => {
 })
 
 app.post('/verify-otp', async (req, res) => {
-	const { phoneNumber, otp } = req.body
+	console.log("req",req.body)
+	const { phoneNumber, otp, username } = req.body
 	console.log(otp)
 	const user = await User.findOne({ phoneNumber })
 	if (user) {
@@ -89,8 +89,13 @@ app.post('/verify-otp', async (req, res) => {
 	} else {
 		if (otpStore.has(otp)) {
 			const userId = await getUniqueId()
-			const newUser = new User({ userId, phoneNumber, balance: 0 })
-			newUser.save()
+			if (username) {
+				const newUser = new User({ userId, phoneNumber, name: username })
+				newUser.save()
+			} else {
+				const newUser = new User({ userId, phoneNumber })
+				newUser.save()
+			}
 			return res.json({ success: true, userId })
 		} else {
 			// Authentication failed

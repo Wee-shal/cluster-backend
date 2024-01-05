@@ -1,9 +1,16 @@
 const express = require('express')
+const twilio = require('twilio')
 
 const router = express.Router()
 const User = require('../db/models/users')
 const Transaction = require('../db/models/transaction')
-const { makePhoneCall, makeConferenceCall, endAudioCall, getAudioCallStatus } = require('../logic')
+const {
+	makePhoneCall,
+	makeConferenceCall,
+	endAudioCall,
+	getAudioCallStatus,
+	disconnectCallWithExistMessage,
+} = require('../logic')
 
 // POST /calls/connect
 router.post('/connect', async (req, res) => {
@@ -60,15 +67,9 @@ router.post('/makeConferenceCall', async (req, res) => {
 			setTimeout(async () => {
 				/** check if call is in progress */
 				const callStatus = await getAudioCallStatus(sid)
-				if (callStatus) {
+				if (callStatus === 'no-answer') {
 					await endAudioCall(sid)
 					/** making balance zero for user */
-					try {
-						user.balance = 0
-						await user.save()
-					} catch (e) {
-						console.log(e)
-					}
 				}
 			}, time)
 		}
@@ -89,14 +90,16 @@ router.post('/status-callback', async (req, res) => {
 	const { callerphoneNumber } = req?.query
 	console.log('unique', uniqueId, helperphoneNumber)
 	const callStatus = req?.body?.CallStatus
+	const callSid = req?.body?.To === `+${helperphoneNumber?.trim()}` ? req?.body?.CallSid : ''
+	const conferenceSid = req?.body?.ConferenceSid
+	console.log('conferenceSid', conferenceSid, callSid)
 	console.log('call Sid: ', req.body)
 	const caller = await User.findOne({
-		phoneNumber: `+${callerphoneNumber.trim()}`,
+		phoneNumber: `+${callerphoneNumber?.trim()}`,
 	})
 	const helper = await User.findOne({
-		phoneNumber: `+${helperphoneNumber.trim()}`,
+		phoneNumber: `+${helperphoneNumber?.trim()}`,
 	})
-	console.log('caller', caller, 'helper', helper)
 	if (callStatus === 'completed' || callStatus === 'failed') {
 		console.log('\n inside completed or faileds')
 		if (processedTransactions.has(uniqueId)) {
@@ -122,15 +125,30 @@ router.post('/status-callback', async (req, res) => {
 			processedTransactions.add(uniqueId)
 			console.log('already added')
 		}
-	} else if (callStatus === 'canceled' || callStatus === 'no-answer' || callStatus === 'busy') {
-		/**
-		 *  whatever the id received check its value (phoneNumber) and get other key which has same value
-		 */
-
-		// eslint-disable-next-line no-restricted-syntax
-		console.log('Call disconnected')
 	}
-
+	// } else if (callStatus === 'canceled' || callStatus === 'no-answer' || callStatus === 'busy') {
+	// 	const twiml = new twilio.twiml.VoiceResponse()
+	// 	twiml.say('Sorry, we did not receive an answer. Goodbye!')
+	// 	console.log('Call disconnected')
+	// 	await disconnectCallWithExistMessage(callSid)
+	// }
+	else {
+		// Set a timeout for other cases
+		setTimeout(async () => {
+			// Your asynchronous logic here
+			console.log('checking status')
+			if (callSid) {
+				const status = await getAudioCallStatus(callSid)
+				console.log('status', status)
+				if (
+					conferenceSid &&
+					(status === 'no-answer' || status === 'ringing' || status === 'canceled')
+				) {
+					await endAudioCall(conferenceSid)
+				}
+			}
+		}, 5000)
+	}
 	res.sendStatus(200)
 })
 

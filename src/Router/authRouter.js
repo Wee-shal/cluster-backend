@@ -1,20 +1,20 @@
-const express = require("express")
+const express = require('express')
 // const path = require("path")
-const User = require("../db/models/users")
+const User = require('../db/models/users')
 
 const router = express.Router()
 
-const auth = require("../middlewares/createAuth")
-const { requireAuth } = require("../middlewares/auth")
+const auth = require('../middlewares/createAuth')
+const { requireAuth } = require('../middlewares/auth')
 
-router.use("/auth", auth)
+router.use('/auth', auth)
 
-router.get("/:id", requireAuth, async (req, res) => {
+router.get('/:id', requireAuth, async (req, res) => {
 	try {
 		const user = await User.findOne({ id: req.params.id })
 		res.json(user)
 	} catch (e) {
-		console.log("soemthnig went wrong 1")
+		console.log('soemthnig went wrong 1')
 	}
 })
 

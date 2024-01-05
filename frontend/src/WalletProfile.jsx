@@ -65,6 +65,19 @@ export default function WalletProfile() {
             console.log(e)
         }
     }
+    const inputFieldStyle = {
+      padding: '3px 10px',
+      marginRight: '10px',
+    };
+  
+    const payButtonStyle = {
+      padding: '3px 10px', // Adjust the padding to your preference
+    };
+
+    const dollarSignStyle = {
+      color: 'darken(black, 30%)', // Replace 'your_color' with the desired color
+      
+    };
   {/*end update */}
   return (id &&(
     
@@ -77,7 +90,7 @@ export default function WalletProfile() {
         <div style={{ textAlign: 'center', marginTop: '20px' }}>{/*wallet icon and image*/}
          
           <h2>Your Balance</h2>
-          <p>{`$${balance.toFixed(2)}`}</p>
+          <p><span style={dollarSignStyle}>$</span>{balance.toFixed(2)}</p>
           
         </div>
         <div  style={{textAlign:'center'}}>
@@ -85,7 +98,8 @@ export default function WalletProfile() {
           <form onSubmit={generatePaymentLink}>
                         {user?.currency}{' '}
                         <input
-                            style={{ padding: '3px 10px', marginRight: '10px'  }}
+                            style={inputFieldStyle}
+                            //style={{ padding: '3px 10px', marginRight: '10px'  }}
                             id="creditAmt"
                             name="creditAmt"
                             placeholder="Enter Amount"
@@ -101,7 +115,7 @@ export default function WalletProfile() {
                                 }
                             }}
                         />
-          <button type="submit">Pay</button>
+          <button type="submit" style={{backgroundColor: 'black', color: 'white', ...payButtonStyle}}>Pay</button>
           </form>
           </div>
         </div>

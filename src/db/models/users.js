@@ -1,4 +1,3 @@
-const { Double } = require('mongodb')
 const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
@@ -37,6 +36,6 @@ const userSchema = new mongoose.Schema({
 	currency: { type: String, default: '$' },
 	phoneNumber: String,
 	rates: Number,
-})
+}) 
 
 module.exports = mongoose.model('User', userSchema) 

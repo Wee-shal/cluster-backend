@@ -3,19 +3,18 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import serverUrl from "./config";
 
-
-
 const Triangle = styled.div`
-  width: 0px;
-  height: 0px;
+  width: 0;
+  height: 0;
   border-style: solid;
-  border-width: 60vh 60vw 0 0;
-  border-color: #000000 transparent transparent transparent;
+  border-width: 40vw 40vw 0 0;
+  border-color: #000 transparent transparent transparent;
   transform: rotate(0deg);
   position: absolute;
   z-index: 0;
+
   @media (max-width: 768px) {
-    border-width: 60vh 70vw 0 0;
+    border-width: 40vw 70vw 0 0;
   }
 `;
 
@@ -28,19 +27,33 @@ const Container = styled.div`
   align-items: center;
   margin-bottom: 2rem;
   z-index: 1;
+`;
+
+const HeadingContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+  align-items: center; /* Ensure inline alignment */
+`;
+
+const Heading = styled.h1`
+  font-size: 2.5rem;
+  font-weight: bolder;
+  cursor: pointer;
+  color: ${(props) => (props.selected ? "black" : "grey")};
 
   @media (max-width: 768px) {
+    font-size: 2rem;
   }
 `;
 
-const SignHeading = styled.h1`
-  font-size: 3rem;
+const HeadingSeparator = styled.span`
+  font-size: 2.5rem;
   font-weight: bolder;
+  color: black;
+  display: inline; /* Add for small screens */
 
   @media (max-width: 768px) {
-    background-color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 24px;
+    font-size: 2rem;
   }
 `;
 
@@ -54,7 +67,7 @@ const ContactNumberContainer = styled.input`
   z-index: 1;
 
   &::placeholder {
-    font-size: 1.2rem; /* Adjust the font size as needed */
+    font-size: 1.2rem;
   }
 
   @media (max-width: 768px) {
@@ -71,7 +84,7 @@ const Verify = styled.button`
   border: none;
   padding: 1rem 2rem;
   border-radius: 1rem;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
 
   @media (max-width: 768px) {
     margin-top: 0.5rem;
@@ -83,14 +96,13 @@ const OTPContainer = styled.input`
   border-radius: 24px;
   padding: 0.5rem 0.5rem;
   border: none;
-  display: flex; /* Add this line */
+  display: flex;
   align-items: center;
-  
 
   &::placeholder {
-    font-size: 1rem; /* Adjust the font size as needed */
+    font-size: 1rem;
   }
-  
+
   width: 140px !important;
   height: 30px !important;
 
@@ -107,13 +119,10 @@ const SubmitButton = styled.button`
   border: none;
   border-radius: 1rem;
   margin-top: 0.5rem;
-  padding: 0.5rem 1rem; /* Adjusted padding for smaller button */
-  /* Center the button within its container */
+  padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  /* Adjust width as needed, but use min-width for responsiveness */
   min-width: 8vw;
 `;
 
@@ -138,40 +147,32 @@ const OTPErrorMessage = styled(ErrorMessage)`
   margin-bottom: 0;
 `;
 
-
-export default function LoginPage() {
+export default function AuthPage() {
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [username, setUsername] = useState("");
   const [otp, setOtp] = useState("");
   const [isPhoneVerified, setIsPhoneVerified] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  
-
+  const [isSignIn, setIsSignIn] = useState(false);
   const navigate = useNavigate();
 
   const validatePhoneNumber = (input) => {
-   // Check if the phone number starts with + followed by the area code
-    // if (!/^\+\d{2}/.test(input)) {
-    //   return " Number should start with + the country code";
-    // }
-
-    // // Check if the phone number has at least 10 digits
-    // if (!/\d{12}/.test(input.replace(/\D/g, ""))) {
-    //   return "Phone number should have at least 10 digits.";
-    // }
-    
     if (!input.startsWith("+")) {
-      return "Number should start with + (country code).";
+      return "Number should start with + country code and contact number.";
     }
-  
-    // Check if the phone number has at least 10 digits
-    if (!/\d{10,}/.test(input.replace(/\D/g, ""))) {
-      return "Phone number should have at least 10 digits.";
-    }
-   
 
-    return ""; // If all checks pass, return an empty string (no error)
+    const digitsAfterFirstThree = input.slice(3).replace(/\D/g, "");
+    if (input.length > 3 && digitsAfterFirstThree.length < 10) {
+      return "Valid contact number to be inserted after country code.";
+    }
+
+    if (!/^\+[\d]+$/.test(input)) {
+      return "Please enter a valid number with country code.";
+    }
+
+    return "";
   };
 
   const handleVerify = async (e) => {
@@ -185,17 +186,22 @@ export default function LoginPage() {
       if (validationError) {
         throw new Error(validationError);
       }
+      let requestBody;
+      if (isSignIn) {
+        requestBody = { phoneNumber, otp };
+      } else {
+        requestBody = { phoneNumber, username, otp };
+      }
 
       const response = await fetch(`${serverUrl}/send-otp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ phoneNumber }),
+        body: JSON.stringify(requestBody),
       });
 
       const data = await response.json();
-      console.log(data);
 
       if (data.success) {
         setIsPhoneVerified(true);
@@ -215,15 +221,20 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
+      let requestBody;
+      if (isSignIn) {
+        requestBody = { phoneNumber, otp };
+      } else {
+        requestBody = { phoneNumber, username, otp };
+      }
+
+      console.log("Request Body:", requestBody);
       const response = await fetch(`${serverUrl}/verify-otp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          phoneNumber: phoneNumber,
-          otp,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
@@ -248,7 +259,7 @@ export default function LoginPage() {
 
   const handlePhoneNumberChange = (e) => {
     let input = e.target.value;
-    input = input.replace(/[^+\d]/g, "");
+    input = input.replace(/[^+\w]/g, "");
     setPhoneNumber(input);
     if (input.trim() !== "") {
       const validationError = validatePhoneNumber(input);
@@ -260,20 +271,35 @@ export default function LoginPage() {
 
   const handleOtpChange = (e) => {
     setOtp(e.target.value);
-    setErrorMessage(""); // Clear error message when typing
+    setErrorMessage("");
   };
- 
-  
+
   return (
     <>
       <Triangle></Triangle>
       <Container>
-        <SignHeading>Sign In/Sign Up</SignHeading>
+        <HeadingContainer>
+          <Heading onClick={() => setIsSignIn(false)} selected={!isSignIn}>
+            Sign Up
+          </Heading>
+          <HeadingSeparator>/</HeadingSeparator>
+          <Heading onClick={() => setIsSignIn(true)} selected={isSignIn}>
+            Sign In
+          </Heading>
+        </HeadingContainer>
         <Form onSubmit={handleSubmit}>
           {!isPhoneVerified && (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              {!isSignIn && (
+                <ContactNumberContainer
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  style={{ marginBottom: '1rem' }}
+                ></ContactNumberContainer>
+              )}
               <ContactNumberContainer
-                placeholder="Contact Number"
+                placeholder={isSignIn ? "Phone Number" : "Contact Number"}
                 value={phoneNumber}
                 onChange={handlePhoneNumberChange}
                 style={{ marginBottom: '1rem' }}
@@ -288,7 +314,6 @@ export default function LoginPage() {
                 </div>
               )}
 
-
               <Verify onClick={handleVerify} disabled={isLoading}>
                 {isLoading ? "Verifying..." : "Verify"}
               </Verify>
@@ -300,7 +325,7 @@ export default function LoginPage() {
                 placeholder="Confirm your OTP"
                 value={otp}
                 onChange={handleOtpChange}
-                maxlength="4"
+                maxLength="4"
               ></OTPContainer>
               {errorMessage && (
                 <OTPErrorMessage>{errorMessage}</OTPErrorMessage>

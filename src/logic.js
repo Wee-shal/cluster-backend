@@ -33,21 +33,25 @@ async function makeConferenceCall(phoneNumbers) {
 		console.log(process.env.CALLBACK_URL)
 		let SID
 		const callPromises = phoneNumbers.map(async number => {
-			await client.conferences('CFXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX').participants.create({
-				twiml: `https://handler.twilio.com/twiml/EH292269d41da5c0aba0661d1b1027f3a0`,
-				to: number,
-				from: process.env.TWILIO_PHONE_NUMBER,
-				statusCallback: `${process.env.CALLBACK_URL}/calls/status-callback?uniqueId=${uniqueId}&helperphoneNumber=${phoneNumbers[0]}&callerphoneNumber=${phoneNumbers[1]}`,
-				statusCallbackMethod: 'POST',
-			})
+			const call = await client
+				.conferences('CFXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+				.participants.create({
+					waitUrl: `https://handler.twilio.com/twiml/EH292269d41da5c0aba0661d1b1027f3a0`,
+					waitMethod: 'POST',
+					to: number,
+					from: process.env.TWILIO_PHONE_NUMBER,
+					beep: 'onExit',
+					endConferenceOnExit: true,
+					earlyMedia: true,
+					statusCallback: `${process.env.CALLBACK_URL}/calls/status-callback?uniqueId=${uniqueId}&helperphoneNumber=${phoneNumbers[0]}&callerphoneNumber=${phoneNumbers[1]}`,
+					// statusCallbackEvent: ['initiated', 'completed'],
+					statusCallbackMethod: 'POST',
+					// conferenceStatusCallback: `${process.env.CALLBACK_URL}/calls/status-callback`,
+					// conferenceStatusCallbackEvent: ['join'],
+					// conferenceStatusCallbackMethod: 'POST',
+				})
 			SID = call.callSid
 			process.stdout.write(`Called ${number} - call.sid ${call.callSid} \n`)
-			if (!users[call.callSid]) {
-				// eslint-disable-next-line prefer-destructuring
-				users[call.callSid] = phoneNumbers[0]
-			}
-
-			return call
 		})
 		await Promise.all(callPromises).catch(error => {
 			console.error('Error:', error)
@@ -147,14 +151,15 @@ async function endAudioVideoCall(roomSid) {
 }
 
 async function endAudioCall(sid) {
+	console.log('endcallhit')
 	try {
 		await client
-			.calls(sid)
+			.conferences(sid)
 			.update({
 				status: 'completed',
 			})
 			.then(() => {
-				console.log('call is ended')
+				console.log(`Conference has been ended.`)
 			})
 	} catch (e) {
 		console.log(e)

@@ -1,17 +1,18 @@
 import styled from 'styled-components'
 import algoliasearch from 'algoliasearch/lite'
-import {useState} from 'react'
+import { useState, useEffect } from 'react';
 import { InstantSearch, SearchBox, Hits } from 'react-instantsearch'
 import PropTypes from 'prop-types'
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import IconButton from '@mui/material/IconButton'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded'
 import magnifyingGlassSvg from '../assets/icons/magnifyingGlass.svg'
 import { algoliaAppId, algoliaSearchApiKey } from '../config'
 import DeveloperCard from './DeveloperCard'
 import Wallet from './Wallet'
 import Signin from './buttons/Signin'
+import { getUser } from '../services/helpers'; 
 
 const searchClient = algoliasearch(algoliaAppId, algoliaSearchApiKey)
 const idFromUrl = window.localStorage.getItem('id')
@@ -67,8 +68,13 @@ const SearchBarContainer = styled.div`
 		outline: none;
 		flex: 1;
 	}
-
-	
+	.ais-SearchBox-reset {
+		/* Add styles to remove rectangular border and set the color to black */
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: black;
+	  }
 
 	/* Ensure consistent styling for input[type='search'] */
 	.ais-SearchBox-input[type='search']::-webkit-search-cancel-button {
@@ -80,8 +86,7 @@ const SearchBarContainer = styled.div`
 	/* Sidebar styling (if applicable) should be defined separately */
 
 	/* Add any other styles for maintaining consistency */
-`;
-
+`
 
 // const SearchBarContainer = styled.div`
 // 	display: flex;
@@ -161,38 +166,58 @@ const ResultsContainer = styled.div`
 	}
 `
 
+
+
 export default function SearchBar() {
-  const [anchorEl, setAnchorEl] = useState(null)
+	const [anchorEl, setAnchorEl] = useState(null)
+	const [userName, setUserName] = useState(null)
 	async function handleSearch(e) {
 		e.preventDefault()
 		const inputValue = e.target.value
 		console.log('Input value:', inputValue)
 	}
+	useEffect(() => {
+		const fetchUserData = async () => {
+		try {
+			const user = await getUser(idFromUrl);
+			setUserName(user.name);
+		} catch (error) {
+			console.error('Error fetching user data:', error);
+		}
+		};
+	
+		if (idFromUrl) {
+		fetchUserData();
+		}
+	}, [idFromUrl]);
+	
 	const handleClick = () => {
 		// Navigate to the home page
 		window.location.href = '/'
 	}
 
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+	const handleMenuClick = event => {
+		setAnchorEl(event.currentTarget)
+	}
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+	const handleClose = () => {
+		setAnchorEl(null)
+	}
 
-  const handleMenuItemClick = (menuItem) => {
-    console.log(`Clicked on ${menuItem}`);
-    handleClose();
-    {/*logout*/}
-    if(menuItem === 'Logout'){
-      //logic for clearing session, tokens etc.
-      window.localStorage.removeItem('id');
+	const handleMenuItemClick = menuItem => {
+		console.log(`Clicked on ${menuItem}`)
+		handleClose()
+		{
+			/*logout*/
+		}
+		if (menuItem === 'Logout') {
+			//logic for clearing session, tokens etc.
+			window.localStorage.removeItem('id')
 
-      //reloading of page and other actions if needed
-      window.location.href='/';  //home page
-    }
-  };
+			//reloading of page and other actions if needed
+			window.location.href = '/' //home page
+		}
+	}
 
 	return (
 		<div>
@@ -210,7 +235,7 @@ export default function SearchBar() {
 						<AlgoliaSearchBar onInput={handleSearch} placeholder="Search..." />
 					</SearchBarContainer>
 					<SignInButtonContainer>
-						{idFromUrl ? (
+					{userName ? (
 							<>
 								<Wallet />
 								<div className="pressable-icon">
@@ -223,6 +248,11 @@ export default function SearchBar() {
 									>
 										<AccountCircleRoundedIcon fontSize="large" />
 									</IconButton>
+									{userName && (
+										<div>
+										<h1 style={{ margin: 0, fontSize: '0.8rem', marginLeft: '8px' }}>{userName}</h1>
+										</div>
+									)}
 									<Menu
 										id="menu-appbar"
 										anchorEl={anchorEl}

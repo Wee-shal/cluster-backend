@@ -95,7 +95,13 @@ const ProfileImage = styled.img.attrs(({ src }) => ({
   width: 30%;
   margin-top: 1rem;
 `
-const Description = styled.p``
+const Description = styled.p`
+width: 200px; /* Adjust the width as needed */
+display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+`
 
 const Price = styled.p`
   margin-top: 0.5rem;
@@ -117,14 +123,15 @@ const TwilioPhoneCall = styled.div`
   align-items: center;
   justify-content: center;
   gap: 0.2rem;
-  background-color: #e7e7e7;
+  background-color: black;
   flex: 1;
   text-align: center;
   transition: background-color 0.3s ease;
   height: 100%;
   cursor: pointer;
+  color:white;
   &:hover {
-    background-color: #c9c9c9;
+    background-color: #333;
   }
   padding: 2rem auto;
 `
@@ -133,6 +140,7 @@ const Icon = styled.img.attrs(({ src }) => ({
   src,
 }))`
   width: ${props => props.iconwidth || '15px'};
+  filter: invert(1);
 `
 
 const ProfileWrapper = styled.div`
@@ -212,7 +220,7 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
           )}
           <ProfileImage src={profilePic} />
           <Name>{name}</Name>
-          <Description>{description.slice(0, 26)}…</Description>
+          <Description>{description.slice(0, 55)}…</Description>
           <Price>
             <b>Price</b> - {hit.currency}
             {rates} /min
