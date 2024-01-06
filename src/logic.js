@@ -42,13 +42,9 @@ async function makeConferenceCall(phoneNumbers) {
 					from: process.env.TWILIO_PHONE_NUMBER,
 					beep: 'onExit',
 					endConferenceOnExit: true,
-					earlyMedia: true,
 					statusCallback: `${process.env.CALLBACK_URL}/calls/status-callback?uniqueId=${uniqueId}&helperphoneNumber=${phoneNumbers[0]}&callerphoneNumber=${phoneNumbers[1]}`,
-					// statusCallbackEvent: ['initiated', 'completed'],
+					statusCallbackEvent: ['initiated', 'completed'],
 					statusCallbackMethod: 'POST',
-					// conferenceStatusCallback: `${process.env.CALLBACK_URL}/calls/status-callback`,
-					// conferenceStatusCallbackEvent: ['join'],
-					// conferenceStatusCallbackMethod: 'POST',
 				})
 			SID = call.callSid
 			process.stdout.write(`Called ${number} - call.sid ${call.callSid} \n`)

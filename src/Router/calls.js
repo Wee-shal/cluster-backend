@@ -81,6 +81,8 @@ router.post('/makeConferenceCall', async (req, res) => {
 })
 
 const processedTransactions = new Set()
+const callSid = new Set()
+const conferenceSid = new Set()
 router.post('/status-callback', async (req, res) => {
 	console.log('/status-callback hit...')
 	console.log(processedTransactions)
@@ -90,8 +92,8 @@ router.post('/status-callback', async (req, res) => {
 	const { callerphoneNumber } = req?.query
 	console.log('unique', uniqueId, helperphoneNumber)
 	const callStatus = req?.body?.CallStatus
-	const callSid = req?.body?.To === `+${helperphoneNumber?.trim()}` ? req?.body?.CallSid : ''
-	const conferenceSid = req?.body?.ConferenceSid
+	if (req?.body?.To === `+${helperphoneNumber?.trim()}`) callSid.add(req?.body?.CallSid)
+	conferenceSid.add(req?.body?.ConferenceSid)
 	console.log('conferenceSid', conferenceSid, callSid)
 	console.log('call Sid: ', req.body)
 	const caller = await User.findOne({
@@ -125,26 +127,19 @@ router.post('/status-callback', async (req, res) => {
 			processedTransactions.add(uniqueId)
 			console.log('already added')
 		}
-	}
-	// } else if (callStatus === 'canceled' || callStatus === 'no-answer' || callStatus === 'busy') {
-	// 	const twiml = new twilio.twiml.VoiceResponse()
-	// 	twiml.say('Sorry, we did not receive an answer. Goodbye!')
-	// 	console.log('Call disconnected')
-	// 	await disconnectCallWithExistMessage(callSid)
-	// }
-	else {
+	} else {
 		// Set a timeout for other cases
 		setTimeout(async () => {
 			// Your asynchronous logic here
 			console.log('checking status')
-			if (callSid) {
-				const status = await getAudioCallStatus(callSid)
+			if (callSid.has(req?.body?.CallSid)) {
+				const status = await getAudioCallStatus(req?.body?.CallSid)
 				console.log('status', status)
 				if (
-					conferenceSid &&
+					conferenceSid.has(req?.body?.ConferenceSid) &&
 					(status === 'no-answer' || status === 'ringing' || status === 'canceled')
 				) {
-					await endAudioCall(conferenceSid)
+					await endAudioCall(req?.body?.ConferenceSid)
 				}
 			}
 		}, 5000)

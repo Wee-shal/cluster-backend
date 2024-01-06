@@ -32,12 +32,12 @@ server.listen(process.env.PORT || 3000, () => {
 })
 
 app.get('/status', (req, res) => {
-	res.send('working')
+	res.send('working') 
 })
 
 app.get('/api/data', async (req, res) => {
 	const { userId } = req?.query
-	try {
+	try { 
 		// Fetch data from MongoDB collection
 		const data = await Transaction.find({ caller: userId }).sort({ _id: -1 })
 		res.json(data)
@@ -113,7 +113,7 @@ app.get('/getPaymentLink', async (req, res) => {
 		res.send({ link })
 	} catch (e) {
 		console.log(e)
-		res.sendStatus(500)
+		res.sendStatus(500) 
 	}
 })
 
