@@ -6,7 +6,7 @@ async function getPaymentLink(amount, userId) {
 	try {
 		const user = await User.findOne({ userId })
 		// let currency = country === 'India' ? 'INR' : 'USD'
-		let currency = user?.country === 'india' ? 'INR' : 'USD'
+		let currency = user?.phoneNumber.startsWith('+91') ? 'INR' : 'USD'
 		const price = await stripe.prices.create({
 			unit_amount: amount * 100,
 			currency,
