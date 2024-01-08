@@ -144,7 +144,7 @@ export default function Profile() {
           <h2>{expert?.name}</h2>
           <p>{expert?.role}</p>
           <p>{expert?.username}</p>
-          <p>1K+ reviews 4.5★</p>
+          <p></p>
           <p>{expert?.location}</p>
           <div>
             <Button variant="contained" style={{ backgroundColor: 'black', color: 'white', fontWeight: 'bold', borderRadius: '0' }} onClick={id ? makePhoneCall : () => navigate(`/login`)}>Contact me</Button>
