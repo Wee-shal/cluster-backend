@@ -1,6 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const twilio = require('twilio')
+const { AccessToken } = require('twilio').jwt
 
+const { VideoGrant } = AccessToken
 const accountSid = process.env.TWILLIO_ACCOUNT_SID
 const authToken = process.env.TWILLIO_AUTH_TOKEN
 const client = twilio(accountSid, authToken)
@@ -135,6 +137,47 @@ async function getHelper() {
 	}
 }
 
+async function createVideoRoom(roomName) {
+	try {
+		const roomList = await client.video.v1.rooms.list({
+			uniqueName: roomName,
+			status: 'in-progress',
+		})
+
+		let room
+		if (!roomList.length) {
+			// Call the Twilio video API to create the new Go room
+			room = await client.video.v1.rooms.create({
+				uniqueName: roomName,
+				type: process.env.TWILIO_ROOM_TYPE,
+			})
+		} else {
+			// eslint-disable-next-line prefer-destructuring
+			room = roomList[0]
+		}
+		console.log('room: ', room)
+	} catch (e) {
+		console.log(e)
+	}
+}
+
+async function connectToVideoRoom(roomName, participantIdentity) {
+	const identity = participantIdentity
+	const token = new AccessToken(
+		process.env.TWILIO_ACCOUNT_SID,
+		process.env.TWILIO_API_KEY_SID,
+		process.env.TWILIO_API_KEY_SECRET,
+		{ identity }
+	)
+
+	const videoGrant = new VideoGrant({
+		room: roomName,
+	})
+
+	token.addGrant(videoGrant)
+	console.log(token)
+}
+
 async function endAudioVideoCall(roomSid) {
 	try {
 		client.video.v1
@@ -176,11 +219,13 @@ async function makePhoneCall(phoneNumber) {
 	try {
 		/** HardCoded roomName for POC */
 		const call = await client.calls.create({
-			twiml: `<Response>
+			twiml: `
+			<Response>
 						<Connect>
-							<Room>roomName</Room>
+							<Room>room1</Room>
 						</Connect>
-						</Response>`,
+						</Response>
+						`,
 			to: phoneNumber,
 			from: process.env.TWILIO_PHONE_NUMBER,
 			statusCallback: `${process.env.CALLBACK_URL}/status-callback`,
@@ -211,6 +256,8 @@ module.exports = {
 	getCurrentConferenceCalls,
 	getConferenceLists,
 	getHelper,
+	connectToVideoRoom,
+	createVideoRoom,
 	endAudioVideoCall,
 	endAudioCall,
 	getAudioCallStatus,

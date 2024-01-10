@@ -85,7 +85,7 @@ export default function WalletProfile() {
       
       <Navbar />
       <div>
-        <h1 style={{ textAlign: 'center', marginTop: '20px' }}>Wallet</h1>
+        <h1 style={{ textAlign: 'center', marginTop: '20px',marginBottom:'10px' }}>Wallet</h1>
         
         <div style={{ textAlign: 'center', marginTop: '20px' }}>{/*wallet icon and image*/}
          
@@ -115,7 +115,7 @@ export default function WalletProfile() {
                                 }
                             }}
                         />
-          <button type="submit" style={{backgroundColor: 'black', color: 'white', ...payButtonStyle}}>Pay</button>
+          <button type="submit" style={{backgroundColor: 'black', color: 'white', ...payButtonStyle, cursor:'pointer'}}>Pay</button>
           </form>
           </div>
         </div>

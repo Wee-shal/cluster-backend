@@ -6,7 +6,25 @@ import { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { userContext } from '../state/userState'
 import serverUrl from '../config'
+import video from '../assets/icons/video.svg'
 
+const AvPhoneCall = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  background-color: black;
+  flex: 1;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  height: 100%;
+  cursor: pointer;
+  color: white;
+  &:hover {
+    background-color: #333;
+  }
+  padding: 2rem auto;
+`;
 const CallStatusContainer = styled.div`
   position: absolute;
   bottom: 0;
@@ -231,6 +249,10 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
             <Icon src={callIcon} />
             Phone Call
           </TwilioPhoneCall>
+          <AvPhoneCall onClick={() => navigate(`/call`)}>
+            <Icon src={video} />
+            AV Call
+          </AvPhoneCall>
         </Container>
       </Card>
     </>

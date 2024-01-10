@@ -3,7 +3,7 @@ async function getToken(roomname, username) {
 	try {
 		// eslint-disable-next-line prefer-rest-params
 		console.log('getToken function hit with the values', ...arguments)
-		const response = await fetch(`/token`, {
+		const response = await fetch(`${config}/token`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -41,6 +41,6 @@ async function getTokenForAudioCall() {
 		console.log(e)
 		return null
 	}
-}
+} 
 
 export { getToken, getTokenForAudioCall }

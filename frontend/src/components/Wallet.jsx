@@ -5,27 +5,29 @@ import { getUser } from '../services/helpers'
 import { userContext } from '../state/userState'
 
 const Container = styled.div`
-	position: absolute;
-	top: 1.5rem;
-	right: 7rem;
+	
+	
+	
 	background-color: white;
 	padding: 0.5rem 0.5rem;
-	color: black;
-	border-radius: 4%;
+	color: #080808;
+	
 	outline: ${({ balance }) => {
 		if (balance === 0) {
-			return `2px solid red`
+			return ``
 		} else if (balance < 20) {
-			return `2px solid yellow`
+			return ``
 		} else if (balance > 20) {
-			return `2px solid green`
+			return ``
 		}
 	}};
 	cursor: pointer;
 
-	@media (max-width: 768px) {
-		right: 1rem;
-	}
+	
+`
+const BalanceText = styled.div`
+	
+	
 `
 export default function Wallet() {
 	const { user, setUser } = useContext(userContext)
@@ -37,13 +39,14 @@ const id = window.localStorage.getItem("id")
 			setUser(user)
 		})()
 	}, [])
+	const balance = user?.balance || 0;
 
 	return (
-		<Container onClick={() => navigate('/payment')}>
-			<div>
+		<Container balance={balance} onClick={() => navigate('/payment')}>
+			<BalanceText>
 			Balance: {user?.currency}
-			{user?.balance?.toFixed(2).toLocaleString()}
-			</div>
+				{balance.toFixed(2).toLocaleString()}
+			</BalanceText>
 		</Container>
 	)
 }

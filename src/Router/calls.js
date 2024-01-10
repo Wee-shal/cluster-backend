@@ -10,6 +10,8 @@ const {
 	endAudioCall,
 	getAudioCallStatus,
 	disconnectCallWithExistMessage,
+	createVideoRoom,
+	connectToVideoRoom,
 } = require('../logic')
 
 // POST /calls/connect
@@ -21,10 +23,11 @@ router.post('/connect', async (req, res) => {
 		await makePhoneCall([process.env.HELPER_PHONE_NUMBER])
 		// let user join from browser as audio user in room
 		/** create room */
-		await createVideoRoom('roomName')
+		await createVideoRoom('room1')
+		await connectToVideoRoom('room1', 'helper')
 		res.send(`<Response>
 		<Connect>
-			<Room>roomName</Room>
+			<Room>room1</Room>
 		</Connect>
 		</Response>`)
 	} catch (e) {
@@ -63,16 +66,8 @@ router.post('/makeConferenceCall', async (req, res) => {
 		const time = Math.floor(userBalance) / helper?.rates
 		if (userBalance >= helper?.rates) {
 			const sid = await makeConferenceCall([helperPhoneNumber, userPhoneNumber])
-			/** end call based on balance */
-			setTimeout(async () => {
-				/** check if call is in progress */
-				const callStatus = await getAudioCallStatus(sid)
-				if (callStatus === 'no-answer') {
-					await endAudioCall(sid)
-					/** making balance zero for user */
-				}
-			}, time)
 		}
+		/** end call based on balance */
 		res.sendStatus(200)
 	} catch (e) {
 		console.log(e)
@@ -81,8 +76,6 @@ router.post('/makeConferenceCall', async (req, res) => {
 })
 
 const processedTransactions = new Set()
-const callSid = new Set()
-const conferenceSid = new Set()
 router.post('/status-callback', async (req, res) => {
 	console.log('/status-callback hit...')
 	console.log(processedTransactions)
@@ -92,9 +85,6 @@ router.post('/status-callback', async (req, res) => {
 	const { callerphoneNumber } = req?.query
 	console.log('unique', uniqueId, helperphoneNumber)
 	const callStatus = req?.body?.CallStatus
-	if (req?.body?.To === `+${helperphoneNumber?.trim()}`) callSid.add(req?.body?.CallSid)
-	conferenceSid.add(req?.body?.ConferenceSid)
-	console.log('conferenceSid', conferenceSid, callSid)
 	console.log('call Sid: ', req.body)
 	const caller = await User.findOne({
 		phoneNumber: `+${callerphoneNumber?.trim()}`,
@@ -120,7 +110,7 @@ router.post('/status-callback', async (req, res) => {
 				rate: helper?.rates,
 				amount: (req?.body?.CallDuration / 60) * helper?.rates,
 				isRecharge: false,
-				balance: caller.balance,
+				balance: caller?.balance,
 			})
 			await transaction.save()
 		} else {
@@ -132,17 +122,7 @@ router.post('/status-callback', async (req, res) => {
 		setTimeout(async () => {
 			// Your asynchronous logic here
 			console.log('checking status')
-			if (callSid.has(req?.body?.CallSid)) {
-				const status = await getAudioCallStatus(req?.body?.CallSid)
-				console.log('status', status)
-				if (
-					conferenceSid.has(req?.body?.ConferenceSid) &&
-					(status === 'no-answer' || status === 'ringing' || status === 'canceled')
-				) {
-					await endAudioCall(req?.body?.ConferenceSid)
-				}
-			}
-		}, 5000)
+		})
 	}
 	res.sendStatus(200)
 })

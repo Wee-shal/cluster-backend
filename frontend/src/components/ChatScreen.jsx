@@ -132,7 +132,7 @@ const ConnectionStatusMessage = styled.div`
 export default function ChatScreen({ userId }) {
 	const [inputMessage, setInputMessage] = useState('')
 	const [messages, setMessages] = useState([])
-	const [room, setRoom] = useState('roomName')
+	const [room, setRoom] = useState('room1')
 	const [connectionStatus, setConnectionStatus] = useState(false)
 	const { isChatVisible, setIsChatVisible } = useContext(userContext)
 	const [currentUserId, setCurrentUserId] = useState()
@@ -140,7 +140,7 @@ export default function ChatScreen({ userId }) {
 	const messagesContainerRef = useRef(null)
 
 	useEffect(() => {
-		setRoom('roomName')
+		setRoom('room1')
 		setCurrentUserId(userId || window?.location?.pathname?.split('/')[2])
 
 	})
@@ -152,7 +152,7 @@ export default function ChatScreen({ userId }) {
 		e.preventDefault()
 		setMessages(prev => [...prev, { userId: currentUserId, message: inputMessage }])
 		console.log('inputMessage', inputMessage)
-		const data = { room: 'roomName', userId: currentUserId, content: inputMessage }
+		const data = { room: 'room1', userId: currentUserId, content: inputMessage }
 		console.log('sending Date: ', data)
 		setInputMessage('')
 	}

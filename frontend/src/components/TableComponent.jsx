@@ -31,7 +31,7 @@ const TableComponent = () => {
 		setExpandedTransactionId(prevId => (prevId === transactId ? null : transactId))
 	}
 	return (
-		<div style={{ textAlign: 'center' }}>
+		<div style={{ textAlign: 'center',overflowX:'auto'  }}>
 			<table style={{ margin: '0 auto',...tableStyle}}>
 				<thead>
 					<tr>
