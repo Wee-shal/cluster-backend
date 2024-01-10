@@ -1,15 +1,12 @@
 const express = require('express')
 const twilio = require('twilio')
-
+const { VoiceResponse } = require('twilio').twiml
 const router = express.Router()
 const User = require('../db/models/users')
 const Transaction = require('../db/models/transaction')
 const {
 	makePhoneCall,
 	makeConferenceCall,
-	endAudioCall,
-	getAudioCallStatus,
-	disconnectCallWithExistMessage,
 	createVideoRoom,
 	connectToVideoRoom,
 } = require('../logic')
@@ -34,7 +31,22 @@ router.post('/connect', async (req, res) => {
 		console.log(e)
 	}
 })
+router.get('/callback', async (req, res) => {
+	console.log('/calls/callback hit...')
+	const response = new VoiceResponse()
+	const connect = response.connect()
+	try {
+		res.send(`<Response>
+		<Connect>
+			<Room>room1</Room>
+		</Connect>
+		</Response>`)
+	} catch (e) {
+		console.log(e)
+	}
 
+	console.log(response.toString())
+})
 router.post('/makeConferenceCall', async (req, res) => {
 	const { userId } = req?.query
 	const { expertId } = req?.query

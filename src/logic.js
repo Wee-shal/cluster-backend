@@ -219,17 +219,12 @@ async function makePhoneCall(phoneNumber) {
 	try {
 		/** HardCoded roomName for POC */
 		const call = await client.calls.create({
-			twiml: `
-			<Response>
-						<Connect>
-							<Room>room1</Room>
-						</Connect>
-						</Response>
-						`,
+			twiml: `<Response><Say>Waiting to connect</Say></Response>`,
 			to: phoneNumber,
 			from: process.env.TWILIO_PHONE_NUMBER,
-			statusCallback: `${process.env.CALLBACK_URL}/status-callback`,
-			statusCallbackMethod: 'POST',
+			statusCallback: `${process.env.CALLBACK_URL}/calls/callback`,
+			statusCallbackEvent: ['initiated'],
+			statusCallbackMethod: 'GET',
 		})
 		console.log(`Called ${phoneNumber} - call.sid ${call.sid} \n`)
 	} catch (e) {

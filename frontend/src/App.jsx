@@ -12,6 +12,7 @@ import ProfilePage from './Profile'
 import LoginPage from './LoginPage'
 import AVCallPage from './AVCallPage'
 import GlobalStyles from './components/GlobalStyles'
+import Policy from '../policy'
 const router = createBrowserRouter(
 	createRoutesFromElements(
 		<Route>
@@ -22,6 +23,7 @@ const router = createBrowserRouter(
 			<Route path="/login" element={<LoginPage />} />
 			<Route path="/login" component={LoginPage} />
 			<Route path="/call" component={AVCallPage}/>
+			<Route path="/Policy" element={<Policy/>}/>
 		</Route>
 	)
 )
