@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
-import { getUser } from '../services/helpers'
-import { userContext } from '../state/userState'
-import serverUrl from '../config'
+import { getUser } from '../src/services/helpers'
+import { userContext } from '../src/state/userState'
+import serverUrl from '../src/config'
 
 const TableComponent = () => {
 	const [data, setData] = useState([])
@@ -9,7 +9,7 @@ const TableComponent = () => {
 	const [expandedTransactionId, setExpandedTransactionId] = useState(null)
 	const id = window.localStorage.getItem('id')
 	useEffect(() => {
-		(async () => {
+		;(async () => {
 			const user = await getUser(id)
 			setUser(user)
 			fetch(`${serverUrl}/api/data?userId=${user.userId}`)
@@ -26,13 +26,9 @@ const TableComponent = () => {
 		const remainingSeconds = seconds % 60
 		return `${minutes}m ${remainingSeconds}s`
 	}
-	const handleTransactionIdClick = transactId => {
-		// setExpandedTransactionId(transactId)
-		setExpandedTransactionId(prevId => (prevId === transactId ? null : transactId))
-	}
 	return (
-		<div style={{ textAlign: 'center',overflowX:'auto'  }}>
-			<table style={{ margin: '0 auto',...tableStyle}}>
+		<div style={{ textAlign: 'center', overflowX: 'auto' }}>
+			<table style={{ margin: '0 auto', ...tableStyle }}>
 				<thead>
 					<tr>
 						<th style={thStyle}>ID</th>
@@ -48,34 +44,24 @@ const TableComponent = () => {
 					{/*Dynamic table rows*/}
 					{data.map(item => (
 						<tr key={item?._id.toString()}>
-							<td
-								style={{...tdStyle, cursor:'pointer'}}
-								onClick={() => handleTransactionIdClick(item?._id.toString())}
-							>
-								{/* {item?._id.toString().substring(0, 6)
-									? item?._id.toString().substring(0, 6)
-									: item?.transactid?.substring(0, 6)} */}
-								{expandedTransactionId === item?._id.toString()
-									? item?._id.toString()
-									: item?._id.toString().substring(0, 6)}
-							</td>
 							<td style={tdStyle}>
 								{new Date(item.timeStamp).toLocaleString('en-US', {
 									timeStyle: 'short',
 									dateStyle: 'short',
 								})}
 							</td>
+							<td style={tdStyle}>{user.name}</td>
 							<td style={tdStyle}>
-							{item.helper ? (
-								<a
-									href={`/profile/${item.helper}`}
-									style={{ textDecoration: 'blue', color: 'blue' }}
-								>
-									{item.helper}
-								</a>
-							):(
-								"Recharged"
-							)}
+								{item.helper ? (
+									<a
+										href={`/profile/${item.helper}`}
+										style={{ textDecoration: 'blue', color: 'blue' }}
+									>
+										{item.helper}
+									</a>
+								) : (
+									'Recharged'
+								)}
 							</td>
 							<td style={tdStyle}>
 								{item?.duration ? formatDuration(item?.duration) : '-'}
@@ -95,7 +81,7 @@ const TableComponent = () => {
 const tableStyle = {
 	borderCollapse: 'collapse',
 	width: '100%',
-	overflowX:'auto',
+	overflowX: 'auto',
 }
 
 const thStyle = {
@@ -103,7 +89,7 @@ const thStyle = {
 	padding: '8px',
 	textAlign: 'left',
 	backgroundColor: 'black', // Background color
-  color: 'white', // Text color
+	color: 'white', // Text color
 }
 
 const tdStyle = {
