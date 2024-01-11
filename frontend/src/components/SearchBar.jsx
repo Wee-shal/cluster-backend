@@ -21,6 +21,7 @@ const TopHeader = styled.header`
   background-color: #333;
   height: 1px;
   margin: 0;
+  visibility:hidden;
 `;
 
 const ResultsContainer = styled.div`

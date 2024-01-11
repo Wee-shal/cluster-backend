@@ -149,7 +149,7 @@ export default function AVCallScreen({ userId }) {
 	const navigate = useNavigate()
 
 	useEffect(() => {
-		;(async () => {
+		(async () => {
 			/**
 			 * For POC:
 			 * Detecting wheather its a user or developer based on the how they arrive to the page
@@ -262,7 +262,7 @@ export default function AVCallScreen({ userId }) {
 
 		setCurrentParticipant(participant)
 		const remoteParticipantContainer = document.getElementById('remoteParticipant')
-		const mainContainer = document.getElementById('main')
+	   const mainContainer = document.getElementById('main')
 
 		const tracksDiv = document.createElement('div')
 		tracksDiv.setAttribute('id', participant.sid)
@@ -273,6 +273,7 @@ export default function AVCallScreen({ userId }) {
 				trackSubscribe(tracksDiv, publication.track)
 			}
 		})
+		
 
 		console.log('participant.tracks ', participant.tracks)
 
@@ -282,6 +283,7 @@ export default function AVCallScreen({ userId }) {
 				trackSubscribe(audioContainer, track)
 			}
 			console.log('outside of the video')
+          
 			if (track.kind === 'video') {
 				if (track.name === 'screen') {
 					console.log('inside track.names screen')
@@ -429,7 +431,7 @@ export default function AVCallScreen({ userId }) {
 	}
 
 	useEffect(() => {
-		if (connected) {
+		if (connected) {4
 			handleVideoToggle()
 		}
 	}, [isUserVideoOff])

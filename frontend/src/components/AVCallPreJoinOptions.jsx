@@ -147,7 +147,7 @@ const ButtonContainer = styled.div``
 
 export default function AVCallPreJoinOptions({ setConnect, connect }) {
 	const { isUserMute, setIsUserMute, isUserVideoOff, setIsUserVideoOff } = useContext(userContext)
-	const userId = "sinchana1"
+	const userId = window?.location?.pathname?.split('/')[2]
 	console.log(`Isusermute: ${isUserMute} \n isUserVideoOff: ${isUserVideoOff} `)
 	const [joinRoom, setJoinRoom] = useState(false)
 	const navigate = useNavigate()

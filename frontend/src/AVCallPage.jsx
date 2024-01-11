@@ -10,8 +10,7 @@ const Container = styled.div`
 `
 
 export default function AVCallPage() {
-	const location = useLocation()
-	const userId = location?.state?.key
+	const userId =window.localStorage.getItem("id")
 	console.log('location: ', userId)
 	const [join, setJoin] = useState(false)
 	let participantCount = 0
@@ -20,9 +19,9 @@ export default function AVCallPage() {
 	return (
 		<Container>
 			{join ? (
-				<AVCallScreen userId="om123" />
+				<AVCallScreen userId={userId} />
 			) : (
-				<AVCallPreJoinOptions setConnect={setJoin} connect={join} userId="sinchana1" />
+				<AVCallPreJoinOptions setConnect={setJoin} connect={join} userId={userId} />
 			)}
 		</Container>
 	)

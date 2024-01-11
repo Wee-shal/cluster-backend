@@ -13,17 +13,19 @@ import LoginPage from './LoginPage'
 import AVCallPage from './AVCallPage'
 import GlobalStyles from './components/GlobalStyles'
 import Policy from '../policy'
+import TransactionPage from './TransactionPage'
 const router = createBrowserRouter(
 	createRoutesFromElements(
 		<Route>
-			<Route path="/" element={<HomePage />}  />
+			<Route path="/" element={<HomePage />} />
 			<Route path="/profile/:userId" element={<ProfilePage />} />
-			<Route path="/call" element={<AVCallPage />} />
+			<Route path="/profile/:devName/call" element={<AVCallPage />} />
 			<Route path="/payment" element={<WalletProfile />} />
 			<Route path="/login" element={<LoginPage />} />
 			<Route path="/login" component={LoginPage} />
-			<Route path="/call" component={AVCallPage}/>
-			<Route path="/Policy" element={<Policy/>}/>
+			<Route path="/call" component={AVCallPage} />
+			<Route path="/Policy" element={<Policy />} />
+			<Route path="/transactions" element={<TransactionPage />} />
 		</Route>
 	)
 )

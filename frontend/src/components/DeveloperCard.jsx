@@ -216,6 +216,19 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
   const closeNotification = () => {
     setNotification(false);
   };
+  
+	const makeAVCall = () => {
+		if (!user.balance) {
+			setNotification(true)
+
+			setInterval(() => {
+				setNotification(false)
+			}, 3000)
+			return null
+		} else {
+			navigate(`profile/${hit.userId}/call`)
+		}
+	}
 
   return (
     <>
@@ -249,7 +262,7 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
             <Icon src={callIcon} />
             Phone Call
           </TwilioPhoneCall>
-          <AvPhoneCall onClick={() => navigate(`/call`)}>
+          <AvPhoneCall onClick={id ? makeAVCall : () => navigate(`/login`)}>
             <Icon src={video} />
             AV Call
           </AvPhoneCall>

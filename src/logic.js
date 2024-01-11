@@ -161,23 +161,6 @@ async function createVideoRoom(roomName) {
 	}
 }
 
-async function connectToVideoRoom(roomName, participantIdentity) {
-	const identity = participantIdentity
-	const token = new AccessToken(
-		process.env.TWILIO_ACCOUNT_SID,
-		process.env.TWILIO_API_KEY_SID,
-		process.env.TWILIO_API_KEY_SECRET,
-		{ identity }
-	)
-
-	const videoGrant = new VideoGrant({
-		room: roomName,
-	})
-
-	token.addGrant(videoGrant)
-	console.log(token)
-}
-
 async function endAudioVideoCall(roomSid) {
 	try {
 		client.video.v1
@@ -219,12 +202,15 @@ async function makePhoneCall(phoneNumber) {
 	try {
 		/** HardCoded roomName for POC */
 		const call = await client.calls.create({
-			twiml: `<Response><Say>Waiting to connect</Say></Response>`,
+			twiml: `<Response>
+						<Connect>
+							<Room>room1</Room>
+						</Connect>
+						</Response>`,
 			to: phoneNumber,
 			from: process.env.TWILIO_PHONE_NUMBER,
-			statusCallback: `${process.env.CALLBACK_URL}/calls/callback`,
-			statusCallbackEvent: ['initiated'],
-			statusCallbackMethod: 'GET',
+			statusCallback: `${process.env.CALLBACK_URL}/status-callback`,
+			statusCallbackMethod: 'POST',
 		})
 		console.log(`Called ${phoneNumber} - call.sid ${call.sid} \n`)
 	} catch (e) {
@@ -251,7 +237,6 @@ module.exports = {
 	getCurrentConferenceCalls,
 	getConferenceLists,
 	getHelper,
-	connectToVideoRoom,
 	createVideoRoom,
 	endAudioVideoCall,
 	endAudioCall,

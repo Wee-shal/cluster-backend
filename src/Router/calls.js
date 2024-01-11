@@ -4,12 +4,7 @@ const { VoiceResponse } = require('twilio').twiml
 const router = express.Router()
 const User = require('../db/models/users')
 const Transaction = require('../db/models/transaction')
-const {
-	makePhoneCall,
-	makeConferenceCall,
-	createVideoRoom,
-	connectToVideoRoom,
-} = require('../logic')
+const { makePhoneCall, makeConferenceCall, createVideoRoom } = require('../logic')
 
 // POST /calls/connect
 router.post('/connect', async (req, res) => {
@@ -21,7 +16,6 @@ router.post('/connect', async (req, res) => {
 		// let user join from browser as audio user in room
 		/** create room */
 		await createVideoRoom('room1')
-		await connectToVideoRoom('room1', 'helper')
 		res.send(`<Response>
 		<Connect>
 			<Room>room1</Room>
@@ -29,61 +23,6 @@ router.post('/connect', async (req, res) => {
 		</Response>`)
 	} catch (e) {
 		console.log(e)
-	}
-})
-router.get('/callback', async (req, res) => {
-	console.log('/calls/callback hit...')
-	const response = new VoiceResponse()
-	const connect = response.connect()
-	try {
-		res.send(`<Response>
-		<Connect>
-			<Room>room1</Room>
-		</Connect>
-		</Response>`)
-	} catch (e) {
-		console.log(e)
-	}
-
-	console.log(response.toString())
-})
-router.post('/makeConferenceCall', async (req, res) => {
-	const { userId } = req?.query
-	const { expertId } = req?.query
-	try {
-		console.log(req?.body)
-		console.log('makeConferenceCall route hit...')
-
-		const user = await User.findOne({ userId })
-		const helper = await User.findOne({
-			userId: expertId,
-		})
-		const helperPhoneNumber = helper.phoneNumber
-			? helper.phoneNumber
-			: process.env.HELPER_PHONE_NUMBER
-		const userPhoneNumber = user.phoneNumber ? user.phoneNumber : process.env.USER_PHONE_NUMBER
-		console.log('user', user, 'helper', helper)
-		let userBalance
-		if (user?.currency !== helper?.currency) {
-			if (user?.currency === '$') {
-				userBalance = user?.balance
-			} else if (user?.currency === '₹') {
-				userBalance = user?.balance * 0.012 // to convert rupee into dollar
-			}
-		} else {
-			userBalance = user?.balance
-		}
-
-		/** calculate call end time */
-		const time = Math.floor(userBalance) / helper?.rates
-		if (userBalance >= helper?.rates) {
-			const sid = await makeConferenceCall([helperPhoneNumber, userPhoneNumber])
-		}
-		/** end call based on balance */
-		res.sendStatus(200)
-	} catch (e) {
-		console.log(e)
-		res.send(500)
 	}
 })
 

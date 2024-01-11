@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-key */
 import { useEffect, useState, useContext, useRef } from 'react'
+import { socket } from '../services/socket'
 import styled from 'styled-components'
 import { userContext } from '../state/userState'
 import crossIcon from '../assets/icons/cross.svg'
@@ -132,7 +133,7 @@ const ConnectionStatusMessage = styled.div`
 export default function ChatScreen({ userId }) {
 	const [inputMessage, setInputMessage] = useState('')
 	const [messages, setMessages] = useState([])
-	const [room, setRoom] = useState('room1')
+	const [room, setRoom] = useState('roomName')
 	const [connectionStatus, setConnectionStatus] = useState(false)
 	const { isChatVisible, setIsChatVisible } = useContext(userContext)
 	const [currentUserId, setCurrentUserId] = useState()
@@ -143,7 +144,45 @@ export default function ChatScreen({ userId }) {
 		setRoom('room1')
 		setCurrentUserId(userId || window?.location?.pathname?.split('/')[2])
 
-	})
+		const connectWebSocket = () => {
+			socket.onopen = () => {
+				console.log('WebSocket connected')
+				setConnectionStatus(true)
+				setRetryAttempt(0)
+			}
+			socket.onmessage = event => {
+				setConnectionStatus(true)
+				const data = JSON.parse(event.data)
+				console.log('message from server: ', data.content)
+				console.log('server room name', data)
+
+				if (data.room === room) {
+					console.log('event.data.userId', data.userId, 'not mine')
+					setMessages(prev => [...prev, { userId: data.userId, message: data.content }])
+				}
+			}
+			socket.onclose = () => {
+				console.log('WebSocket disconnected??')
+				setConnectionStatus(false)
+				setRetryAttempt(0)
+				if (retryAttempt < 5) {
+					const retryDelay = 2000
+					setTimeout(() => {
+						console.log('Retrying WebSocket connection...')
+						setRetryAttempt(prev => prev + 1)
+						connectWebSocket()
+					}, retryDelay)
+				}
+			}
+		}
+		connectWebSocket()
+
+		return () => {
+			socket.close()
+			setConnectionStatus(false)
+		}
+	}, [retryAttempt])
+
 	useEffect(() => {
 		scrollToBottom()
 	}, [messages])
@@ -152,8 +191,9 @@ export default function ChatScreen({ userId }) {
 		e.preventDefault()
 		setMessages(prev => [...prev, { userId: currentUserId, message: inputMessage }])
 		console.log('inputMessage', inputMessage)
-		const data = { room: 'room1', userId: currentUserId, content: inputMessage }
+		const data = { room: 'roomName', userId: currentUserId, content: inputMessage }
 		console.log('sending Date: ', data)
+		socket.send(JSON.stringify(data))
 		setInputMessage('')
 	}
 	const scrollToBottom = () => {
@@ -222,4 +262,3 @@ export default function ChatScreen({ userId }) {
 		</ChatScreenContainer>
 	)
 }
-	
