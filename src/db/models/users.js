@@ -1,7 +1,10 @@
 const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
-	userId: String,
+	userId: {
+		type: String,
+		unique: true,
+	},
 	name: String,
 	isHelper: Boolean,
 	profilePic: String,
@@ -36,6 +39,6 @@ const userSchema = new mongoose.Schema({
 	currency: { type: String, default: '$' },
 	phoneNumber: String,
 	rates: Number,
-}) 
+})
 
-module.exports = mongoose.model('User', userSchema) 
+module.exports = mongoose.model('User', userSchema)

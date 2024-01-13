@@ -1,199 +1,102 @@
-[{
-  "_id": {
-    "$oid": "659bd266691088bb7e07a2b0"
-  },
-  "userId": "riya123",
-  "name": "Riya Ghoshal",
-  "price": 0,
-  "role": "Email Marketing Consultant",
-  "description": "Email Marketing Consultant | Email List Manager | Appointment Setter through Email List | Chartered Accountant",
-  "country": "india",
-  "balance": 0,
-  "phoneNumber": "+919974779655",
-  "__v": 1,
-  "skills": [],
-  "currency": "$",
-  "rates": 0.1,
-  "profilePic": "https://media.licdn.com/dms/image/D4D03AQGNdM16N0ueIw/profile-displayphoto-shrink_800_800/0/1697074956051?e=1710374400&v=beta&t=8oRLLRHP3Ion32nEEsV-e-cEQo98DHfFC1PRge6iFtc"
-},
+[
 {
-  "_id": {
-    "$oid": "659bd266691088bb7e07a2b1"
-  },
-  "userId": "suyog12",
-  "name": "Suyog Surendra",
-  "price": 0,
-  "role": "Email Marketing Consultant",
-  "description": "Email Marketing Consultant @ The CEO Magazine Global | Coordinated and Detail-Oriented, Digital Marketing",
+  "userId": "jomin123",
+  "name": "Jomin P jose",
+  "price": 10,
+  "role": "Digital marketing consultant",
+  "description": "Performance Marketing | Growth Marketing and Customer Acquisition | D2C & B2C | E-Commerce | Revenue Growth",
   "country": "india",
   "balance": 0,
-  "phoneNumber": "+919168277560",
+  "phoneNumber": "+919884944877",
   "__v": 1,
   "skills": [
-    "CRM",
-    "Management",
-    "Email systems",
-    "Problem solving",
-    "Data driven insights",
-    "Content management",
-    "Automation"
+    "Paid Search Strategy",
+    "Customer Insight",
+    "Media Buying",
+    "Performance Management",
+    "Multi-Channel Marketing",
+    "Acquisition Marketing",
+    "Budgeting",
+    "Customer Analysis",
+    "Analytical Skills"
   ],
   "currency": "$",
   "rates": 0.1,
-  "profilePic": "https://media.licdn.com/dms/image/D4D03AQE0EvFf_JhK8Q/profile-displayphoto-shrink_800_800/0/1692522657144?e=1710374400&v=beta&t=MX6vx9MD3JsfFz98W3fcLAENeA6erGn62LUORVxsRdw"
+  "profilePic": "https://media.licdn.com/dms/image/D5635AQHMtnkWJ1lUTQ/profile-framedphoto-shrink_800_800/0/1696309151111?e=1705744800&v=beta&t=XsHBRBXas5LXcGD0UPTEaOJ7A2LFdOjvBP1xA2ptv9U"
 },
 {
-  "_id": {
-    "$oid": "659bd266691088bb7e07a2b2"
-  },
-  "userId": "brijesh1",
-  "name": "Brijesh Patel",
-  "price": 0,
-  "role": "Email Marketing Consultant",
-  "description": "Email Marketing Consultant",
+  "userId": "utkarsh12",
+  "name": "Utkarsh Purohit",
+  "price": 10,
+  "role": "Digital marketing consultant",
+  "description": "Certified Digital Marketer|Freelancer|Consultant|Digital Marketing",
   "country": "india",
   "balance": 0,
-  "phoneNumber": "+918948624147",
-  "__v": 1,
-  "skills": [],
-  "currency": "$",
-  "rates": 0.1,
-  "profilePic": "https://media.licdn.com/dms/image/D5603AQGOGrkJny9Mcg/profile-displayphoto-shrink_200_200/0/1690995021766?e=1710374400&v=beta&t=XwSkwYruxK4ZUsJ-iMOAbOR9SuQ2oVDhQ9ebuLquonE"
-},
-{
-  "_id": {
-    "$oid": "659bd266691088bb7e07a2b3"
-  },
-  "userId": "atul",
-  "name": "Athul Thomas",
-  "price": 0,
-  "role": "Google Ads Consultant",
-  "description": "PPC Specialist | Facebook Ads | Google Ads | WordPress developer | Freelance Consultant",
-  "country": "india",
-  "balance": 0,
-  "phoneNumber": "+919633056281",
-  "__v": 1,
-  "skills": [],
-  "currency": "$",
-  "rates": 0.1,
-  "profilePic": "https://media.licdn.com/dms/image/D5603AQGMgUDEOZWI-Q/profile-displayphoto-shrink_200_200/0/1703229977090?e=1710374400&v=beta&t=0rID6JveFwFA5svglfOO7eT37DWRgMa-s-1sVOG0jP4"
-},
-{
-  "_id": {
-    "$oid": "659bd266691088bb7e07a2b4"
-  },
-  "userId": "namansh",
-  "name": "Naman Shrivastav",
-  "price": 0,
-  "role": "Digital Marketing Consultant",
-  "description": "",
-  "country": "india",
-  "balance": 0,
-  "phoneNumber": "+919340087167",
-  "__v": 1,
-  "skills": [],
-  "currency": "$",
-  "rates": 0.1,
-  "profilePic": ""
-},
-{
-  "_id": {
-    "$oid": "659bd266691088bb7e07a2b5"
-  },
-  "userId": "gaurav",
-  "name": "Gaurav Sharma",
-  "price": 0,
-  "role": "",
-  "description": "",
-  "country": "india",
-  "balance": 0,
-  "phoneNumber": "+918236868274",
-  "__v": 1,
-  "skills": [],
-  "currency": "$",
-  "rates": 0.1,
-  "profilePic": ""
-},
-{
-  "_id": {
-    "$oid": "659bd266691088bb7e07a2b6"
-  },
-  "userId": "priyanshik",
-  "name": "Priyanshi Kiyawat",
-  "price": 0,
-  "role": "Digital Marketing Consultant",
-  "description": "Digital Marketing Specialist at KGK Group | Helping Brands Succeed in the Digital World | SEO | PPC | CRO | SMO | Freelancer",
-  "country": "india",
-  "balance": 0,
-  "phoneNumber": "+919406897226",
+  "phoneNumber": "+919986259376",
   "__v": 1,
   "skills": [
-    "Online Marketing",
-    "digital marketing",
-    "Digital Marketing Analytics",
-    "Market Research",
-    "Market Analysis",
-    "Marketing Strategy",
-    "Social Media Advertising",
+    "Digital Marketing Experience",
     "Social Media",
-    "Web Development",
-    "Email Marketing",
-    "Content Marketing",
-    "WordPress Design",
-    "Shopify"
+    "Digital Marketing",
+    "Search Engine Optimization (SEO)",
+    "Social Media Marketing",
+    "Search Engine Marketing (SEM)",
+    "Google Ads",
+    "Google Analytics",
+    "Content Marketing"
   ],
   "currency": "$",
   "rates": 0.1,
-  "profilePic": "https://media.licdn.com/dms/image/D4D03AQFeFFOk5cH35Q/profile-displayphoto-shrink_200_200/0/1696845277352?e=1710374400&v=beta&t=2gAEP34QOD8drUoC2f-hHXLOepyiIaKI0rsyoz6--SE"
+  "profilePic": "https://media.licdn.com/dms/image/C4E03AQEfXynwbnUqgA/profile-displayphoto-shrink_200_200/0/1569515451468?e=1710374400&v=beta&t=Vo-6zyqEgQWjBnu-PQvFDm6sk_7JM_Bcnm85TqDwTss"
 },
 {
-  "_id": {
-    "$oid": "659bd266691088bb7e07a2b7"
-  },
-  "userId": "sinchana1",
-  "name": "Sinchana",
+  "userId": "ramya",
+  "name": "Ramya Shree",
   "price": 10,
-  "role": "Full Stack Development",
-  "description": "HTML,CSS,JavaScript,React,MongoDb. I'm a full-stack developer. In the world of technology, I'm the bridge between what users see and what happens behind the scenes. On the front end, I craft engaging and responsive user interfaces using HTML, CSS, and JavaScript. I love creating seamless and visually appealing experiences for users.Moving to the back end, I'm all about server-side logic and database management. Whether it's handling requests, processing data, or managing the application's business logic, I enjoy building the backbone of applications. I work with languages like Node.js and Python, and databases like MySQL and MongoDB",
+  "role": "Digital marketing consultant",
+  "description": "Digital Marketing consultant",
   "country": "india",
-  "balance": 1004.4,
-  "phoneNumber": "+919483053414",
+  "balance": 0,
+  "phoneNumber": "+919606169288",
   "__v": 1,
   "skills": [
-    "HTML",
-    "CSS",
-    "JavaScript",
-    "React",
-    "MongoDb"
+    "Content Creation",
+    "Online Content",
+    "Off-Page SEO",
+    "Social Media Advertising",
+    "Search Engine Optimization (SEO)",
+    "On-Page Optimization",
+    "SEO Copywriting",
+    "Social Media Marketing"
   ],
   "currency": "$",
   "rates": 0.1,
-  "profilePic": "https://i.ibb.co/PxtQs3H/sam.png",
-  "registrationDate": {
-    "$date": "2024-01-08T10:34:26.110Z"
-  }
+  "profilePic": "https://media.licdn.com/dms/image/C5603AQEXX1mdG0gAGA/profile-displayphoto-shrink_800_800/0/1623837083055?e=1710374400&v=beta&t=Ezwd4yOr9xEuwqPC5N8xmRlFmPjup0ueEtty1fmTWBA"
 },
 {
-  "_id": {
-    "$oid": "659bd266691088bb7e07a2b8"
-  },
-  "userId": "om123",
-  "name": "Om Shankar",
+  "userId": "pranav",
+  "name": "Pranav Batra",
   "price": 10,
-  "role": "Full Stack Development",
-  "description": "HTML,CSS,JavaScript,React,MongoDb. I'm a full-stack developer. In the world of technology, I'm the bridge between what users see and what happens behind the scenes. On the front end, I craft engaging and responsive user interfaces using HTML, CSS, and JavaScript. I love creating seamless and visually appealing experiences for users.Moving to the back end, I'm all about server-side logic and database management. Whether it's handling requests, processing data, or managing the application's business logic, I enjoy building the backbone of applications. I work with languages like Node.js and Python, and databases like MySQL and MongoDB",
+  "role": "Email marketing consultant",
+  "description": "As a skilled email marketer, I take pride in my ability to deliver exceptional results. With 1000+ successfully delivered orders, an impressive 4.9 rating backed by 700+ reviews, and a focus on the deliverability of emails into the inbox, I am highly motivated to help you achieve outstanding email campaign success. Through my expertise and highly professional communication skills, I will ensure that your messages reach the right audience at the right time. Let's collaborate and optimize your email marketing strategy for maximum impact.",
   "country": "india",
-  "balance": 1000,
-  "phoneNumber": "+919798485591",
+  "balance": 0,
+  "phoneNumber": "+919654455614",
   "__v": 1,
   "skills": [
-    "HTML",
-    "CSS",
-    "JavaScript",
-    "React",
-    "MongoDb"
+    "Content writing",
+    "Blogging",
+    "Blog design",
+    "Training & development",
+    "WordPress",
+    "Articles writing",
+    "Article rewriting",
+    "Social media marketing",
+    "Social media management",
+    "Animation",
+    "SEO"
   ],
   "currency": "$",
-  "rates": 0.2,
-  "profilePic": "https://i.ibb.co/PxtQs3H/sam.png"
+  "rates": 0.1,
+  "profilePic": ""
 }]

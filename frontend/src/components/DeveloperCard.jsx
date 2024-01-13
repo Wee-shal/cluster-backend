@@ -112,6 +112,7 @@ const ProfileImage = styled.img.attrs(({ src }) => ({
 }))`
   width: 30%;
   margin-top: 1rem;
+  border-radius:30px;
 `
 const Description = styled.p`
 width: 200px; /* Adjust the width as needed */

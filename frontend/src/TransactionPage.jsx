@@ -1,18 +1,12 @@
-import { useState, useEffect, useContext } from 'react'
-import { getUser } from '../src/services/helpers'
-import { userContext } from '../src/state/userState'
+import { useState, useEffect } from 'react'
 import serverUrl from '../src/config'
 
 const TableComponent = () => {
 	const [data, setData] = useState([])
-	const { user, setUser } = useContext(userContext)
-	const [expandedTransactionId, setExpandedTransactionId] = useState(null)
-	const id = window.localStorage.getItem('id')
+	const [callerName, setCallerName] = useState(null)
 	useEffect(() => {
-		;(async () => {
-			const user = await getUser(id)
-			setUser(user)
-			fetch(`${serverUrl}/api/data?userId=${user.userId}`)
+		(async () => {
+			fetch(`${serverUrl}/data`)
 				.then(response => response.json())
 				.then(data => setData(data))
 				.catch(error => console.error('Error fetching data:', error))
@@ -31,34 +25,22 @@ const TableComponent = () => {
 			<table style={{ margin: '0 auto', ...tableStyle }}>
 				<thead>
 					<tr>
-						<th style={thStyle}>ID</th>
-						<th style={thStyle}>TimeStamp</th>
-						<th style={thStyle}>Name</th>
+						<th style={thStyle}>Caller</th>
+						<th style={thStyle}>Helper</th>
 						<th style={thStyle}>Call duration</th>
 						<th style={thStyle}>Rate/min</th>
 						<th style={thStyle}>Amount</th>
-						<th style={{ ...thStyle }}>Balance</th>
 					</tr>
 				</thead>
 				<tbody>
 					{/*Dynamic table rows*/}
 					{data.map(item => (
 						<tr key={item?._id.toString()}>
-							<td style={tdStyle}>
-								{new Date(item.timeStamp).toLocaleString('en-US', {
-									timeStyle: 'short',
-									dateStyle: 'short',
-								})}
-							</td>
-							<td style={tdStyle}>{user.name}</td>
+							<td style={tdStyle}>{item.caller}</td>
 							<td style={tdStyle}>
 								{item.helper ? (
-									<a
-										href={`/profile/${item.helper}`}
-										style={{ textDecoration: 'blue', color: 'blue' }}
-									>
-										{item.helper}
-									</a>
+
+										`${item.helper}`
 								) : (
 									'Recharged'
 								)}
@@ -68,9 +50,6 @@ const TableComponent = () => {
 							</td>
 							<td style={tdStyle}>{item?.rate ? item.rate : '-'}</td>
 							<td style={tdStyle}>{formatAmount(item.amount)}</td>
-							<td style={{ ...tdStyle, color: item.isRecharge ? 'green' : 'black' }}>
-								{item?.balance?.toFixed(2)}
-							</td>
 						</tr>
 					))}
 				</tbody>

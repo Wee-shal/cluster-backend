@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 import { useEffect, useState, useContext, useRef } from 'react'
 import { socket } from '../services/socket'
 import styled from 'styled-components'
@@ -6,10 +5,11 @@ import { userContext } from '../state/userState'
 import crossIcon from '../assets/icons/cross.svg'
 
 const ChatScreenContainer = styled.div`
-	background-color: white;
+	background-color: #b2beb5;
 	flex: 2;
 	position: static;
-	display: block;
+	display: flex;
+	flex-direction: column;
 	min-width: 100%;
 	margin: auto;
 	height: 20vh;
@@ -17,11 +17,9 @@ const ChatScreenContainer = styled.div`
 	z-index: 10;
 
 	@media (max-width: 768px) {
-		display: ${prop => (prop.isVisible ? 'block' : 'none')};
 		min-height: 100vh;
 		width: 100%;
 		margin: 0 auto;
-		/* display: grid; */
 		align-items: center;
 		position: absolute;
 		top: 0;
@@ -39,22 +37,11 @@ const Form = styled.form`
 	align-items: center;
 	width: 100%;
 	margin-left: 1vw;
-`
-
-const InputBoxContainer = styled.div`
-	width: 80%;
-	margin: auto;
-	position: static;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	border-radius: 1rem;
-	padding: 0.3rem;
 	@media (max-width: 768px) {
 		position: absolute;
 		bottom: 1%;
 		border-radius: 0.2rem;
-		background-color: white;
+		background-color: #b2beb5;
 		width: 90%;
 		height: 5rem;
 		display: flex;
@@ -64,20 +51,24 @@ const InputBoxContainer = styled.div`
 `
 
 const MsgContainer = styled.div`
-	background-color: #e0e0e0;
+	background-color: grey;
 	padding: 0.2rem 0.5rem;
-	border-bottom-left-radius: 3px;
+	border-bottom-left-radius: 10px;
 	border-bottom-right-radius: 10px;
 	border-top-left-radius: 10px;
-	border-top-right-radius: 3px;
+	border-top-right-radius: 10px;
 	width: 80%;
 	margin-left: 5%;
+	margin-bottom: 1%;
+	position: relative;
+	z-index: 1;
 `
 
 const Input = styled.input`
 	width: 100%;
-	margin: auto;
-	padding: 0.3rem 0;
+	padding: 0.4rem 0; /* Adjust the padding value as needed */
+	border-radius: 10px;
+	border: 3px solid black;
 `
 
 const SendButton = styled.button`
@@ -86,6 +77,10 @@ const SendButton = styled.button`
 	margin-left: 0.3rem;
 	width: auto;
 	height: 2rem;
+	margin-right: 12px;
+	height: 2rem;
+	border-radius: 10px;
+	border: 3px solid black;
 `
 
 const Closebutton = styled.div`
@@ -114,13 +109,13 @@ const ChatMessageWrapper = styled.div`
 	bottom: 0rem;
 	overflow-y: auto;
 	height: 70%;
-	background-color: azure;
+	background-color: #b2beb5;
 	@media (max-width: 768px) {
 		position: absolute;
 		bottom: 0;
 		height: 88%;
-		/* height: 30rem; */
 		top: 3rem;
+		z-index: 0;
 		overflow-y: auto;
 	}
 `
@@ -141,7 +136,7 @@ export default function ChatScreen({ userId }) {
 	const messagesContainerRef = useRef(null)
 
 	useEffect(() => {
-		setRoom('room1')
+		setRoom('roomName')
 		setCurrentUserId(userId || window?.location?.pathname?.split('/')[2])
 
 		const connectWebSocket = () => {
@@ -192,7 +187,7 @@ export default function ChatScreen({ userId }) {
 		setMessages(prev => [...prev, { userId: currentUserId, message: inputMessage }])
 		console.log('inputMessage', inputMessage)
 		const data = { room: 'roomName', userId: currentUserId, content: inputMessage }
-		console.log('sending Date: ', data)
+		console.log('sending Data: ', data)
 		socket.send(JSON.stringify(data))
 		setInputMessage('')
 	}
@@ -230,7 +225,7 @@ export default function ChatScreen({ userId }) {
 				{messages.length > 0 &&
 					messages.map(item => {
 						return (
-							<MsgContainer style={{ marginTop: '1rem' }}>
+							<MsgContainer>
 								<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 									<b>{item.userId}</b>{' '}
 									{new Date().toLocaleTimeString([], {
@@ -244,21 +239,20 @@ export default function ChatScreen({ userId }) {
 						)
 					})}
 			</ChatMessageWrapper>
-			<InputBoxContainer>
-				<Form onSubmit={sendMessage}>
-					<Input
-						type="text"
-						value={inputMessage}
-						onChange={e => {
-							const inputValue = e.target.value
-							if (inputValue.trim() !== '') {
-								setInputMessage(inputValue)
-							}
-						}}
-					/>
-					<SendButton type="submit">Send</SendButton>
-				</Form>
-			</InputBoxContainer>
+			<Form onSubmit={sendMessage}>
+				<Input
+					style={{ paddingLeft: '5px' }}
+					type="text"
+					value={inputMessage}
+					onChange={e => {
+						const inputValue = e.target.value
+						if (inputValue.trim() !== '') {
+							setInputMessage(inputValue)
+						}
+					}}
+				/>
+				<SendButton type="submit">Send</SendButton>
+			</Form>
 		</ChatScreenContainer>
 	)
 }

@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const twilio = require('twilio')
 const { AccessToken } = require('twilio').jwt
-
+const axios = require('axios')
 const { VideoGrant } = AccessToken
 const accountSid = process.env.TWILLIO_ACCOUNT_SID
 const authToken = process.env.TWILLIO_AUTH_TOKEN
@@ -33,19 +33,18 @@ async function makeConferenceCall(phoneNumbers) {
 		// const roomName = createRoomName()
 		console.log('Creating conference call to numbers: ', phoneNumbers)
 		console.log(process.env.CALLBACK_URL)
-		let SID
 		const callPromises = phoneNumbers.map(async number => {
 			const call = await client
 				.conferences('CFXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
 				.participants.create({
-					waitUrl: `https://handler.twilio.com/twiml/EH292269d41da5c0aba0661d1b1027f3a0`,
+					waitUrl: `https://handler.twilio.com/twiml/EHd899f0e924a5009473e4e51088816108`,
 					waitMethod: 'POST',
 					to: number,
 					from: process.env.TWILIO_PHONE_NUMBER,
 					beep: 'onExit',
 					endConferenceOnExit: true,
 					statusCallback: `${process.env.CALLBACK_URL}/calls/status-callback?uniqueId=${uniqueId}&helperphoneNumber=${phoneNumbers[0]}&callerphoneNumber=${phoneNumbers[1]}`,
-					statusCallbackEvent: ['initiated', 'completed'],
+					statusCallbackEvent: ['completed'],
 					statusCallbackMethod: 'POST',
 				})
 			SID = call.callSid
@@ -54,8 +53,6 @@ async function makeConferenceCall(phoneNumbers) {
 		await Promise.all(callPromises).catch(error => {
 			console.error('Error:', error)
 		})
-
-		return SID
 	} catch (e) {
 		console.log(e)
 		return null
@@ -198,21 +195,22 @@ async function getAudioCallStatus(sid) {
 	}
 }
 
-async function makePhoneCall(phoneNumber) {
+async function makePhoneCall(helperId, callerId) {
 	try {
-		/** HardCoded roomName for POC */
+		const helper = await axios.get(`${process.env.BASE_URL}/getUser?userId=${helperId}`)
+		console.log(helper.data.user.phoneNumber)
 		const call = await client.calls.create({
 			twiml: `<Response>
 						<Connect>
 							<Room>room1</Room>
 						</Connect>
 						</Response>`,
-			to: phoneNumber,
+			to: helper.data.user.phoneNumber,
 			from: process.env.TWILIO_PHONE_NUMBER,
-			statusCallback: `${process.env.CALLBACK_URL}/status-callback`,
+			statusCallback: `${process.env.CALLBACK_URL}/calls/callback?userId=${callerId}`,
 			statusCallbackMethod: 'POST',
 		})
-		console.log(`Called ${phoneNumber} - call.sid ${call.sid} \n`)
+		console.log(`Called ${helper.phoneNumber} - call.sid ${call.sid} \n`)
 	} catch (e) {
 		console.log(e)
 	}
