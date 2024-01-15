@@ -25,8 +25,8 @@ const TableComponent = () => {
 			<table style={{ margin: '0 auto', ...tableStyle }}>
 				<thead>
 					<tr>
-						<th style={thStyle}>Caller</th>
-						<th style={thStyle}>Helper</th>
+						<th style={thStyle}>From</th>
+						<th style={thStyle}>To</th>
 						<th style={thStyle}>Call duration</th>
 						<th style={thStyle}>Rate/min</th>
 						<th style={thStyle}>Amount</th>

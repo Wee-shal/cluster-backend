@@ -19,6 +19,7 @@ const { getPaymentLink, stripeWebhookHandler } = require('./Payment/index')
 
 const app = express()
 const server = http.createServer(app)
+const wss = new WebSocket.Server({ server })
 app.use(cookieParser())
 app.use(cors({ origin: '*' }))
 app.use(routers)
@@ -36,7 +37,41 @@ server.listen(process.env.PORT || 3000, () => {
 app.get('/status', (req, res) => {
 	res.send('working')
 })
+const clients = new Set()
+wss.on('connection', ws => {
+	console.log(`WebSocket client connected`)
 
+	// Store the client in the clients set
+	clients.add(ws)
+
+	console.log('client length', clients.size)
+
+	ws.on('message', message => {
+		try {
+			const data = JSON.parse(message)
+
+			const { room, userId, content } = data
+			console.log(room, userId, content)
+			console.log(data)
+
+			for (const client of clients) {
+				if (client !== ws) {
+					// Send the message only to other clients, not the sender
+					client.send(JSON.stringify({ room, userId, content }))
+					// client.send({ room, userId, content })
+				}
+				console.log('content is: ', content)
+			}
+		} catch (error) {
+			console.error('Error parsing message:', error)
+		}
+	})
+
+	ws.on('close', () => {
+		console.log('WebSocket client disconnected')
+		clients.delete(ws)
+	}) 
+})
 app.get('/api/data', async (req, res) => {
 	const { userId } = req?.query
 	try {
@@ -49,7 +84,7 @@ app.get('/api/data', async (req, res) => {
 	}
 }) 
  
-app.get('/data', async (req, res) => {n
+app.get('/data', async (req, res) => {
 	try {
 		// Fetch data from MongoDB collection
 		const data = await Transaction.find().sort({ _id: -1 })

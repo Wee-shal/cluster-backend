@@ -69,7 +69,7 @@ router.post('/makeConferenceCall', async (req, res) => {
 const processedTransactions = new Set()
 router.post('/status-callback', async (req, res) => {
 	console.log('/status-callback hit...')
-	console.log(processedTransactions)
+	console.log(processedTransactions) 
 	// eslint-disable-next-line no-unused-vars
 	const { uniqueId } = req?.query
 	const { helperphoneNumber } = req?.query
@@ -102,13 +102,13 @@ router.post('/status-callback', async (req, res) => {
 				if (result.modifiedCount === 1) {
 					const transaction = new Transaction({
 						timeStamp,
-						caller: caller?.userId,
-						helper: helper?.userId,
+						caller: helper?.userId,
+						helper: caller?.userId,
 						duration: parseInt(req?.body?.CallDuration, 10),
 						rate: helper?.rates,
 						amount: (req?.body?.CallDuration / 60) * helper?.rates,
 						isRecharge: true,
-						balance: caller?.balance,
+						balance: helper?.balance,
 					})
 					await transaction.save()
 				} else {

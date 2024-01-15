@@ -37,7 +37,7 @@ async function makeConferenceCall(phoneNumbers) {
 			const call = await client
 				.conferences('CFXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
 				.participants.create({
-					waitUrl: `https://handler.twilio.com/twiml/EHd899f0e924a5009473e4e51088816108`,
+					waitUrl: process.env.TWIML_BIN_URL,
 					waitMethod: 'POST',
 					to: number,
 					from: process.env.TWILIO_PHONE_NUMBER,
@@ -210,6 +210,7 @@ async function makePhoneCall(helperId, callerId) {
 			statusCallback: `${process.env.CALLBACK_URL}/calls/callback?userId=${callerId}`,
 			statusCallbackMethod: 'POST',
 		})
+		//helper.data.user.phoneNumber
 		console.log(`Called ${helper.phoneNumber} - call.sid ${call.sid} \n`)
 	} catch (e) {
 		console.log(e)

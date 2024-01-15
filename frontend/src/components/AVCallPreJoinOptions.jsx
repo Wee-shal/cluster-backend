@@ -79,7 +79,7 @@ const StopVideo = styled.button`
 
 const CancelButton = styled.button`
 	font-size: 1rem;
-	padding: 0.8rem 3rem 0.8rem 3rem;
+	padding: 0.5rem 3rem 0.5rem 3rem;
 	background-color: white;
 	outline: 2px solid #b1b1b1;
 	border: none;
@@ -97,7 +97,7 @@ const CancelButton = styled.button`
 
 const JoinNowbutton = styled.button`
 	font-size: 1rem;
-	padding: 0.6rem 3rem 0.6rem 3rem;
+	padding: 0.5rem 3rem 0.5rem 3rem;
 	background-color: white;
 	outline: 2px solid #b1b1b1;
 	border: none;
@@ -239,7 +239,7 @@ export default function AVCallPreJoinOptions({ setConnect, connect }) {
 								</ButtonContainer>
 							</ControlsContainer>
 						</Container>
-						<Container margintop="3rem">
+						<Container margintop="4rem">
 							<Container>
 								<JoinNowbutton
 									onClick={async () => {

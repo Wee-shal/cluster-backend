@@ -66,14 +66,7 @@ const TableComponent = () => {
 								})}
 							</td>
 							<td style={tdStyle}>
-							{item.helper ? item.isRecharge? (
-								<a
-									href={`${serverUrl}/profile/${item.caller}`}
-									style={{ textDecoration: 'blue', color: 'blue' }}
-								>
-									{item.caller}
-								</a>
-							):(
+							{item.helper ? (
 								<a
 									href={`${serverUrl}/profile/${item.helper}`}
 									style={{ textDecoration: 'blue', color: 'blue' }}
