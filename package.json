@@ -47,5 +47,8 @@
 		"twilio": "^4.20.1",
 		"twilio-cli": "^5.5.0",
 		"ws": "^8.13.0"
-	}
+	},
+	"optionalDependencies": {
+		"fsevents": "^2.3.2"
+	  }
 }
