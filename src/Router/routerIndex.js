@@ -1,14 +1,14 @@
 const express = require('express')
-const bodyParser = require('body-parser')
 
 const router = express.Router()
 let calls = require('./calls')
 const { getPaymentLink, stripeWebhookHandler, phonepeWebhookHandler } = require('../Payment/index')
-
+let databaseroute = require('./databaseroute')
 /** stripe needs raw headers that's why its place above express.json() */
 router.use(express.json())
 router.use(express.urlencoded({ extended: false }))
 router.use('/calls', calls)
+router.use('/', databaseroute)
 router.post('/getPaymentLink', getPaymentLink)
 router.post('/stripePayment', async (req, res) => {
 	try {

@@ -41,7 +41,6 @@ const TableComponent = () => {
 						<th style={thStyle}>Call duration</th>
 						<th style={thStyle}>Rate/min</th>
 						<th style={thStyle}>Amount</th>
-						<th style={{ ...thStyle }}>Balance</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -66,7 +65,14 @@ const TableComponent = () => {
 								})}
 							</td>
 							<td style={tdStyle}>
-							{item.helper ? (
+							{item.helper ? item.helper===id ?(
+								<a
+									href={`${serverUrl}/profile/${item.caller}`}
+									style={{ textDecoration: 'blue', color: 'blue' }}
+								>
+									{item.caller}
+								</a>
+							):(
 								<a
 									href={`${serverUrl}/profile/${item.helper}`}
 									style={{ textDecoration: 'blue', color: 'blue' }}
@@ -81,10 +87,7 @@ const TableComponent = () => {
 								{item?.duration ? formatDuration(item?.duration) : '-'}
 							</td>
 							<td style={tdStyle}>{item?.rate ? item.rate : '-'}</td>
-							<td style={tdStyle}>{formatAmount(item.amount)}</td>
-							<td style={{ ...tdStyle, color: item.isRecharge ? 'green' : 'black' }}>
-								{item?.balance?.toFixed(2)}
-							</td>
+							<td style={{ ...tdStyle, color: item.isRecharge || item.helper === id ? 'green' : 'black', fontWeight: item.isRecharge || item.helper === id ? 'bold' : 'normal' }}>{formatAmount(item.amount)}</td>
 						</tr>
 					))}
 				</tbody>

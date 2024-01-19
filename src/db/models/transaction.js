@@ -10,7 +10,6 @@ const transactionSchema = new mongoose.Schema({
 	rate: Number,
 	amount: Number,
 	isRecharge: Boolean,
-	balance: Number,
 })
 
 module.exports = mongoose.model('Transaction', transactionSchema)

@@ -205,8 +205,8 @@ async function makePhoneCall(helperId, callerId) {
 							<Room>room1</Room>
 						</Connect>
 						</Response>`,
-			to: helper.data.user.phoneNumber,
-			from: process.env.TWILIO_PHONE_NUMBER,
+			to: +15005550008,
+			from: +15005550006,
 			statusCallback: `${process.env.CALLBACK_URL}/calls/callback?userId=${callerId}`,
 			statusCallbackMethod: 'POST',
 		})

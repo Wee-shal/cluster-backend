@@ -37,7 +37,7 @@ router.post('/makeConferenceCall', async (req, res) => {
 		const user = await User.findOne({ userId })
 		const helper = await User.findOne({
 			userId: expertId,
-		})
+		}) 
 		const helperPhoneNumber = helper.phoneNumber
 			? helper.phoneNumber
 			: process.env.HELPER_PHONE_NUMBER
@@ -56,9 +56,9 @@ router.post('/makeConferenceCall', async (req, res) => {
 
 		/** calculate call end time */
 		if (userBalance >= helper?.rates) {
-			await makeConferenceCall([helperPhoneNumber, userPhoneNumber])
+			await makeConferenceCall(["+18004444444", userPhoneNumber])
 		}
-		/** end call based on balance */
+		/** end call based on balance */ 
 		res.sendStatus(200)
 	} catch (e) {
 		console.log(e)
@@ -91,7 +91,7 @@ router.post('/status-callback', async (req, res) => {
 				console.log('inside first if')
 				caller.balance -= (req?.body?.CallDuration / 60) * helper?.rates
 				await caller.save()
-				const result = await User.updateOne(
+				await User.updateOne(
 					{ userId: helper.userId },
 					{
 						$inc: {
@@ -99,21 +99,6 @@ router.post('/status-callback', async (req, res) => {
 						},
 					}
 				)
-				if (result.modifiedCount === 1) {
-					const transaction = new Transaction({
-						timeStamp,
-						caller: helper?.userId,
-						helper: caller?.userId,
-						duration: parseInt(req?.body?.CallDuration, 10),
-						rate: helper?.rates,
-						amount: (req?.body?.CallDuration / 60) * helper?.rates,
-						isRecharge: true,
-						balance: helper?.balance,
-					})
-					await transaction.save()
-				} else {
-					console.log('Failed to update the balance for userId: ', helper.userId)
-				}
 			}
 			console.log('amount', (req?.body?.CallDuration / 60) * helper?.rates)
 
@@ -125,7 +110,6 @@ router.post('/status-callback', async (req, res) => {
 				rate: helper?.rates,
 				amount: (req?.body?.CallDuration / 60) * helper?.rates,
 				isRecharge: false,
-				balance: caller?.balance,
 			})
 			await transaction.save()
 		} else {
@@ -173,7 +157,6 @@ router.post('/callback', async (req, res) => {
 					rate: helper?.rates,
 					amount: (req?.body?.CallDuration / 60) * helper?.rates,
 					isRecharge: true,
-					balance: caller?.balance,
 				})
 				await transaction.save()
 			} else {
@@ -190,7 +173,6 @@ router.post('/callback', async (req, res) => {
 			rate: helper?.rates,
 			amount: (req?.body?.CallDuration / 60) * helper?.rates,
 			isRecharge: false,
-			balance: caller?.balance,
 		})
 		await transaction.save()
 	}

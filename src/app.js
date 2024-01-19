@@ -4,6 +4,7 @@ const path = require('path')
 const express = require('express')
 const twilio = require('twilio')
 const { AccessToken } = require('twilio').jwt
+
 const { VideoGrant } = AccessToken
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILLIO_AUTH_TOKEN)
 const cors = require('cors')
@@ -70,20 +71,22 @@ wss.on('connection', ws => {
 	ws.on('close', () => {
 		console.log('WebSocket client disconnected')
 		clients.delete(ws)
-	}) 
+	})
 })
 app.get('/api/data', async (req, res) => {
 	const { userId } = req?.query
 	try {
 		// Fetch data from MongoDB collection
-		const data = await Transaction.find({ caller: userId }).sort({ _id: -1 })
+		const data = await Transaction.find({
+			$or: [{ caller: userId }, { helper: userId }],
+		}).sort({ _id: -1 })
 		res.json(data)
 	} catch (error) {
 		console.error('Error fetching data from MongoDB:', error)
 		res.status(500).json({ error: 'Internal Server Error' })
 	}
-}) 
- 
+})
+
 app.get('/data', async (req, res) => {
 	try {
 		// Fetch data from MongoDB collection

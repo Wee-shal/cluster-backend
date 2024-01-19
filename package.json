@@ -45,6 +45,7 @@
 		"react-router-dom": "^6.21.0",
 		"stripe": "^12.17.0",
 		"twilio": "^4.20.1",
+		"twilio-cli": "^5.5.0",
 		"ws": "^8.13.0"
 	}
 }
