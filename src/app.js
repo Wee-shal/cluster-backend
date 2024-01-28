@@ -15,7 +15,7 @@ const routers = require('./Router/routerIndex')
 const User = require('./db/models/users')
 const Transaction = require('./db/models/transaction')
 
-const { generateOTP, getUniqueId } = require('./logic')
+const { generateOTP, getUniqueId, endAudioVideoCall } = require('./logic')
 const { getPaymentLink, stripeWebhookHandler } = require('./Payment/index')
 
 const app = express()
@@ -31,8 +31,8 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'dist')))
 
-server.listen(process.env.PORT || 3000, () => {
-	console.log(`Server running at ${process.env.PORT || 3000}`)
+server.listen(process.env.PORT || 3001, () => {
+	console.log(`Server running at ${process.env.PORT || 3001}`)
 })
 
 app.get('/status', (req, res) => {
@@ -41,7 +41,6 @@ app.get('/status', (req, res) => {
 const clients = new Set()
 wss.on('connection', ws => {
 	console.log(`WebSocket client connected`)
-
 	// Store the client in the clients set
 	clients.add(ws)
 
@@ -240,6 +239,18 @@ app.post('/verify-otp', async (req, res) => {
 	}
 })
 
+app.post('/endAudioVideo', async (req, res) => {
+	console.log('end audio video call hit')
+	const { roomName } = req?.query
+	const roomDetail = await client.video.v1
+		.rooms(roomName)
+		.fetch()
+		.then(room => console.log(room.uniqueName))
+	const roomSid = roomDetail?.sid
+	const response = await endAudioVideoCall(roomSid)
+	console.log(response.ok)
+})
+
 app.get('/getPaymentLink', async (req, res) => {
 	try {
 		const { amount, userId } = req?.query
@@ -259,7 +270,7 @@ app.get('/success.html', async (req, res) => {
 
 app.get('/getUser', async (req, res) => {
 	const { userId } = req?.query
-	console.log('userid', userId)
+	console.log('userid', userId) 
 	console.log('route hit getuser')
 	try {
 		const user = await User.findOne({ userId })

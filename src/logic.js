@@ -134,19 +134,19 @@ async function getHelper() {
 	}
 }
 
-async function createVideoRoom(roomName) {
+async function createVideoRoom(roomName, helperId, callerId) {
 	try {
 		const roomList = await client.video.v1.rooms.list({
 			uniqueName: roomName,
 			status: 'in-progress',
 		})
-
 		let room
 		if (!roomList.length) {
-			// Call the Twilio video API to create the new Go room
 			room = await client.video.v1.rooms.create({
 				uniqueName: roomName,
 				type: process.env.TWILIO_ROOM_TYPE,
+				statusCallback: `${process.env.BASE_URL}/calls/videoCallback?userId=${callerId}&helperId=${helperId}`,
+				statusCallbackMethod: 'POST',
 			})
 		} else {
 			// eslint-disable-next-line prefer-destructuring
@@ -160,10 +160,7 @@ async function createVideoRoom(roomName) {
 
 async function endAudioVideoCall(roomSid) {
 	try {
-		client.video.v1
-			.rooms(roomSid)
-			.update({ status: 'completed' })
-			.then(room => console.log(room.uniqueName))
+		client.video.v1.rooms(roomSid).update({ status: 'completed' })
 	} catch (e) {
 		console.log(e)
 	}
@@ -202,11 +199,11 @@ async function makePhoneCall(helperId, callerId) {
 		const call = await client.calls.create({
 			twiml: `<Response>
 						<Connect>
-							<Room>room1</Room>
+							<Room>room4</Room>
 						</Connect>
 						</Response>`,
-			to: +15005550008,
-			from: +15005550006,
+			to: helper.data.user.phoneNumber,
+			from: process.env.TWILIO_PHONE_NUMBER,
 			statusCallback: `${process.env.CALLBACK_URL}/calls/callback?userId=${callerId}`,
 			statusCallbackMethod: 'POST',
 		})

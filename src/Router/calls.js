@@ -4,24 +4,33 @@ const { VoiceResponse } = require('twilio').twiml
 const router = express.Router()
 const User = require('../db/models/users')
 const Transaction = require('../db/models/transaction')
-const { makePhoneCall, makeConferenceCall, createVideoRoom } = require('../logic')
+const {
+	makePhoneCall,
+	makeConferenceCall,
+	createRoomName,
+	createVideoRoom,
+	endAudioVideoCall,
+} = require('../logic')
 
 // POST /calls/connect
 router.post('/connect', async (req, res) => {
 	console.log('/calls/connect hit...')
 	try {
 		const { callerId } = req?.query
-		const { userId } = req?.query
+		const { helperId } = req?.query
 		// create phone call and join room
-		await makePhoneCall(userId, callerId)
+		console.log('calls', helperId, callerId)
+		await makePhoneCall(helperId, callerId)
 		// let user join from browser as audio user in room
 		/** create room */
-		await createVideoRoom('room1')
+		const roomName = 'room4'
+		await createVideoRoom(roomName, helperId, callerId)
 		res.send(`<Response>
 		<Connect>
-			<Room>room1</Room>
+			<Room>room4</Room>
 		</Connect>
 		</Response>`)
+		return roomName
 	} catch (e) {
 		console.log(e)
 	}
@@ -37,7 +46,7 @@ router.post('/makeConferenceCall', async (req, res) => {
 		const user = await User.findOne({ userId })
 		const helper = await User.findOne({
 			userId: expertId,
-		}) 
+		})
 		const helperPhoneNumber = helper.phoneNumber
 			? helper.phoneNumber
 			: process.env.HELPER_PHONE_NUMBER
@@ -47,7 +56,7 @@ router.post('/makeConferenceCall', async (req, res) => {
 		if (user?.currency !== helper?.currency) {
 			if (user?.currency === '$') {
 				userBalance = user?.balance
-			} else if (user?.currency === '₹') { 
+			} else if (user?.currency === '₹') {
 				userBalance = user?.balance * 0.012 // to convert rupee into dollar
 			}
 		} else {
@@ -56,9 +65,9 @@ router.post('/makeConferenceCall', async (req, res) => {
 
 		/** calculate call end time */
 		if (userBalance >= helper?.rates) {
-			await makeConferenceCall(["+18004444444", userPhoneNumber])
+			await makeConferenceCall([helperPhoneNumber, userPhoneNumber])
 		}
-		/** end call based on balance */ 
+		/** end call based on balance */
 		res.sendStatus(200)
 	} catch (e) {
 		console.log(e)
@@ -69,7 +78,7 @@ router.post('/makeConferenceCall', async (req, res) => {
 const processedTransactions = new Set()
 router.post('/status-callback', async (req, res) => {
 	console.log('/status-callback hit...')
-	console.log(processedTransactions) 
+	console.log(processedTransactions)
 	// eslint-disable-next-line no-unused-vars
 	const { uniqueId } = req?.query
 	const { helperphoneNumber } = req?.query
@@ -120,31 +129,57 @@ router.post('/status-callback', async (req, res) => {
 	res.sendStatus(200)
 })
 
-router.post('/callback', async (req, res) => {
+router.post('/videoCallback', async (req, res) => {
 	console.log('/callback hit...')
 	const { userId } = req?.query
+	const { helperId } = req?.query
+	console.log(userId, helperId)
+
 	// eslint-disable-next-line no-unused-vars
 	const helperphoneNumber = req?.body.Called
 	const timeStamp = new Date(req?.body?.Timestamp)
 	const callStatus = req?.body?.CallStatus
+	const roomStatus = req?.body?.RoomStatus
 	console.log('call Sid: ', req.body)
 	const caller = await User.findOne({
 		userId,
 	})
-	const helper = await User.findOne({
-		phoneNumber: helperphoneNumber,
-	})
-	if (callStatus === 'completed' || callStatus === 'failed') {
+	let helper
+	if (!helperId) {
+		helper = await User.findOne({
+			phoneNumber: helperphoneNumber,
+		})
+	} else {
+		helper = await User.findOne({
+			userId: helperId,
+		})
+	}
+	const amount =
+		(req?.body?.CallDuration / 60) * helper?.rates
+			? (req?.body?.CallDuration / 60) * helper?.rates
+			: (req?.body?.RoomDuration / 60) * helper?.rates
+	const duration = parseInt(
+		req?.body?.CallDuration ? req?.body?.CallDuration : req?.body?.RoomDuration,
+		10
+	)
+	if (
+		req?.body?.ParticipantStatus === 'disconnected' &&
+		req?.body?.ParticipantIdentity !== userId
+	) {
+		await endAudioVideoCall(req?.body?.RoomSid)
+	}
+	if (callStatus === 'completed' || callStatus === 'failed' || roomStatus === 'completed') {
 		console.log('\n inside completed or faileds')
-		if ((req?.body?.CallDuration / 60) * helper?.rates <= caller?.balance) {
+
+		if (amount <= caller?.balance) {
 			console.log('inside first if')
-			caller.balance -= (req?.body?.CallDuration / 60) * helper?.rates
+			caller.balance -= amount
 			await caller.save()
 			const result = await User.updateOne(
 				{ userId: helper.userId },
 				{
 					$inc: {
-						balance: (req?.body?.CallDuration / 60) * helper?.rates,
+						balance: amount,
 					},
 				}
 			)
@@ -153,9 +188,9 @@ router.post('/callback', async (req, res) => {
 					timeStamp,
 					caller: caller?.userId,
 					helper: helper?.userId,
-					duration: parseInt(req?.body?.CallDuration, 10),
+					duration,
 					rate: helper?.rates,
-					amount: (req?.body?.CallDuration / 60) * helper?.rates,
+					amount,
 					isRecharge: true,
 				})
 				await transaction.save()
@@ -163,19 +198,9 @@ router.post('/callback', async (req, res) => {
 				console.log('Failed to update the balance for userId: ', helper.userId)
 			}
 		}
-		console.log('amount', (req?.body?.CallDuration / 60) * helper?.rates)
-
-		const transaction = new Transaction({
-			timeStamp,
-			caller: caller?.userId,
-			helper: helper?.userId,
-			duration: parseInt(req?.body?.CallDuration, 10),
-			rate: helper?.rates,
-			amount: (req?.body?.CallDuration / 60) * helper?.rates,
-			isRecharge: false,
-		})
-		await transaction.save()
+		console.log('amount', amount)
 	}
+
 	res.sendStatus(200)
 })
 

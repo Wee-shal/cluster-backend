@@ -1,503 +1,18 @@
-// import React, { useState, useEffect, useContext } from 'react';
-// import Video from 'twilio-video';
-// import styled from 'styled-components';
-// import { useNavigate } from 'react-router-dom';
-// import { getToken } from '../services/tokenService';
-// import { AudioToggle } from './buttons/AudioToggle';
-// import { VideoToggle } from './buttons/VideoToggle';
-// import { EndCall } from './buttons/EndCall';
-// import { userContext } from '../state/userState';
-// import { ShareScreenToggle } from './buttons/ShareScreenToggle';
-// import shareScreen from '../assets/icons/shareScreen.svg';
-// import ChatScreen from '../components/ChatScreen';
-// import { ChatToggle } from './buttons/ChatToggle';
-// import NotificationMessage from '../components/NotificationMsg';
-// import { getUser } from '../services/helpers';
+import React, { useEffect, useRef } from 'react'
+import useState from 'react-usestateref' // see this line
 
-// const Container = styled.div`
-//     height: 100vh;
-//     background-color: #000000;
-//     position: relative;
-// `;
-
-// const ParticipantsWrapper = styled.div`
-//     width: 20%;
-//     height: 20%;
-// `;
-
-// const Participants = styled.div`
-//     position: absolute;
-//     right: 10px;
-//     bottom: 0;
-//     height: 200px;
-//     top: auto;
-// `;
-
-// const UsernameContainer = styled.div`
-//     text-align: center;
-//     position: absolute;
-//     bottom: 0;
-//     background-color: black;
-//     color: white;
-//     border-top-right-radius: 0px;
-//     margin: 0 auto;
-// `;
-
-// const InCallControlsContainer = styled.div`
-//     position: absolute;
-//     bottom: 1rem;
-//     left: 0;
-//     right: 0;
-//     display: flex;
-//     gap: 1rem;
-//     justify-content: center;
-//     z-index: 1;
-
-//     @media (max-width: 768px) {
-//     }
-// `;
-
-// const ShareScreenToggleButton = styled.button`
-//     background-color: gray;
-//     padding: 0.5rem 1rem 0.5rem 1rem;
-//     border-radius: 22%;
-//     border: none;
-//     cursor: pointer;
-//     width: ${prop => prop.width || 'auto'};
-//     &:hover {
-//         background-color: #7270709f;
-//     }
-// `;
-
-// const Main = styled.div`
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     border-radius: 0.2rem;
-//     height: 100%;
-//     width: 75%;
-//     flex: 3;
-//     background-color: #2b2b2b;
-// `;
-
-// const SideContainer = styled.div`
-//     display: flex;
-//     flex: 1;
-//     flex-direction: column;
-//     background-color: blanchedalmond;
-// `;
-
-// const LocalParticipant = styled.div`
-//     flex: 1;
-//     background-color: #1f1f1f;
-//     z-index: 1;
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-// `;
-
-// const RemoteParticipant = styled.div`
-//     flex: 1;
-//     background-color: #e9a105;
-//     z-index: 2;
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-// `;
-
-// const ScreensWrapper = styled.div`
-//     position: absolute;
-//     top: 1.5rem;
-//     bottom: 0;
-//     left: 0;
-//     right: 0;
-//     display: flex;
-//     background-color: green;
-//     height: 80%;
-//     width: 90%;
-//     margin: 0 auto;
-
-//     @media (max-width: 768px) {
-//         top: 0;
-//     }
-// `;
-
-// const AudioParticipant = styled.div`
-//     display: hidden;
-// `;
-
-// export default function AVCallScreen({ userId }) {
-//     const [connected, setConnected] = useState(false);
-//     const [room, setRoom] = useState(null);
-//     const [localIdentity, setLocalIdentity] = useState('');
-//     const [remoteIdentity, setRemoteIdentity] = useState('');
-//     const [currentParticipant, setCurrentParticipant] = useState();
-// 	const [isCallPickedUp, setIsCallPickedUp] = useState(false);
-//     const {
-//         user,
-//         setUser,
-//         isUserMute,
-//         setIsUserMute,
-//         isUserVideoOff,
-//         setIsUserVideoOff,
-//         isScreenSharingEnabled,
-//         setIsScreenSharingEnabled,
-//     } = useContext(userContext);
-//     const [screenTrackData, setScreenTrackData] = useState(null);
-//     const [remoteTracks, setRemoteTracks] = useState(null);
-//     const [displayNotification, setDisplayNotification] = useState(false);
-//     const [notificationMsg, setNotificationMsg] = useState('');
-//     const [isRemoteShareScreenEnabled, setIsRemoteShareScreenEnabled] = useState(false);
-
-//     const navigate = useNavigate();
-
-//     useEffect(() => {
-//         (async () => {
-//             await connectOrDisconnect(userId || window?.location?.pathname?.split('/')[2]);
-//             await addLocalVideo();
-//             console.log('passed userId is : ', userId);
-//         })();
-//     }, []);
-
-//     const addLocalVideo = async () => {
-//         console.log('addLocalVideo');
-//         const localParticipant = document.getElementById('localParticipant');
-//         try {
-//             removeTrackFromDiv(localParticipant);
-//         } catch (e) {
-//             console.log(e);
-//         }
-//         const videoTrack = await Video.createLocalVideoTrack();
-//         const trackElement = videoTrack.attach();
-//         trackElement.style.transform = 'scale(-1, 1)';
-//         localParticipant.appendChild(trackElement);
-//     };
-
-//     const connectOrDisconnect = async identity => {
-//         if (!connected) {
-//             try {
-//                 await connect(identity);
-//             } catch (error) {
-//                 console.log('connectOrDisconnect', error);
-//                 alert('Failed to connect to video room.', error);
-//             }
-//         } else {
-//             disconnect();
-//         }
-//     };
-
-//     const connect = async identity => {
-//         const roomName = 'room1';
-//         const devName = identity;
-//         let token;
-//         try {
-//             token = (await getToken(roomName, devName))?.token;
-//         } catch (e) {
-//             console.log(e);
-//         }
-//         console.log('Token from server: ', token);
-//         const twilioRoom = await Video.connect(token);
-//         setLocalIdentity(identity);
-//         setRoom(twilioRoom);
-
-//         twilioRoom.participants.forEach(participantConnected);
-//         twilioRoom.on('participantConnected', participantConnected);
-//         twilioRoom.on('participantDisconnected', participantDisconnected);
-//         twilioRoom.on('disconnected', userDisconnect);
-//         setConnected(true);
-//     };
-
-//     const userDisconnect = async () => {
-//         console.log('user is disconnected');
-//         const currentUserId = userId || window?.location?.pathname?.split('/')[2];
-//         const user = await getUser(userId || window?.location?.pathname?.split('/')[2]);
-//         setUser(user);
-//         if (currentUserId === 'userId') {
-//             if (user.balance > 0) {
-//                 setNotificationMsg('User left call');
-//             } else {
-//                 setNotificationMsg('❗Out of balance, Call disconnected');
-//             }
-//         } else {
-//             setNotificationMsg('User left the call');
-//         }
-//         setDisplayNotification(true);
-
-//         if (!displayNotification) {
-//             setTimeout(() => {
-//                 setDisplayNotification(false);
-//             }, 3000);
-//         }
-
-//         setTimeout(() => {
-//             navigate('/');
-//         }, 7000);
-//     };
-
-//     const disconnect = () => {
-//         try {
-//             console.log('in disconnect fn');
-//             room.disconnect();
-//             setConnected(false);
-//             setRemoteIdentity('');
-//             setLocalIdentity('');
-//         } catch (e) {
-//             console.log(e);
-//         }
-//     };
-
-// 	const participantConnected = participant => {
-// 		// ... (your existing code)
-// 		console.log(`RemoteParticipant ${participant.identity} is connected`);
-
-// 		setCurrentParticipant(participant);
-// 		const remoteParticipantContainer = document.getElementById('remoteParticipant');
-// 		setRemoteIdentity(participant.identity);
-
-// 		// Update the state when the call is picked up
-// 		setIsCallPickedUp(true);
-
-// 		// ... (your existing code)
-// 	};
-
-//     const participantDisconnected = participant => {
-//         const remoteParticipant = document.getElementById('remoteParticipant');
-//         remoteParticipant.removeChild(document.getElementById(participant.sid));
-//         setRemoteIdentity('');
-//     };
-
-//     const removeTrackFromDiv = div => {
-//         console.log('removeTrackFromDiv hit');
-//         const trackElement = div.querySelector('video');
-
-//         if (trackElement) {
-//             div.removeChild(trackElement);
-//         }
-//     };
-
-//     const trackSubscribe = (div, track) => {
-//         console.log('trackSubscribe hit');
-//         if (isScreenSharingEnabled) {
-//             const shareScreenContainer = document.querySelector('#screen_share_container');
-//             if (shareScreenContainer) {
-//                 shareScreenContainer.innerHTML = '';
-//             }
-//         }
-//         console.log('trackSubcribe: ', JSON.stringify(track));
-//         const trackElement = track.attach();
-//         if (track.kind === 'video' && track.name !== 'screen') {
-//             trackElement.style.transform = 'scale(-1, 1)';
-//         }
-//         div.appendChild(trackElement);
-//     };
-
-//     const handleVideoToggle = () => {
-//         if (isUserVideoOff) {
-//             room.localParticipant.videoTracks.forEach(publication => {
-//                 if (publication.track.name !== 'screen') {
-//                     publication.track.disable();
-//                 }
-//             });
-//             const localParticipantElement = document.querySelector('#localParticipant');
-//             localParticipantElement.style.backgroundColor = 'black';
-//             localParticipantElement.style.position = 'relative';
-//             const blackLayer = document.createElement('div');
-//             blackLayer.style.position = 'absolute';
-//             blackLayer.style.top = '0';
-//             blackLayer.style.left = '0';
-//             blackLayer.style.width = '100%';
-//             blackLayer.style.height = '100%';
-//             blackLayer.style.backgroundColor = 'rgba(17, 17, 17, 0.997)';
-//             blackLayer.style.zIndex = '100';
-//             blackLayer.setAttribute('id', 'blackLayer');
-//             localParticipantElement.appendChild(blackLayer);
-//         } else {
-//             const blackLayer = document.querySelector('#blackLayer');
-//             if (blackLayer) {
-//                 const parentElement = blackLayer.parentElement;
-//                 parentElement.removeChild(blackLayer);
-//             }
-//             room.localParticipant.videoTracks.forEach(publication => {
-//                 if (publication.track.name !== 'screen') {
-//                     publication.track.enable();
-//                 }
-//             });
-//         }
-//     };
-
-//     const handleMuteToggle = () => {
-//         if (!isUserMute) {
-//             room.localParticipant.audioTracks.forEach(publication => {
-//                 publication.track.disable();
-//             });
-//         } else {
-//             room.localParticipant.audioTracks.forEach(publication => {
-//                 publication.track.enable();
-//             });
-//         }
-//     };
-
-//     useEffect(() => {
-//         if (connected) {
-//             handleVideoToggle();
-//         }
-//     }, [isUserVideoOff]);
-
-//     useEffect(() => {
-//         if (connected) {
-//             handleMuteToggle();
-//         }
-//     }, [isUserMute]);
-
-//     async function shareScreenToggle() {
-//         if (!isScreenSharingEnabled) {
-//             await startScreenSharing();
-//         } else {
-//             stopScreenSharing();
-//         }
-//     }
-
-//     let screenTrack;
-//     const startScreenSharing = async () => {
-//         setIsScreenSharingEnabled(true);
-
-//         try {
-//             const stream = await navigator.mediaDevices.getDisplayMedia();
-//             const videoTrack = stream.getVideoTracks()[0];
-
-//             screenTrack = new Video.LocalVideoTrack(videoTrack, {
-//                 name: 'screen',
-//             });
-
-//             console.log('startScreenSharing-screenTrack: ', screenTrack);
-//             setScreenTrackData(screenTrack);
-
-//             await room.localParticipant.publishTrack(screenTrack);
-
-//             const remoteParticipantContainer = document.getElementById('remoteParticipant');
-
-//             const mainContainer = document.getElementById('main');
-//             if (mainContainer) {
-//                 mainContainer.innerHTML = '';
-//             }
-
-//             screenTrack.once('stopped', async () => {
-//                 await room.localParticipant.unpublishTrack(screenTrack);
-//                 setIsScreenSharingEnabled(false);
-//             });
-
-//             const screenShareVideo = document.createElement('video');
-//             screenShareVideo.innerHTML = '';
-//             screenShareVideo.srcObject = stream;
-//             screenShareVideo.autoplay = true;
-//             mainContainer.appendChild(screenShareVideo);
-
-//             currentParticipant.tracks.forEach(publication => {
-//                 trackSubscribe(remoteParticipantContainer, publication.track);
-//             });
-//         } catch (error) {
-//             console.error('Error sharing the screen:', error);
-//             setIsScreenSharingEnabled(false);
-//         }
-//     };
-
-//     const stopScreenSharing = () => {
-//         if (isScreenSharingEnabled === true) {
-//             if (room) {
-//                 screenTrackData.stop();
-//                 room.localParticipant.unpublishTrack(screenTrackData);
-//                 screenTrack = null;
-//                 document.querySelector('#main').innerHTML = '';
-//             }
-//             setIsScreenSharingEnabled(false);
-
-//             const mainContainer = document.querySelector('#main');
-//             const remoteParticipantContainer = document.getElementById('remoteParticipant');
-//             removeTrackFromDiv(remoteParticipantContainer);
-//             removeTrackFromDiv(mainContainer);
-//             currentParticipant.tracks.forEach(publication => {
-//                 trackSubscribe(mainContainer, publication.track);
-//             });
-//         }
-//     };
-
-//     return (
-//         <div>
-//             {displayNotification && <NotificationMessage message={notificationMsg} />}
-//             <Container>
-//                 <ScreensWrapper>
-//                     <Main id="main"></Main>
-//                     <SideContainer>
-//                         <RemoteParticipant id="remoteParticipant"> {isCallPickedUp && <h1>Picked Up</h1>}</RemoteParticipant>
-//                         <LocalParticipant id="localParticipant"></LocalParticipant>
-//                         <AudioParticipant></AudioParticipant>
-//                         <ChatScreen userId={userId || window?.location?.pathname?.split('/')[2]} />
-//                     </SideContainer>
-//                 </ScreensWrapper>
-//                 <InCallControlsContainer>
-//                     <AudioToggle />
-//                     <VideoToggle />
-//                     <ShareScreenToggleButton onClick={shareScreenToggle}>
-//                         <img src={shareScreen} width={'70%'} alt="Share Screen" />
-//                     </ShareScreenToggleButton>
-//                     <ChatToggle />
-//                     <EndCall
-//                         onClick={() => {
-//                             if (connected) {
-//                                 disconnect();
-//                             }
-//                             navigate('/');
-//                         }}
-//                     />
-//                 </InCallControlsContainer>
-//             </Container>
-//         </div>
-//     );
-// }
-import React, { useState, useEffect, useContext } from 'react'
 import Video from 'twilio-video'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
-import { getToken } from '../services/tokenService'
+import { endAudioVideoCall, getToken } from '../services/tokenService'
 import { AudioToggle } from './buttons/AudioToggle'
 import { VideoToggle } from './buttons/VideoToggle'
 import { EndCall } from './buttons/EndCall'
 import { userContext } from '../state/userState'
-import { ShareScreenToggle } from './buttons/ShareScreenToggle'
 import shareScreen from '../assets/icons/shareScreen.svg'
-import ChatScreen from '../components/ChatScreen'
+import ChatScreen from './ChatScreen'
 import { ChatToggle } from './buttons/ChatToggle'
-import NotificationMessage from '../components/NotificationMsg'
 import { getUser } from '../services/helpers'
-
-const Container = styled.div`
-	height: 100vh;
-	background-color: black;
-	position: relative;
-`
-
-const ParticipantsWrapper = styled.div`
-	width: 20%;
-	height: 20%;
-`
-
-const Participants = styled.div`
-	position: absolute;
-	right: 10px;
-	bottom: 0;
-	height: 200px;
-	top: auto;
-`
-
-const UsernameContainer = styled.div`
-	text-align: center;
-	position: absolute;
-	bottom: 0;
-	background-color: black;
-	color: white;
-	border-top-right-radius: 0px;
-	margin: 0 auto;
-`
 
 const InCallControlsContainer = styled.div`
 	position: absolute;
@@ -510,430 +25,265 @@ const InCallControlsContainer = styled.div`
 	z-index: 1;
 
 	@media (max-width: 768px) {
+		bottom: 0.2rem;
+		gap: 0.5rem;
+		left: 0.5rem;
+		right: 0.5rem;
+		justify-content: center;
 	}
 `
-
 const ShareScreenToggleButton = styled.button`
 	background-color: gray;
 	padding: 0.5rem 1rem 0.5rem 1rem;
 	border-radius: 22%;
-	border: none;
+	border: black;
 	cursor: pointer;
 	width: ${prop => prop.width || 'auto'};
-	&:hover {
-		background-color: #7270709f;
-	}
-`
-
-const Main = styled.div`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	border-radius: 0.2rem;
-	height: 75%;
-	width: 75%;
-	flex: 3;
-	background-color: grey;
-	overflow: hidden;
-`
-
-const SideContainer = styled.div`
-	display: flex;
-	flex: 1;
-	flex-direction: column;
-	background-color: white;
-	overflow: hidden;
-	width: 50%;
-`
-
-const LocalParticipant = styled.div`
-	flex: 1;
-	background-color: #1f1f1f;
-	z-index: 1;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	overflow: hidden;
-	width: 100%;
-	height: 100%;
-	video {
-		width: 150%;
-		height: 100%;
-	}
-`
-
-const RemoteParticipant = styled.div`
-	flex: 1;
-	background-color: orange;
-	z-index: 2;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	overflow: hidden;
-	width: 100%; /* Set your desired width */
-	height: 100%; /* Set your desired height */
-	video {
-		width: 150%;
-		height: 100%;
-	}
-`
-
-const ScreensWrapper = styled.div`
-	position: absolute;
-	top: 1.5rem;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	display: flex;
-	background-color: grey;
-	height: 80%;
-	width: 90%;
-	margin: 0 auto;
-
-	@media (max-width: 768px) {
-		top: 0;
-	}
-`
-
-const AudioParticipant = styled.div`
-	display: hidden;
 `
 
 export default function AVCallScreen({ userId }) {
-	const [connected, setConnected] = useState(false)
-	const [room, setRoom] = useState(null)
-	const [localIdentity, setLocalIdentity] = useState('')
-	const [remoteIdentity, setRemoteIdentity] = useState('')
-	const [currentParticipant, setCurrentParticipant] = useState()
-	const [isCallPickedUp, setIsCallPickedUp] = useState(false)
-	const {
-		user,
-		setUser,
-		isUserMute,
-		setIsUserMute,
-		isUserVideoOff,
-		setIsUserVideoOff,
-		isScreenSharingEnabled,
-		setIsScreenSharingEnabled,
-	} = useContext(userContext)
-	const [screenTrackData, setScreenTrackData] = useState(null)
-	const [displayNotification, setDisplayNotification] = useState(false)
-	const [notificationMsg, setNotificationMsg] = useState('')
-	const [isRemoteShareScreenEnabled, setIsRemoteShareScreenEnabled] = useState(false)
 
-	const navigate = useNavigate()
+    const [remoteParticipant, setRemoteParticipant] = useState(null)
+    const [isScreenSharingEnabled, setIsScreenSharingEnabled, isScreenSharingEnabledRef] = useState(false)
+	const [isRemoteScreenSharingEnabled, setIsRemoteScreenSharingEnabled, isRemoteScreenSharingEnabledRef] = useState(false)
+    const [room, setRoom, roomRef] = useState(null)
+    const [isRoomConnected, setIsRoomConnected] = useState(false)
+    const [localScreenTrack, setLocalScreenTrack, localScreenTrackRef] = useState(null)
+    const [localVideoTrack, setLocalVideoTrack, localvideoTrackRef] = useState(null)
 
-	useEffect(() => {
-		;(async () => {
-			await connectOrDisconnect(userId || window?.location?.pathname?.split('/')[2])
-			await addLocalVideo()
-			console.log('passed userId is : ', userId)
-		})()
-	}, [])
+    const handleDisconnected= room => console.log('disconnected ', room)
 
-	const addLocalVideo = async () => {
-		console.log('addLocalVideo')
-		const localParticipant = document.getElementById('localParticipant')
-		try {
-			removeTrackFromDiv(localParticipant)
-		} catch (e) {
-			console.log(e)
-		}
-		const videoTrack = await Video.createLocalVideoTrack()
-		const trackElement = videoTrack.attach()
-		trackElement.style.transform = 'scale(-1, 1)'
-		localParticipant.appendChild(trackElement)
-	}
+	const connect = async () => {
+        
+        if(roomRef.current) {
+            console.log("Already connected")
+            return
+        }
 
-	const connectOrDisconnect = async identity => {
-		if (!connected) {
-			try {
-				await connect(identity)
-			} catch (error) {
-				console.log('connectOrDisconnect', error)
-				alert('Failed to connect to video room.', error)
-			}
-		} else {
-			disconnect()
-		}
-	}
-
-	const connect = async identity => {
-		const roomName = 'room1'
-		const devName = identity
-		let token
-		try {
-			token = (await getToken(roomName, devName))?.token
-		} catch (e) {
-			console.log(e)
-		}
+        let twilioRoom
+ 
+		let token = (await getToken("room4", userId))?.token
 		console.log('Token from server: ', token)
-		const twilioRoom = await Video.connect(token)
-		setLocalIdentity(identity)
-		setRoom(twilioRoom)
+		twilioRoom = await Video.connect(token)
+        setRoom(twilioRoom)
 
-		twilioRoom.participants.forEach(participantConnected)
-		twilioRoom.on('participantConnected', participantConnected)
-		twilioRoom.on('participantDisconnected', participantDisconnected)
-		twilioRoom.on('disconnected', userDisconnect)
-		setConnected(true)
+		twilioRoom.participants.forEach(handleParticipantConnected)
+		twilioRoom.on('participantConnected', handleParticipantConnected)
+		twilioRoom.on('participantDisconnected', handleParticipantDisconnected)
+		twilioRoom.on('disconnected', handleDisconnected)
+		twilioRoom.on('trackSubscribed', handleTrackSubscribed)
+        twilioRoom.on('trackUnsubscribed', handleTrackUnsubscribed)
+        twilioRoom.on('trackUnpublished', handleTrackUnpublished)
+        
+        setIsRoomConnected(true)
+        console.log("connection successful")
 	}
 
-	const userDisconnect = async () => {
-		console.log('user is disconnected')
-		const currentUserId = userId || window?.location?.pathname?.split('/')[2]
-		const user = await getUser(userId || window?.location?.pathname?.split('/')[2])
-		setUser(user)
-		if (currentUserId === 'userId') {
-			if (user.balance > 0) {
-				setNotificationMsg('User left call')
-			} else {
-				setNotificationMsg('❗Out of balance, Call disconnected')
-			}
-		} else {
-			setNotificationMsg('User left the call')
-		}
-		setDisplayNotification(true)
-
-		if (!displayNotification) {
-			setTimeout(() => {
-				setDisplayNotification(false)
-			}, 3000)
-		}
-
-		setTimeout(() => {
-			navigate('/')
-		}, 7000)
-	}
-
-	const disconnect = () => {
+	const disconnect = async () => {
 		try {
-			console.log('in disconnect fn')
-			room.disconnect()
-			setConnected(false)
-			setRemoteIdentity('')
-			setLocalIdentity('')
+            if (roomRef.current && isRoomConnected) {
+                console.log('in disconnect fn: ', roomRef.current, isRoomConnected)
+                await roomRef.current.disconnect()
+                setIsRoomConnected(false)
+            } else {
+                console.log("Already disconnected")
+            }
 		} catch (e) {
 			console.log(e)
 		}
 	}
 
-	const participantConnected = participant => {
-		console.log(`RemoteParticipant ${participant.identity} is connected`)
-		setCurrentParticipant(participant)
-		setRemoteIdentity(participant.identity)
-		setIsCallPickedUp(true)
+    setInterval(async () => { await disconnect(); useNavigate('/') }, 179000);
+
+    const removeTrackFromDiv = (divID, track) => {
+        const div = document.getElementById(divID)
+        const childId = divID + '-child' + (track.kind || track.name)
+        document.getElementById(childId)?.remove()
+    }
+
+    const attachLocalVideoTrack = async () => {
+        const videoTrack = await Video.createLocalVideoTrack()
+        // attachTrackToDiv('localVideo', videoTrack)
+        videoTrack.attach('#localVideo-video')
+	}
+
+    const getLocalScreenShareTrack = async () => {
+        try {
+			const stream = await navigator.mediaDevices.getDisplayMedia()
+			const videoTrack = stream.getVideoTracks()[0]
+            let screenTrack = new Video.LocalVideoTrack(videoTrack, {
+				name: 'screen',
+			})
+            return screenTrack
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const handleParticipantConnected = participant => {
+		console.log(`RemoteParticipant connected: ${participant}`)
+        setRemoteParticipant(participant)
+
+		participant.on('trackUnpublished', handleTrackUnpublished)
 
 		// Subscribe to the tracks of the connected participant
-		console.log('tracks', participant.tracks)
 		participant.tracks.forEach(publication => {
 			if (publication.isSubscribed) {
-				trackSubscribe(document.getElementById('remoteParticipant'), publication.track)
+                if (publication.track.name === 'screen') {
+                    setIsRemoteScreenSharingEnabled(true)
+                    // attachTrackToDiv('remoteScreen', publication.track)
+                    publication.track.attach('#remoteScreen-video')
+                } else if (publication.track.kind === 'video' || publication.track.kind === 'audio') {
+                    // attachTrackToDiv('remoteVideo', publication.track)
+                    // attachTrackToDiv('remoteVideo2', publication.track)
+                    publication.track.attach('#remoteVideo-video')
+                    publication.track.attach('#remoteVideo2-video')
+				}
 			} else {
 				publication.on('subscribed', track => {
-					trackSubscribe(document.getElementById('remoteParticipant'), track)
+                    if (track.name === 'screen') {
+                        setIsRemoteScreenSharingEnabled(true)
+                        // attachTrackToDiv('remoteScreen', track)
+                        track.attach('#remoteScreen-video')
+                    } else if (track.kind === 'video' || track.kind === 'audio') {
+                        // attachTrackToDiv('remoteVideo', track)
+                        // attachTrackToDiv('remoteVideo2', publication.track)
+                        track.attach('#remoteVideo-video')
+                        track.attach('#remoteVideo2-video')
+                    }
 				})
 			}
 		})
-
-		// Update the state when the call is picked up
-		setIsCallPickedUp(true)
 	}
 
-	const participantDisconnected = participant => {
-		const remoteParticipant = document.getElementById('remoteParticipant')
-		remoteParticipant.removeChild(document.getElementById(participant.sid))
-		setRemoteIdentity('')
+    const handleParticipantDisconnected = participant => {
+		setRemoteParticipant(null)
 	}
 
-	const removeTrackFromDiv = div => {
-		console.log('removeTrackFromDiv hit')
-		const trackElement = div.querySelector('video')
-
-		if (trackElement) {
-			div.removeChild(trackElement)
+    const handleTrackSubscribed = track => {
+		if (track.name === 'screen') {
+			console.log('Remote participant started sharing screen.')
+            setIsRemoteScreenSharingEnabled(true)
+			// attachTrackToDiv('remoteScreen', track)
+            track.attach('#remoteScreen-video')
 		}
 	}
 
-	const trackSubscribe = (div, track) => {
-		console.log('trackSubscribe hit')
-		if (isScreenSharingEnabled) {
-			const shareScreenContainer = document.querySelector('#screen_share_container')
-			if (shareScreenContainer) {
-				shareScreenContainer.innerHTML = ''
-			}
-		}
+    const handleTrackUnsubscribed = track => {
+        console.log(track.kind, track.name, track.trackName)
+        if (track.name === 'screen') {
+            // removeTrackFromDiv('remoteScreen', track)
+            track.detach('#remoteScreen-video')
+        } else if (track.kind === 'video' || track.kind === 'audio') {
+            // removeTrackFromDiv('remoteVideo', track)
+            // removeTrackFromDiv('remoteVideo2', track)
+            track.detach('#remoteVideo-video')
+            track.detach('#remoteVideo2-video')
+        }
+    }
 
-		const trackElement = track.attach()
-		if (track.kind === 'video' && track.name !== 'screen') {
-			trackElement.style.transform = 'scale(-1, 1)'
-		}
-		div.appendChild(trackElement)
-	}
-
-	const handleVideoToggle = () => {
-		if (isUserVideoOff) {
-			room.localParticipant.videoTracks.forEach(publication => {
-				if (publication.track.name !== 'screen') {
-					publication.track.disable()
-				}
-			})
-			const localParticipantElement = document.querySelector('#localParticipant')
-			localParticipantElement.style.backgroundColor = 'black'
-			localParticipantElement.style.position = 'relative'
-			const blackLayer = document.createElement('div')
-			blackLayer.style.position = 'absolute'
-			blackLayer.style.top = '0'
-			blackLayer.style.left = '0'
-			blackLayer.style.width = '100%'
-			blackLayer.style.height = '100%'
-			blackLayer.style.backgroundColor = 'rgba(17, 17, 17, 0.997)'
-			blackLayer.style.zIndex = '100'
-			blackLayer.setAttribute('id', 'blackLayer')
-			localParticipantElement.appendChild(blackLayer)
-		} else {
-			const blackLayer = document.querySelector('#blackLayer')
-			if (blackLayer) {
-				const parentElement = blackLayer.parentElement
-				parentElement.removeChild(blackLayer)
-			}
-			room.localParticipant.videoTracks.forEach(publication => {
-				if (publication.track.name !== 'screen') {
-					publication.track.enable()
-				}
-			})
+    const handleTrackUnpublished = track => {
+        console.log("track unpublished: ", track.kind)
+		if (track.trackName === 'screen') {
+			console.log('Remote stopped sharing screen')
+            setIsRemoteScreenSharingEnabled(false)
+            // removeTrackFromDiv('remoteScreen', track)
+            track.detach('#remoteScreen-video')
 		}
 	}
 
-	const handleMuteToggle = () => {
-		if (!isUserMute) {
-			room.localParticipant.audioTracks.forEach(publication => {
-				publication.track.disable()
-			})
-		} else {
-			room.localParticipant.audioTracks.forEach(publication => {
-				publication.track.enable()
-			})
+    const startScreenSharing = async () => {
+        console.log(roomRef.current)
+		if (!roomRef.current || isScreenSharingEnabledRef.current) {
+            console.log("no room to share screen in")
+			return
 		}
-	}
-
-	useEffect(() => {
-		if (connected) {
-			handleVideoToggle()
-		}
-	}, [isUserVideoOff])
-
-	useEffect(() => {
-		if (connected) {
-			handleMuteToggle()
-		}
-	}, [isUserMute])
-
-	async function shareScreenToggle() {
-		if (!isScreenSharingEnabled) {
-			await startScreenSharing()
-		} else {
-			stopScreenSharing()
-		}
-	}
-
-	let screenTrack
-	const startScreenSharing = async () => {
-		setIsScreenSharingEnabled(true)
 
 		try {
-			const stream = await navigator.mediaDevices.getDisplayMedia()
-			const videoTrack = stream.getVideoTracks()[0]
+            const screenTrack = await getLocalScreenShareTrack()
+			await roomRef.current.localParticipant.publishTrack(screenTrack)
+            setLocalScreenTrack(screenTrack)
+            screenTrack.attach('#localScreen-video')            
+            setIsScreenSharingEnabled(true)
 
-			screenTrack = new Video.LocalVideoTrack(videoTrack, {
-				name: 'screen',
-			})
-
-			console.log('startScreenSharing-screenTrack: ', screenTrack)
-			setScreenTrackData(screenTrack)
-
-			await room.localParticipant.publishTrack(screenTrack)
-
-			const remoteParticipantContainer = document.getElementById('remoteParticipant')
-
-			const mainContainer = document.getElementById('main')
-			if (mainContainer) {
-				mainContainer.innerHTML = ''
-			}
-
-			screenTrack.once('stopped', async () => {
-				await room.localParticipant.unpublishTrack(screenTrack)
-				setIsScreenSharingEnabled(false)
-			})
-
-			const screenShareVideo = document.createElement('video')
-			screenShareVideo.innerHTML = ''
-			screenShareVideo.srcObject = stream
-			screenShareVideo.autoplay = true
-			mainContainer.appendChild(screenShareVideo)
-
-			currentParticipant.tracks.forEach(publication => {
-				trackSubscribe(remoteParticipantContainer, publication.track)
+            console.log('Local participant started sharing screen.')
+            
+            screenTrack.once('stopped', async () => {
+                console.log("about to stop")
+                await stopScreenSharing()
 			})
 		} catch (error) {
+            setIsScreenSharingEnabled(false)
 			console.error('Error sharing the screen:', error)
-			setIsScreenSharingEnabled(false)
 		}
 	}
 
-	const stopScreenSharing = () => {
-		if (isScreenSharingEnabled === true) {
-			if (room) {
-				screenTrackData.stop()
-				room.localParticipant.unpublishTrack(screenTrackData)
-				screenTrack = null
-				document.querySelector('#main').innerHTML = ''
+    const stopScreenSharing = async () => {
+        console.log("stopping ", isScreenSharingEnabledRef.current)
+		if (isScreenSharingEnabledRef.current) {
+			setIsScreenSharingEnabled(false)
+			// Stop screen sharing for local participant
+			if (roomRef.current && localScreenTrackRef.current) {
+                localScreenTrackRef.current.detach('#localScreen-video')
+                // removeTrackFromDiv('localScreen', localScreenTrackRef.current)
+				await roomRef.current.localParticipant.unpublishTrack(localScreenTrackRef.current)
+                localScreenTrackRef.current.stop();
+				setLocalScreenTrack(null)
 			}
-			setIsScreenSharingEnabled(false)
-
-			const mainContainer = document.querySelector('#main')
-			const remoteParticipantContainer = document.getElementById('remoteParticipant')
-			removeTrackFromDiv(remoteParticipantContainer)
-			removeTrackFromDiv(mainContainer)
-			currentParticipant.tracks.forEach(publication => {
-				trackSubscribe(mainContainer, publication.track)
-			})
+			console.log('remove screen sharing')
 		}
 	}
 
-	return (
-		<div>
-			{displayNotification && <NotificationMessage message={notificationMsg} />}
-			<Container>
-				<ScreensWrapper>
-					<Main id="main"></Main>
-					<SideContainer>
-						<RemoteParticipant id="remoteParticipant">
-							{' '}
-							{isCallPickedUp && <h1>Picked Up</h1>}
-						</RemoteParticipant>
-						<LocalParticipant id="localParticipant"></LocalParticipant>
-						<AudioParticipant></AudioParticipant>
-						<ChatScreen userId={userId || window?.location?.pathname?.split('/')[2]} />
-					</SideContainer>
-				</ScreensWrapper>
-				<InCallControlsContainer>
-					<AudioToggle />
-					<VideoToggle />
-					<ShareScreenToggleButton onClick={shareScreenToggle}>
-						<img src={shareScreen} width={'70%'} alt="Share Screen" />
+    useEffect(() => {
+		;(async () => {
+            await navigator.mediaDevices.getUserMedia({video: true, audio: false})
+			await attachLocalVideoTrack()
+			await connect(userId)
+            console.log("in use effect: ", roomRef.current)
+		})()
+	}, [])
+
+    return (
+        <div>
+            <div style={{ display: 'flex', height: '100vh' }}>
+                <div style={{ flex: 2, display: 'flex', flexDirection: 'column', backgroundColor: '#f0f0f0', padding: '20px', boxSizing: 'border-box', overflow: 'hidden' }}>
+                    <div id='remoteScreen' style={{ width: '100%', maxHeight: '100%', objectFit: 'contain', display: isRemoteScreenSharingEnabledRef.current ? 'block' : 'none' }}>
+                        <video id="remoteScreen-video" autoplay></video>
+                    </div>
+                    <div id='localScreen' style={{ width: '100%', maxHeight: '100%', objectFit: 'contain', display: isScreenSharingEnabledRef.current && !isRemoteScreenSharingEnabledRef.current ? 'block' : 'none' }}>
+                        <video id="localScreen-video" autoplay></video>
+                    </div>
+                    <div id='remoteVideo' style={{ width: '100%', maxHeight: '100%', objectFit: 'contain', display: !isScreenSharingEnabledRef.current && !isRemoteScreenSharingEnabledRef.current ? 'block' : 'none' }}>
+                        <video id="remoteVideo-video" autoplay></video>
+                    </div>
+                </div>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '20px', boxSizing: 'border-box' }}>
+                    <div id='remoteVideo2' style={{ width: '100%', maxHeight: '50%', marginBottom: '10px', objectFit: 'contain', display: isScreenSharingEnabledRef.current || isRemoteScreenSharingEnabledRef.current ? 'block' : 'none' }}>
+                        <video id="remoteVideo2-video" autoplay></video>
+                    </div>
+                    <div id='localVideo' style={{ width: '100%', maxHeight: '50%', objectFit: 'contain' }}>
+                        <video id="localVideo-video" autoplay></video>
+                    </div>
+                </div>
+            </div>
+            <InCallControlsContainer>
+					<ShareScreenToggleButton onClick={async () => {
+                        if (isScreenSharingEnabled) {
+                            // screen already being shared
+                            return
+                        }
+                        await startScreenSharing()
+                    }}>
+						<img src={shareScreen} width={'70%'} />
 					</ShareScreenToggleButton>
 					<ChatToggle />
 					<EndCall
-						onClick={() => {
-							if (connected) {
-								disconnect()
-							}
-							navigate('/')
+						onClick={async () => {
+                            await disconnect()
+							//useNavigate('/')
 						}}
 					/>
 				</InCallControlsContainer>
-			</Container>
-		</div>
-	)
+        </div>
+    );
 }

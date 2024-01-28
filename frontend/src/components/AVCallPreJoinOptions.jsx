@@ -148,6 +148,7 @@ const ButtonContainer = styled.div``
 export default function AVCallPreJoinOptions({ setConnect, connect }) {
 	const { isUserMute, setIsUserMute, isUserVideoOff, setIsUserVideoOff } = useContext(userContext)
 	const userId = window?.location?.pathname?.split('/')[2]
+	console.log("userId1", userId)
 	const id = window.localStorage.getItem("id")
 	console.log(`Isusermute: ${isUserMute} \n isUserVideoOff: ${isUserVideoOff} `)
 	const [joinRoom, setJoinRoom] = useState(false)
@@ -248,7 +249,7 @@ export default function AVCallPreJoinOptions({ setConnect, connect }) {
 										}
 										try {
 											const response = await fetch(
-												`${serverUrl}/calls/connect?userId=${userId}&callerId=${id}`,
+												`${serverUrl}/calls/connect?helperId=${userId}&callerId=${id}`,
 												{
 													method: 'POST',
 													headers: {

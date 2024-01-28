@@ -43,4 +43,20 @@ async function getTokenForAudioCall() {
 	}
 } 
 
-export { getToken, getTokenForAudioCall }
+async function endAudioVideoCall(roomName) {
+	try {
+		// eslint-disable-next-line prefer-rest-params
+		console.log('endAudioVideoCall')
+		const response = await fetch(`${config}/endAudioVideo?roomName=${roomName}`)
+		if (!response.ok) {
+			throw new Error('Failed to fetch')
+		}
+
+		console.log('response: ', response)
+	} catch (e) {
+		console.log(e)
+		return null
+	}
+} 
+
+export { getToken, getTokenForAudioCall, endAudioVideoCall }

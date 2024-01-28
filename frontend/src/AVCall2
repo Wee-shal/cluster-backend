@@ -1,0 +1,349 @@
+import React, { useState, useEffect, useContext } from 'react';
+import Video from 'twilio-video';
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { getToken } from '../services/tokenService';
+import { AudioToggle } from './buttons/AudioToggle';
+import { VideoToggle } from './buttons/VideoToggle';
+import { EndCall } from './buttons/EndCall';
+import { userContext } from '../state/userState';
+import { ShareScreenToggle } from './buttons/ShareScreenToggle';
+import shareScreen from '../assets/icons/shareScreen.svg';
+import ChatScreen from '../components/ChatScreen';
+import { ChatToggle } from './buttons/ChatToggle';
+import NotificationMessage from '../components/NotificationMsg';
+import { getUser } from '../services/helpers';
+export default function AVCallScreen2 ({userId}) {
+    const [connected, setConnected] = useState(false);
+    const [room, setRoom] = useState(null);
+    const [localIdentity, setLocalIdentity] = useState('');
+    const [remoteIdentity, setRemoteIdentity] = useState('');
+    const [currentParticipant, setCurrentParticipant] = useState();
+    const [isCallPickedUp, setIsCallPickedUp] = useState(false);
+    const {
+        user,
+        setUser,
+        isUserMute,
+        setIsUserMute,
+        isUserVideoOff,
+        setIsUserVideoOff,
+        isScreenSharingEnabled,
+        setIsScreenSharingEnabled,
+    } = useContext(userContext);
+    const [screenTrackData, setScreenTrackData] = useState(null);
+    const [displayNotification, setDisplayNotification] = useState(false);
+    const [notificationMsg, setNotificationMsg] = useState('');
+    const [isRemoteShareScreenEnabled, setIsRemoteShareScreenEnabled] = useState(false);
+    let remoteParticipantContainer
+    const navigate = useNavigate();
+    useEffect(() => {
+        (async () => {
+            await connectOrDisconnect(userId || window?.location?.pathname?.split('/')[2]);
+            await addLocalVideo();
+            console.log('passed userId is : ', userId);
+            remoteParticipantContainer = document.getElementById('remoteParticipant');
+        })();
+    }, []);
+    const addLocalVideo = async () => {
+        console.log('addLocalVideo');
+        const localParticipant = document.getElementById('localParticipant');
+        try {
+            removeTrackFromDiv(localParticipant);
+        } catch (e) {
+            console.log(e);
+        }
+        const videoTrack = await Video.createLocalVideoTrack();
+        const trackElement = videoTrack.attach();
+        trackElement.style.transform = 'scale(-1, 1)';
+        localParticipant.appendChild(trackElement);
+    };
+    const connectOrDisconnect = async identity => {
+        if (!connected) {
+            try {
+                await connect(identity);
+            } catch (error) {
+                console.log('connectOrDisconnect', error);
+                alert('Failed to connect to video room.', error);
+            }
+        } else {
+            disconnect();
+        }
+    };
+    const connect = async identity => {
+        const roomName = 'room3';
+        const devName = identity;
+        let token;
+        try {
+            token = (await getToken(roomName, devName))?.token;
+        } catch (e) {
+            console.log(e);
+        }
+        console.log('Token from server: ', token);
+        const twilioRoom = await Video.connect(token);
+        setLocalIdentity(identity);
+        setRoom(twilioRoom);
+        twilioRoom.participants.forEach(participantConnected);
+        twilioRoom.on('participantConnected', participantConnected);
+        twilioRoom.on('participantDisconnected', participantDisconnected);
+        twilioRoom.on('disconnected', userDisconnect);
+        setConnected(true);
+    };
+    const userDisconnect = async () => {
+        console.log('user is disconnected');
+        const currentUserId = userId || window?.location?.pathname?.split('/')[2];
+        const user = await getUser(userId || window?.location?.pathname?.split('/')[2]);
+        setUser(user);
+        if (currentUserId === 'userId') {
+            if (user.balance > 0) {
+                setNotificationMsg('User left call');
+            } else {
+                setNotificationMsg('❗Out of balance, Call disconnected');
+            }
+        } else {
+            setNotificationMsg('User left the call');
+        }
+        setDisplayNotification(true);
+        if (!displayNotification) {
+            setTimeout(() => {
+                setDisplayNotification(false);
+            }, 3000);
+        }
+        setTimeout(() => {
+            navigate('/');
+        }, 7000);
+    };
+    const disconnect = () => {
+        try {
+            console.log('in disconnect fn');
+            room.disconnect();
+            setConnected(false);
+            setRemoteIdentity('');
+            setLocalIdentity('');
+        } catch (e) {
+            console.log(e);
+        }
+    };
+    const participantConnected = participant => {
+        console.log(`RemoteParticipant ${participant.identity} is connected`);
+        setCurrentParticipant(participant);
+        setRemoteIdentity(participant.identity);
+        setIsCallPickedUp(true);
+        // Subscribe to the tracks of the connected participant
+        console.log("tracks", participant.tracks)
+        participant.tracks.forEach(publication => {
+            if(publication.isSubscribed){
+            trackSubscribe(document.getElementById('remoteParticipant'), publication.track);
+            trackSubscribe(document.getElementById('main'), publication.track);
+        }
+        else{
+            publication.on('subscribed', track => {
+                trackSubscribe(document.getElementById('remoteParticipant'), track);
+                trackSubscribe(document.getElementById('main'), track);
+            });
+        }
+        });
+        // Update the state when the call is picked up
+        setIsCallPickedUp(true);
+    };
+    const participantDisconnected = participant => {
+        const remoteParticipant = document.getElementById('remoteParticipant');
+        remoteParticipant.removeChild(document.getElementById(participant.sid));
+        setRemoteIdentity('');
+    };
+    const removeTrackFromDiv = div => {
+        console.log('removeTrackFromDiv hit');
+        const trackElement = div.querySelector('video');
+        if (trackElement) {
+            div.removeChild(trackElement);
+        }
+    };
+    const trackSubscribe = (div, track) => {
+        console.log('trackSubscribe hit');
+        if (isScreenSharingEnabled) {
+            const shareScreenContainer = document.querySelector('#screen_share_container');
+            if (shareScreenContainer) {
+                shareScreenContainer.innerHTML = '';
+            }
+        }
+        const trackElement = track.attach();
+        if (track.kind === 'video' && track.name !== 'screen') {
+            trackElement.style.transform = 'scale(-1, 1)';
+        }
+        div.appendChild(trackElement);
+    };
+    const handleVideoToggle = () => {
+        if (isUserVideoOff) {
+            room.localParticipant.videoTracks.forEach(publication => {
+                if (publication.track.name !== 'screen') {
+                    publication.track.disable();
+                }
+            });
+            const localParticipantElement = document.querySelector('#localParticipant');
+            localParticipantElement.style.backgroundColor = 'black';
+            localParticipantElement.style.position = 'relative';
+            const blackLayer = document.createElement('div');
+            blackLayer.style.position = 'absolute';
+            blackLayer.style.top = '0';
+            blackLayer.style.left = '0';
+            blackLayer.style.width = '100%';
+            blackLayer.style.height = '100%';
+            blackLayer.style.backgroundColor = 'rgba(17, 17, 17, 0.997)';
+            blackLayer.style.zIndex = '100';
+            blackLayer.setAttribute('id', 'blackLayer');
+            localParticipantElement.appendChild(blackLayer);
+        } else {
+            const blackLayer = document.querySelector('#blackLayer');
+            if (blackLayer) {
+                const parentElement = blackLayer.parentElement;
+                parentElement.removeChild(blackLayer);
+            }
+            room.localParticipant.videoTracks.forEach(publication => {
+                if (publication.track.name !== 'screen') {
+                    publication.track.enable();
+                }
+            });
+        }
+    };
+    const handleMuteToggle = () => {
+        if (!isUserMute) {
+            room.localParticipant.audioTracks.forEach(publication => {
+                publication.track.disable();
+            });
+        } else {
+            room.localParticipant.audioTracks.forEach(publication => {
+                publication.track.enable();
+            });
+        }
+    };
+    useEffect(() => {
+        if (connected) {
+            handleVideoToggle();
+        }
+    }, [isUserVideoOff]);
+    useEffect(() => {
+        if (connected) {
+            handleMuteToggle();
+        }
+    }, [isUserMute]);
+    async function shareScreenToggle() {
+        if (!isScreenSharingEnabled) {
+            await startScreenSharing();
+        } else {
+            stopScreenSharing();
+        }
+    }
+    let screenTrack;
+    const startScreenSharing = async () => {
+        setIsScreenSharingEnabled(true);
+    
+        try {
+            const stream = await navigator.mediaDevices.getDisplayMedia();
+            const videoTrack = stream.getVideoTracks()[0];
+    
+            screenTrack = new Video.LocalVideoTrack(videoTrack, {
+                name: 'screen',
+            });
+    
+            console.log('startScreenSharing-screenTrack: ', screenTrack);
+            setScreenTrackData(screenTrack);
+    
+            await room.localParticipant.publishTrack(screenTrack);
+    
+            const mainContainer = document.getElementById('main');
+            if (mainContainer) {
+                remoteParticipantContainer = document.getElementById("remoteParticipant")
+                remoteParticipantContainer.appendChild(mainContainer.firstElementChild)
+                mainContainer.innerHTML = ""
+            }
+            screenTrack.once('stopped', async () => {
+                // await room.localParticipant.unpublishTrack(screenTrack);
+                // setIsScreenSharingEnabled(false);
+                console.log("stopping")
+                stopScreenSharing()
+            });
+    
+            const screenShareVideo = document.createElement('video');
+            screenShareVideo.srcObject = stream;
+            screenShareVideo.autoplay = true;
+            mainContainer.appendChild(screenShareVideo);  // Append to the main container
+        } catch (error) {
+            console.error('Error sharing the screen:', error);
+            setIsScreenSharingEnabled(false);
+        }
+    };
+    
+    const stopScreenSharing = () => {
+        setIsScreenSharingEnabled(false)
+        if (!isScreenSharingEnabled) {
+            console.log("inside")
+            console.log(1)
+            const mainContainer = document.querySelector('#main');
+            if (room) {
+                            console.log(2)
+                // screenTrackData.stop();
+                room.localParticipant.unpublishTrack(screenTrackData);
+                console.log(31)
+                screenTrack = null;
+                console.log(32)
+                mainContainer.innerHTML = ""
+                console.log(33)
+            }
+            console.log(3)
+            setIsScreenSharingEnabled(false);
+            console.log(4)
+            removeTrackFromDiv(remoteParticipantContainer);
+            console.log("hellohello ", currentParticipant?.tracks?.length)
+            currentParticipant.tracks.forEach(publication => {
+                trackSubscribe(mainContainer, publication.track);
+            });
+        }
+    };
+  return (
+    <div style={{ display: 'flex', height: '100vh' }}>
+      {/* Remote Participant or Screen Sharing Column */}
+      <div id="main" style={{ flex: 7, border: '1px solid #ccc', backgroundColor: isScreenSharingEnabled ? '#f0f0f0' : '#c0c0c0' }}>
+        {/* Render remote participant video/audio or screen sharing content */}
+        {/* Implement your screen sharing toggle button here */}
+        <button onClick={shareScreenToggle}>
+          {isScreenSharingEnabled ? 'Stop Screen Sharing' : 'Start Screen Sharing'}
+        </button>
+      </div>
+      {/* Remote, Local, and Chat Column */}
+      <div style={{ flex: 3, display: 'flex', flexDirection: 'column' }}>
+        {/* Remote Participant */}
+        <div style={{ flex: 1, border: '1px solid #ccc', display: isScreenSharingEnabled ? "block" : "none", backgroundColor: remoteIdentity ? '#a0a0a0' : '#f0f0f0' }}>
+            <div id='remoteParticipant'>
+                Remote Participant: {remoteIdentity}
+            </div>
+        </div>
+        {/* Local Participant */}
+        <div style={{ flex: 1, border: '1px solid #ccc', backgroundColor: localIdentity ? '#80c080' : '#f0f0f0' }}>
+            <div id="localParticipant">
+                Local Participant: {localIdentity}
+            </div>
+        </div>
+        <div style={{ flex: 1, border: '1px solid #ccc', backgroundColor:'yellow' }}>
+        <ChatScreen userId={userId || (window?.location?.pathname?.split('/')[2])} />
+            </div>
+            </div>
+            {/* <InCallControlsContainer>
+                    <AudioToggle />
+                    <VideoToggle />
+                    <ShareScreenToggleButton onClick={shareScreenToggle}>
+                        <img src={shareScreen} width={'70%'} />
+                    </ShareScreenToggleButton>
+                    <ChatToggle />
+                    <EndCall
+                        onClick={() => {
+                            if (connected) {
+                                disconnect()
+                            }
+                            navigate('/')
+                        }}
+                    />
+                </InCallControlsContainer> */}
+      </div>
+      
+   
+  );
+}

@@ -87,7 +87,7 @@ const TableComponent = () => {
 								{item?.duration ? formatDuration(item?.duration) : '-'}
 							</td>
 							<td style={tdStyle}>{item?.rate ? item.rate : '-'}</td>
-							<td style={{ ...tdStyle, color: item.isRecharge || item.helper === id ? 'green' : 'black', fontWeight: item.isRecharge || item.helper === id ? 'bold' : 'normal' }}>{formatAmount(item.amount)}</td>
+							<td style={{ ...tdStyle, color: item.isRecharge && item.helper === id ? 'green' : 'black', fontWeight: item.isRecharge && item.helper === id ? 'bold' : 'normal' }}>{formatAmount(item.amount)}</td>
 						</tr>
 					))}
 				</tbody>
