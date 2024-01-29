@@ -6,6 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Signin from './buttons/Signin';
 import Wallet from './Wallet';
 import { getUser } from '../services/helpers';
+import ClustleLogo from '../assets/clustlelogo.jpeg'
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -37,7 +38,9 @@ const Navbar = () => {
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
+  const handleClick = () => {
+    window.location.href = '/';
+  };
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -54,10 +57,12 @@ const Navbar = () => {
   };
 
   return (
-    <nav style={{ backgroundColor: '#333', padding: '0.5rem', color: 'white', position: 'sticky', top: '0', zIndex: '1000', maxWidth: '100%', overflow: 'hidden' }}>
+    <nav style={{ backgroundColor: 'black', padding: '0.5rem', color: 'white', position: 'sticky', top: '0', zIndex: '1000', maxWidth: '100%', overflow: 'hidden' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
         {/* Dummy Logo Text */}
-        <div style={{ fontSize: '1.5rem', fontWeight: 'bold', cursor: 'pointer', flex: '1' }} onClick={() => (window.location.href = '/')}>konnect</div>
+        <div style={{ cursor: 'pointer', textDecoration: 'none', marginRight:'10px'}} onClick={handleClick}>
+          <img src={ClustleLogo} style={{maxHeight: '70px'}}></img>
+        </div>
         {/* Search Bar */}
         {/* User Icon and Menu */}
         <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>

@@ -13,6 +13,7 @@ import { getUser } from '../services/helpers';
 import { userContext } from '../state/userState';
 import DeveloperCard from './DeveloperCard';
 import Signin from './buttons/Signin';
+import ClustleLogo from '../assets/clustlelogo.jpeg'
 
 const searchClient = algoliasearch(algoliaAppId, algoliaSearchApiKey);
 const idFromUrl = window.localStorage.getItem('id');
@@ -163,15 +164,14 @@ export default function SearchBar() {
           backgroundColor: 'black',
           display: 'flex',
           justifyContent: 'space-between',
-          padding: '0',
+          gap: '50px',
+          padding: '0 20px 0 20px',
           margin:'0',
           flexWrap:'wrap',
-
-          
         }}
       >
-        <div style={{ cursor: 'pointer', textDecoration: 'none', marginRight:'10px'}} onClick={handleClick}>
-          <TextLogo>Konnect</TextLogo>
+        <div style={{ cursor: 'pointer', textDecoration: 'none', marginRight:'10px', margin: 'auto'}} onClick={handleClick}>
+          <img src={ClustleLogo} style={{maxHeight: '70px'}}></img>
         </div>
         <div
           style={{
@@ -210,7 +210,6 @@ export default function SearchBar() {
             top: '0',
             right: '0',
             zIndex: '999',
-            marginLeft: '50px',
           }}
         >
           {idFromUrl ? (
@@ -220,7 +219,6 @@ export default function SearchBar() {
                   justifyContent: 'center',
                   alignItems: 'center',
                   padding: '10px',
-                  marginTop: '10px',
                 }}
               >
                 <IconButton
