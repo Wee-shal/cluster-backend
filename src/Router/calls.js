@@ -169,7 +169,11 @@ router.post('/videoCallback', async (req, res) => {
 			req?.body?.CallDuration ? req?.body?.CallDuration : req?.body?.RoomDuration,
 			10
 		)
-		if (req?.body?.ParticipantStatus === 'disconnected') {
+		if (
+			req?.body?.ParticipantStatus === 'disconnected' &&
+			(req?.body?.ParticipantIdentity === userId ||
+				req?.body?.ParticipantIdentity === helperId)
+		) {
 			await endAudioVideoCall(req?.body?.RoomSid)
 		}
 		if (callStatus === 'completed' || callStatus === 'failed' || roomStatus === 'completed') {

@@ -160,7 +160,13 @@ async function createVideoRoom(roomName, helperId, callerId) {
 
 async function endAudioVideoCall(roomSid) {
 	try {
-		client.video.v1.rooms(roomSid).update({ status: 'completed' })
+		const room = await client.video.v1.rooms(roomSid).fetch()
+		if (room.status !== 'completed') {
+			await client.video.v1.rooms(roomSid).update({ status: 'completed' })
+			console.log('Room marked as completed.')
+		} else {
+			console.log('Room was already completed.')
+		}
 	} catch (e) {
 		console.log(e)
 	}
