@@ -61,7 +61,7 @@ const Navbar = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
         {/* Dummy Logo Text */}
         <div style={{ cursor: 'pointer', textDecoration: 'none', marginRight:'10px'}} onClick={handleClick}>
-          <img src={ClustleLogo} style={{maxHeight: '70px'}}></img>
+          <img src={ClustleLogo} style={{maxHeight: '40px'}}></img>
         </div>
         {/* Search Bar */}
         {/* User Icon and Menu */}

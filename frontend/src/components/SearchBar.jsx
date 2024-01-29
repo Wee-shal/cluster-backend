@@ -171,7 +171,7 @@ export default function SearchBar() {
         }}
       >
         <div style={{ cursor: 'pointer', textDecoration: 'none', marginRight:'10px', margin: 'auto'}} onClick={handleClick}>
-          <img src={ClustleLogo} style={{maxHeight: '70px'}}></img>
+          <img src={ClustleLogo} style={{maxHeight: '40px'}}></img>
         </div>
         <div
           style={{
