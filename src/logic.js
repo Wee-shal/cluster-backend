@@ -199,7 +199,7 @@ async function makePhoneCall(helperId, callerId) {
 		const call = await client.calls.create({
 			twiml: `<Response>
 						<Connect>
-							<Room>room7</Room>
+							<Room>room8</Room>
 						</Connect>
 						</Response>`,
 			to: helper.data.user.phoneNumber,

@@ -23,11 +23,11 @@ router.post('/connect', async (req, res) => {
 		await makePhoneCall(helperId, callerId)
 		// let user join from browser as audio user in room
 		/** create room */
-		const roomName = 'room7'
+		const roomName = 'room8'
 		await createVideoRoom(roomName, helperId, callerId)
 		res.send(`<Response>
 		<Connect>
-			<Room>room7</Room>
+			<Room>room8</Room>
 		</Connect>
 		</Response>`)
 		return roomName

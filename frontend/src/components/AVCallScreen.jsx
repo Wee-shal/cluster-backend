@@ -67,7 +67,7 @@ export default function AVCallScreen({ userId }) {
 
 		let twilioRoom
 
-		let token = (await getToken('room7', userId))?.token
+		let token = (await getToken('room8', userId))?.token
 		console.log('Token from server: ', token)
 		twilioRoom = await Video.connect(token)
 		setRoom(twilioRoom)
