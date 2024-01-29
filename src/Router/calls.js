@@ -33,6 +33,7 @@ router.post('/connect', async (req, res) => {
 		return roomName
 	} catch (e) {
 		console.log(e)
+		res.send(500)
 	}
 })
 
@@ -77,128 +78,138 @@ router.post('/makeConferenceCall', async (req, res) => {
 
 const processedTransactions = new Set()
 router.post('/status-callback', async (req, res) => {
-	console.log('/status-callback hit...')
-	console.log(processedTransactions)
-	// eslint-disable-next-line no-unused-vars
-	const { uniqueId } = req?.query
-	const { helperphoneNumber } = req?.query
-	const { callerphoneNumber } = req?.query
-	const timeStamp = new Date(req?.body?.Timestamp)
-	console.log('unique', uniqueId, helperphoneNumber)
-	const callStatus = req?.body?.CallStatus
-	console.log('call Sid: ', req.body)
-	const caller = await User.findOne({
-		phoneNumber: `+${callerphoneNumber?.trim()}`,
-	})
-	const helper = await User.findOne({
-		phoneNumber: `+${helperphoneNumber?.trim()}`,
-	})
-	if (callStatus === 'completed' || callStatus === 'failed') {
-		console.log('\n inside completed or faileds')
-		if (processedTransactions.has(uniqueId)) {
-			if ((req?.body?.CallDuration / 60) * helper?.rates <= caller?.balance) {
-				console.log('inside first if')
-				caller.balance -= (req?.body?.CallDuration / 60) * helper?.rates
-				await caller.save()
-				await User.updateOne(
-					{ userId: helper.userId },
-					{
-						$inc: {
-							balance: (req?.body?.CallDuration / 60) * helper?.rates,
-						},
-					}
-				)
-			}
-			console.log('amount', (req?.body?.CallDuration / 60) * helper?.rates)
-
-			const transaction = new Transaction({
-				timeStamp,
-				caller: caller?.userId,
-				helper: helper?.userId,
-				duration: parseInt(req?.body?.CallDuration, 10),
-				rate: helper?.rates,
-				amount: (req?.body?.CallDuration / 60) * helper?.rates,
-				isRecharge: false,
-			})
-			await transaction.save()
-		} else {
-			processedTransactions.add(uniqueId)
-			console.log('already added')
-		}
-	}
-	res.sendStatus(200)
-})
-
-router.post('/videoCallback', async (req, res) => {
-	console.log('/callback hit...')
-	const { userId } = req?.query
-	const { helperId } = req?.query
-	console.log(userId, helperId)
-
-	// eslint-disable-next-line no-unused-vars
-	const helperphoneNumber = req?.body.Called
-	const timeStamp = new Date(req?.body?.Timestamp)
-	const callStatus = req?.body?.CallStatus
-	const roomStatus = req?.body?.RoomStatus
-	console.log('call Sid: ', req.body)
-	const caller = await User.findOne({
-		userId,
-	})
-	let helper
-	if (!helperId) {
-		helper = await User.findOne({
-			phoneNumber: helperphoneNumber,
+	try {
+		console.log('/status-callback hit...')
+		console.log(processedTransactions)
+		// eslint-disable-next-line no-unused-vars
+		const { uniqueId } = req?.query
+		const { helperphoneNumber } = req?.query
+		const { callerphoneNumber } = req?.query
+		const timeStamp = new Date(req?.body?.Timestamp)
+		console.log('unique', uniqueId, helperphoneNumber)
+		const callStatus = req?.body?.CallStatus
+		console.log('call Sid: ', req.body)
+		const caller = await User.findOne({
+			phoneNumber: `+${callerphoneNumber?.trim()}`,
 		})
-	} else {
-		helper = await User.findOne({
-			userId: helperId,
+		const helper = await User.findOne({
+			phoneNumber: `+${helperphoneNumber?.trim()}`,
 		})
-	}
-	const amount =
-		(req?.body?.CallDuration / 60) * helper?.rates
-			? (req?.body?.CallDuration / 60) * helper?.rates
-			: (req?.body?.RoomDuration / 60) * helper?.rates
-	const duration = parseInt(
-		req?.body?.CallDuration ? req?.body?.CallDuration : req?.body?.RoomDuration,
-		10
-	)
-	if (req?.body?.ParticipantStatus === 'disconnected') {
-		await endAudioVideoCall(req?.body?.RoomSid)
-	}
-	if (callStatus === 'completed' || callStatus === 'failed' || roomStatus === 'completed') {
-		console.log('\n inside completed or faileds')
-
-		if (amount <= caller?.balance) {
-			console.log('inside first if')
-			caller.balance -= amount
-			await caller.save()
-			const result = await User.updateOne(
-				{ userId: helper.userId },
-				{
-					$inc: {
-						balance: amount,
-					},
+		if (callStatus === 'completed' || callStatus === 'failed') {
+			console.log('\n inside completed or faileds')
+			if (processedTransactions.has(uniqueId)) {
+				if ((req?.body?.CallDuration / 60) * helper?.rates <= caller?.balance) {
+					console.log('inside first if')
+					caller.balance -= (req?.body?.CallDuration / 60) * helper?.rates
+					await caller.save()
+					await User.updateOne(
+						{ userId: helper.userId },
+						{
+							$inc: {
+								balance: (req?.body?.CallDuration / 60) * helper?.rates,
+							},
+						}
+					)
 				}
-			)
-			if (result.modifiedCount === 1) {
+				console.log('amount', (req?.body?.CallDuration / 60) * helper?.rates)
+
 				const transaction = new Transaction({
 					timeStamp,
 					caller: caller?.userId,
 					helper: helper?.userId,
-					duration,
+					duration: parseInt(req?.body?.CallDuration, 10),
 					rate: helper?.rates,
-					amount,
-					isRecharge: true,
+					amount: (req?.body?.CallDuration / 60) * helper?.rates,
+					isRecharge: false,
 				})
 				await transaction.save()
 			} else {
-				console.log('Failed to update the balance for userId: ', helper.userId)
+				processedTransactions.add(uniqueId)
+				console.log('already added')
 			}
 		}
-		console.log('amount', amount)
+		res.sendStatus(200)
+	} catch (e) {
+		console.log(e)
+		res.send(500)
 	}
+})
 
-	res.sendStatus(200)
+router.post('/videoCallback', async (req, res) => {
+	try {
+		console.log('/callback hit...')
+		const { userId } = req?.query
+		const { helperId } = req?.query
+		console.log(userId, helperId)
+
+		// eslint-disable-next-line no-unused-vars
+		const helperphoneNumber = req?.body.Called
+		const timeStamp = new Date(req?.body?.Timestamp)
+		const callStatus = req?.body?.CallStatus
+		const roomStatus = req?.body?.RoomStatus
+		console.log('call Sid: ', req.body)
+		const caller = await User.findOne({
+			userId,
+		})
+		let helper
+		if (!helperId) {
+			helper = await User.findOne({
+				phoneNumber: helperphoneNumber,
+			})
+		} else {
+			helper = await User.findOne({
+				userId: helperId,
+			})
+		}
+		const amount =
+			(req?.body?.CallDuration / 60) * helper?.rates
+				? (req?.body?.CallDuration / 60) * helper?.rates
+				: (req?.body?.RoomDuration / 60) * helper?.rates
+		const duration = parseInt(
+			req?.body?.CallDuration ? req?.body?.CallDuration : req?.body?.RoomDuration,
+			10
+		)
+		if (req?.body?.ParticipantStatus === 'disconnected') {
+			await endAudioVideoCall(req?.body?.RoomSid)
+		}
+		if (callStatus === 'completed' || callStatus === 'failed' || roomStatus === 'completed') {
+			console.log('\n inside completed or faileds')
+
+			if (amount <= caller?.balance) {
+				console.log('inside first if')
+				caller.balance -= amount
+				await caller.save()
+				const result = await User.updateOne(
+					{ userId: helper.userId },
+					{
+						$inc: {
+							balance: amount,
+						},
+					}
+				)
+				if (result.modifiedCount === 1) {
+					const transaction = new Transaction({
+						timeStamp,
+						caller: caller?.userId,
+						helper: helper?.userId,
+						duration,
+						rate: helper?.rates,
+						amount,
+						isRecharge: true,
+					})
+					await transaction.save()
+				} else {
+					console.log('Failed to update the balance for userId: ', helper.userId)
+				}
+			}
+			console.log('amount', amount)
+		}
+
+		res.sendStatus(200)
+	} catch (e) {
+		console.log(e)
+		res.send(500)
+	}
 })
 
 module.exports = router
