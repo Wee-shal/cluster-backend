@@ -31,8 +31,8 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'dist')))
 
-server.listen(process.env.PORT || 3001, () => {
-	console.log(`Server running at ${process.env.PORT || 3001}`)
+server.listen(process.env.PORT || 3000, () => {
+	console.log(`Server running at ${process.env.PORT || 3000}`)
 })
 
 app.get('/status', (req, res) => {
@@ -61,7 +61,7 @@ wss.on('connection', ws => {
 					// client.send({ room, userId, content })
 				}
 				console.log('content is: ', content)
-			}
+			} 
 		} catch (error) {
 			console.error('Error parsing message:', error)
 		}

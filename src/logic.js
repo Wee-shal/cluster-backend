@@ -145,7 +145,7 @@ async function createVideoRoom(roomName, helperId, callerId) {
 			room = await client.video.v1.rooms.create({
 				uniqueName: roomName,
 				type: process.env.TWILIO_ROOM_TYPE,
-				statusCallback: `${process.env.BASE_URL}/calls/videoCallback?userId=${callerId}&helperId=${helperId}`,
+				statusCallback: `${process.env.CALLBACK_URL}/calls/videoCallback?userId=${callerId}&helperId=${helperId}`,
 				statusCallbackMethod: 'POST',
 			})
 		} else {
@@ -199,7 +199,7 @@ async function makePhoneCall(helperId, callerId) {
 		const call = await client.calls.create({
 			twiml: `<Response>
 						<Connect>
-							<Room>room4</Room>
+							<Room>room7</Room>
 						</Connect>
 						</Response>`,
 			to: helper.data.user.phoneNumber,

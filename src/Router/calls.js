@@ -23,11 +23,11 @@ router.post('/connect', async (req, res) => {
 		await makePhoneCall(helperId, callerId)
 		// let user join from browser as audio user in room
 		/** create room */
-		const roomName = 'room4'
+		const roomName = 'room7'
 		await createVideoRoom(roomName, helperId, callerId)
 		res.send(`<Response>
 		<Connect>
-			<Room>room4</Room>
+			<Room>room7</Room>
 		</Connect>
 		</Response>`)
 		return roomName
@@ -162,10 +162,7 @@ router.post('/videoCallback', async (req, res) => {
 		req?.body?.CallDuration ? req?.body?.CallDuration : req?.body?.RoomDuration,
 		10
 	)
-	if (
-		req?.body?.ParticipantStatus === 'disconnected' &&
-		req?.body?.ParticipantIdentity !== userId
-	) {
+	if (req?.body?.ParticipantStatus === 'disconnected') {
 		await endAudioVideoCall(req?.body?.RoomSid)
 	}
 	if (callStatus === 'completed' || callStatus === 'failed' || roomStatus === 'completed') {
