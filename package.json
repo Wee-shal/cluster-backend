@@ -4,8 +4,8 @@
 	"description": "",
 	"main": "index.js",
 	"engines": {
-		"node": ">=20.10.0",
-		"npm" : ">=10.2.3"
+		"node": "20.10.0",
+		"npm" : "10.4.0"
 		},
 	"scripts": {
 		"dev": "nodemon src/app.js",
