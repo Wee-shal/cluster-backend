@@ -14,6 +14,9 @@ import { userContext } from '../state/userState';
 import DeveloperCard from './DeveloperCard';
 import Signin from './buttons/Signin';
 import ClustleLogo from '../assets/clustlelogo.jpeg'
+import Navbar2 from './Navbar2';
+
+
 
 const searchClient = algoliasearch(algoliaAppId, algoliaSearchApiKey);
 const idFromUrl = window.localStorage.getItem('id');
@@ -65,6 +68,7 @@ export default function SearchBar() {
   const { user, setUser } = useContext(userContext);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  
 
   useEffect(() => {
     (async () => {
@@ -80,6 +84,17 @@ export default function SearchBar() {
       }
     })();
   }, [setUser]);
+
+  const customSearchFunction = async (inputValue) => {
+    setSearchTerm(inputValue);
+
+    try {
+        const { hits } = await searchClient.initIndex('newproj').search(inputValue);
+        setSearchResults(hits);
+    } catch (error) {
+        console.error('Error fetching search results:', error);
+    }
+};
 
   const handleSearch = async (e) => {
     const inputValue = e.target.value;
@@ -101,6 +116,7 @@ export default function SearchBar() {
       }
     }
   };
+
 
   const handleClick = () => {
     window.location.href = '/';
@@ -286,6 +302,7 @@ export default function SearchBar() {
           )}
         </div>
       </div>
+      <Navbar2 customSearchFunction={customSearchFunction}/>
       <InstantSearch searchClient={searchClient} indexName="newproj">
         <div>
           <ResultsContainer>
