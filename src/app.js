@@ -191,7 +191,7 @@ app.post('/token', async (req, res) => {
 			)
 		} catch (e) {
 			console.log(e)
-		}
+		} 
 
 		// Add the video grant and the user's identity to the token
 		token.addGrant(videoGrant)
