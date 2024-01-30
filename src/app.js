@@ -17,6 +17,7 @@ const Transaction = require('./db/models/transaction')
 
 const { generateOTP, getUniqueId, endAudioVideoCall } = require('./logic')
 const { getPaymentLink, stripeWebhookHandler } = require('./Payment/index')
+//const authRouter = require('./Router/authRouter')
 
 const app = express()
 const server = http.createServer(app)
@@ -24,7 +25,7 @@ const wss = new WebSocket.Server({ server })
 app.use(cookieParser())
 app.use(cors({ origin: '*' }))
 app.use(routers)
-//app.use(authRouter);
+//app.use(authRouter)
 app.use('/stripe-webhook', express.raw({ type: 'application/json' }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -61,7 +62,7 @@ wss.on('connection', ws => {
 					// client.send({ room, userId, content })
 				}
 				console.log('content is: ', content)
-			} 
+			}
 		} catch (error) {
 			console.error('Error parsing message:', error)
 		}
@@ -191,7 +192,7 @@ app.post('/token', async (req, res) => {
 			)
 		} catch (e) {
 			console.log(e)
-		} 
+		}
 
 		// Add the video grant and the user's identity to the token
 		token.addGrant(videoGrant)
@@ -270,7 +271,7 @@ app.get('/success.html', async (req, res) => {
 
 app.get('/getUser', async (req, res) => {
 	const { userId } = req?.query
-	console.log('userid', userId) 
+	console.log('userid', userId)
 	console.log('route hit getuser')
 	try {
 		const user = await User.findOne({ userId })

@@ -85,37 +85,39 @@ export default function SearchBar() {
     })();
   }, [setUser]);
 
-  const customSearchFunction = async (inputValue) => {
+ const customSearchFunction = async (inputValue) => {
     setSearchTerm(inputValue);
 
     try {
-        const { hits } = await searchClient.initIndex('newproj').search(inputValue);
-        setSearchResults(hits);
+        if (inputValue) {
+            const { hits } = await searchClient.initIndex('newproj').search(inputValue);
+            setSearchResults(hits);
+        } else {
+          const allCards = await searchClient.initIndex('newproj').search('');
+          setSearchResults(allCards.hits);
+        }
     } catch (error) {
         console.error('Error fetching search results:', error);
     }
 };
 
-  const handleSearch = async (e) => {
-    const inputValue = e.target.value;
-    setSearchTerm(inputValue);
+const handleSearch = async (e) => {
+  const inputValue = e.target.value.trim(); // Trim the input value
 
-    if (inputValue.trim() === '') {
-      try {
-        const allCards = await searchClient.initIndex('newproj').search('');
-        setSearchResults(allCards.hits);
-      } catch (error) {
-        console.error('Error fetching all cards:', error);
-      }
+  try {
+    if (inputValue === '') {
+      // If the input value is empty, fetch all cards
+      const allCards = await searchClient.initIndex('newproj').search('');
+      setSearchResults(allCards.hits);
     } else {
-      try {
-        const { hits } = await searchClient.initIndex('newproj').search(inputValue);
-        setSearchResults(hits);
-      } catch (error) {
-        console.error('Error fetching search results:', error);
-      }
+      // Otherwise, perform search based on the input value
+      const { hits } = await searchClient.initIndex('newproj').search(inputValue);
+      setSearchResults(hits);
     }
-  };
+  } catch (error) {
+    console.error('Error fetching search results:', error);
+  }
+};
 
 
   const handleClick = () => {

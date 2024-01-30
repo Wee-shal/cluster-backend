@@ -12,10 +12,10 @@ import { getTokenForAudioCall } from '../services/tokenService'
 import serverUrl from '../config'
 
 const CenteredContainer = styled.div`
-	width: 45%;
-	height: 50%;
+	width: 100%;
+	height: 100;
 	margin: auto;
-	background-color: #d1d1d1;
+	background-color: #000000;
 	position: fixed;
 	top: 0;
 	bottom: 0;
@@ -31,9 +31,10 @@ const CenteredContainer = styled.div`
 
 const MuteButton = styled.button`
 	font-size: 1rem;
-	padding: 0.6rem 4rem 0.6rem 4rem;
-	width: 11.5rem;
-	margin-bottom: 1rem;
+	padding: 1px;
+	width: 50px;
+	height: 50px;
+	margin: auto;
 	background-color: #ffffff;
 	outline: 2px solid #b1b1b1;
 	border: none;
@@ -55,8 +56,9 @@ const MuteButton = styled.button`
 
 const StopVideo = styled.button`
 	font-size: 1rem;
-	padding: 0.6rem 4rem 0.6rem 4rem;
-	width: 11.5rem;
+	padding: 1 px;
+	width: 50px;
+	height: 50px;
 	background-color: white;
 	outline: 2px solid #b1b1b1;
 	border: none;
@@ -97,8 +99,9 @@ const CancelButton = styled.button`
 
 const JoinNowbutton = styled.button`
 	font-size: 1rem;
-	padding: 0.5rem 3rem 0.5rem 3rem;
-	background-color: white;
+	padding: 0.5rem 4rem 0.5rem 4rem;
+	color: white;
+	background-color: green;
 	outline: 2px solid #b1b1b1;
 	border: none;
 	border-radius: 2px;
@@ -142,6 +145,8 @@ const ControlsContainer = styled.div`
 
 const MainDiv = styled.div`
 	position: relative;
+	background-color: #000000;
+	color: white;
 `
 const ButtonContainer = styled.div``
 
@@ -222,26 +227,25 @@ export default function AVCallPreJoinOptions({ setConnect, connect }) {
 					<CenteredContainer>
 						<Container>
 							<VideoPreview />
-							<ControlsContainer>
+						</Container>
+						<Container margintop="4rem" style={{ display: 'flex', flexDirection: 'column'}}>
+							<ControlsContainer style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '20px'}}>
 								<ButtonContainer>
 									<MuteButton onClick={() => setIsUserMute(!isUserMute)}>
-										{isUserMute ? 'Mute' : 'Unmute'}
-										<img src={isUserMute ? micOffIcon : micIcon} width="15px" />
+										<img src={isUserMute ? micOffIcon : micIcon} width="20px" />
 									</MuteButton>
 								</ButtonContainer>
 								<ButtonContainer>
 									<StopVideo onClick={() => setIsUserVideoOff(!isUserVideoOff)}>
-										{isUserVideoOff ? 'Start' : 'Stop'}
 										<img
 											src={isUserVideoOff ? videoOffIcon : videoIcon}
-											width="15px"
+											width="20px"
 										/>
 									</StopVideo>
 								</ButtonContainer>
 							</ControlsContainer>
-						</Container>
-						<Container margintop="4rem">
-							<Container>
+							<Container style={{ marginTop: '20px'}}>
+								<CancelButton onClick={() => navigate(-1)}>Cancel</CancelButton>
 								<JoinNowbutton
 									onClick={async () => {
 										if (userId !== 'developerId') {
@@ -276,7 +280,6 @@ export default function AVCallPreJoinOptions({ setConnect, connect }) {
 								>
 									Join
 								</JoinNowbutton>
-								<CancelButton onClick={() => navigate(-1)}>Cancel</CancelButton>
 							</Container>
 						</Container>
 					</CenteredContainer>

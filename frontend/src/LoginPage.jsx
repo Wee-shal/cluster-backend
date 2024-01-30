@@ -246,8 +246,7 @@ export default function AuthPage() {
       if (result.success) {
         console.log("OTP verification successful");
         window.localStorage.setItem("id", result.userId);
-        navigate("/");
-        window.location.reload();
+        navigate("/", { replace: true });
       } else {
         setErrorMessage("Invalid OTP");
       }

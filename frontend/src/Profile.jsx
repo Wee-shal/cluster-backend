@@ -6,6 +6,8 @@ import { userContext } from "./state/userState";
 import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import serverUrl from './config';
+import callIcon from './assets/icons/call.svg'
+import videoIcon from './assets/icons/video.svg'
 
 const BlurredBackground = styled.div`
   position: fixed;
@@ -59,6 +61,14 @@ const WalletButton = styled.button`
   margin-bottom: 10px;
 `;
 
+const Icon = styled.img.attrs(({ src }) => ({
+  src,
+}))`
+  width: ${props => props.iconwidth || '15px'};
+  filter: invert(1);
+  margin-right: 10px;
+`
+
 export default function Profile() {
   const { user, setUser } = useContext(userContext);
   const [expert, setExpert] = useState({});
@@ -82,7 +92,7 @@ export default function Profile() {
   }, [id, setUser, location.pathname]);
 
   const makePhoneCall = async () => {
-    if (user.balance === 0 || user.balance < expert.rates) {
+    if (user?.balance === 0 || user?.balance < expert?.rates) {
       setNotification(true)
       return null;
     }
@@ -131,6 +141,20 @@ export default function Profile() {
     }
   };
 
+  const makeAVCall = () => {
+    if (!user.balance) {
+      setNotification(true)
+
+      setInterval(() => {
+        setNotification(false)
+      }, 3000)
+      return null
+    } else {
+      console.log(expert.userId)
+      navigate(`profile/${expert.userId}/call`)
+    }
+  }
+
   const closeNotification = () => {
     setNotification(false);
   };
@@ -142,12 +166,13 @@ export default function Profile() {
         <img style={{ width: '150px', height: '150px', borderRadius: '50%', marginBottom: '20px', marginTop: '40px' }} src={expert?.profilePic} alt={expert?.name} />
         <div style={{ marginRight: '20%', marginLeft: '20%' }}>
           <h2>{expert?.name}</h2>
-          <p>{expert?.role}</p>
+          <h3>{expert?.role}</h3>
           <p>{expert?.username}</p>
           <p></p>
           <p>{expert?.location}</p>
-          <div>
-            <Button variant="contained" style={{ backgroundColor: 'black', color: 'white', fontWeight: 'bold', borderRadius: '0' }} onClick={id ? makePhoneCall : () => navigate(`/login`)}>Contact me</Button>
+          <div style={{marginBottom: "50px"}}>
+            <Button variant="contained" style={{ backgroundColor: 'black', color: 'white', fontWeight: 'bold', borderRadius: '0', marginRight: "10px" }} onClick={id ? makePhoneCall : () => navigate(`/login`)}><Icon src={callIcon} />Phone</Button>
+            <Button variant="contained" style={{ backgroundColor: 'black', color: 'white', fontWeight: 'bold', borderRadius: '0' }} onClick={id ? makeAVCall : () => navigate(`/login`)}><Icon src={videoIcon} />Video</Button>
           </div>
           {notification && (
             <>
@@ -167,11 +192,9 @@ export default function Profile() {
               </NotificationContainer>
             </>
           )}
-          <h2>Description</h2>
-          <p>{expert.description}</p>
-          <h2>Skills</h2>
-          {expert && expert.skills && expert.skills.map((skill, index) => (
-            <span key={index} style={{ borderRadius: '10px', marginRight: '10px', border: '1px solid #000', padding: '5px', paddingRight: '5px', display: 'inline-block', marginTop: '4px', marginBottom: '4px' }}>
+          <p style={{marginBottom: '40px'}}>{expert?.description}</p>
+          {expert && expert?.skills && expert?.skills?.map((skill, index) => (
+            <span key={index} style={{ borderRadius: '10px', marginRight: '10px', border: '1px solid #000', padding: '5px', paddingRight: '5px', display: 'inline-block', marginTop: '5px', marginBottom: '4px' }}>
               {skill}
             </span>
           ))}

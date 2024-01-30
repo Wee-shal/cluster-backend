@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+// Import CSS file for styling if needed
+
+
 
 const NavbarContainer = styled.div`
 background-color: #333;
@@ -30,89 +33,136 @@ const NavbarLink = styled.a`
   
 
 `;
+const NavbarList = styled.ul`
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+`;
+const CategoriesButton = styled.button`
+    background-color: black;
+    color: white;
+    padding: 20px; /* Increase padding for larger size */
+    border: none;
+    cursor: pointer;
+    width: 100%; /* Take the full width of the container */
 
+    &:hover {
+        opacity: 0.8;
+    }
+`;
 function Navbar2({ customSearchFunction }) {
-    const [activeLink, setActiveLink] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeLink, setActiveLink] = useState(null);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+  
 
     const handleClick = (link) => {
-        setActiveLink(link);
-        customSearchFunction(link);
+        if (activeLink === link) {
+            // If the clicked link is already active, reset to show all cards
+            setActiveLink(null);
+            customSearchFunction(null); // Pass null to indicate showing all cards
+        } else {
+            setActiveLink(link);
+            customSearchFunction(link);
+        }
+        setIsOpen(false);
     };
 
-    return (
+
+  return (
+    <div className="navbar2">
+      <CategoriesButton onClick={toggleDropdown} className="dropdown-btn">
+        Categories
+      </CategoriesButton>
+      {isOpen && (
+        <div className="dropdown-content">
+        
         <NavbarContainer className="navbar">
-            <NavbarLink
+            <NavbarList>
+            <li><NavbarLink
                 href="#"
                 onClick={() => handleClick('Graphic Design')}
                 isActive={activeLink === 'Graphic Design'}
             >
                 Graphic Design
-            </NavbarLink>
-            <NavbarLink
+            </NavbarLink></li>
+            <li> <NavbarLink
                 href="#"
                 onClick={() => handleClick('Programming & Tech')}
                 isActive={activeLink === 'Programming & Tech'}
             >
                 Programming & Tech
-            </NavbarLink>
-            <NavbarLink
+            </NavbarLink></li>
+            <li><NavbarLink
                 href="#"
                 onClick={() => handleClick('Digital Marketing')}
                 isActive={activeLink === 'Digital Marketing'}
             >
                 Digital Marketing
-            </NavbarLink>
-            <NavbarLink
+            </NavbarLink></li>
+            <li><NavbarLink
                 href="#"
                 onClick={() => handleClick('Video & Animation')}
                 isActive={activeLink === 'Video & Animation'}
             >
                 Video & Animation
-            </NavbarLink>
-            <NavbarLink
+            </NavbarLink></li>
+            <li><NavbarLink
                 href="#"
                 onClick={() => handleClick('Writing & Translation')}
                 isActive={activeLink === 'Writing & Translation'}
             >
                 Writing & Translation
-            </NavbarLink>
-            <NavbarLink
+            </NavbarLink></li>
+            <li><NavbarLink
                 href="#"
                 onClick={() => handleClick('Music & Video')}
                 isActive={activeLink === 'Music & Video'}
             >
                 Music & Video
-            </NavbarLink>
-            <NavbarLink
+            </NavbarLink></li>
+            <li><NavbarLink
                 href="#"
                 onClick={() => handleClick('Business')}
                 isActive={activeLink === 'Business'}
             >
                 Business
-            </NavbarLink>
-            <NavbarLink
+            </NavbarLink></li>
+            <li><NavbarLink
                 href="#"
                 onClick={() => handleClick('Data')}
                 isActive={activeLink === 'Data'}
             >
                 Data
             </NavbarLink>
-            <NavbarLink
+            </li>
+            <li><NavbarLink
                 href="#"
                 onClick={() => handleClick('Photography')}
                 isActive={activeLink === 'Photography'}
             >
                 Photography
-            </NavbarLink>
-            <NavbarLink
+            </NavbarLink></li>
+            <li><NavbarLink
                 href="#"
                 onClick={() => handleClick('AI Services')}
                 isActive={activeLink === 'AI Services'}
             >
                 AI Services
-            </NavbarLink>
+            </NavbarLink></li>
+            </NavbarList>
         </NavbarContainer>
-    );
+    
+        
+        </div>
+      )}
+    </div>
+  );
 }
 
 Navbar2.propTypes = {
