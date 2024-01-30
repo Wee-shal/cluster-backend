@@ -15,6 +15,7 @@ import DeveloperCard from './DeveloperCard';
 import Signin from './buttons/Signin';
 import ClustleLogo from '../assets/clustlelogo.jpeg'
 import Navbar2 from './Navbar2';
+import Footer from "./Footer"
 
 
 
@@ -328,11 +329,7 @@ const handleSearch = async (e) => {
           </ResultsContainer>
         </div>
       </InstantSearch>
-      <div style={{ display:'flex', marginTop: 'auto', padding: '10px', justifyContent: 'center', color: 'white' }}>
-        <a href="../policy" onClick={handleNavigateToPolicy} style={{ color: 'black',justifyContent: 'center' }}>
-Policy
-        </a>
-      </div>
+<Footer/>
     </div>
   );
 }

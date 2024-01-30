@@ -205,7 +205,7 @@ async function makePhoneCall(helperId, callerId) {
 		const call = await client.calls.create({
 			twiml: `<Response>
 						<Connect>
-							<Room>room8</Room>
+							<Room>room9</Room>
 						</Connect>
 						</Response>`,
 			to: helper.data.user.phoneNumber,

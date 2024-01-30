@@ -12,8 +12,9 @@ import ProfilePage from './Profile'
 import LoginPage from './LoginPage'
 import AVCallPage from './AVCallPage'
 import GlobalStyles from './components/GlobalStyles'
-import Policy from '../policy'
+import Policy from './components/policy'
 import TransactionPage from './TransactionPage'
+import "./global.css"
 const router = createBrowserRouter(
 	createRoutesFromElements(
 		<Route>

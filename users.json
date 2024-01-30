@@ -1,102 +1,22 @@
 [
 {
-  "userId": "jomin123",
-  "name": "Jomin P jose",
+  "userId": "0odk",
+  "name": "Vishal",
   "price": 10,
-  "role": "Digital marketing consultant",
-  "description": "Performance Marketing | Growth Marketing and Customer Acquisition | D2C & B2C | E-Commerce | Revenue Growth",
+  "role": "Full Stack Developer",
+  "description": "HTML,CSS,JavaScript,React,MongoDb. I'm a full-stack developer. In the world of technology, I'm the bridge between what users see and what happens behind the scenes. On the front end, I craft engaging and responsive user interfaces using HTML, CSS, and JavaScript. I love creating seamless and visually appealing experiences for users.Moving to the back end, I'm all about server-side logic and database management. Whether it's handling requests, processing data, or managing the application's business logic, I enjoy building the backbone of applications. I work with languages like Node.js and Python, and databases like MySQL and MongoDB",
   "country": "india",
   "balance": 0,
-  "phoneNumber": "+919884944877",
+  "phoneNumber": "+916363146208",
   "__v": 1,
   "skills": [
-    "Paid Search Strategy",
-    "Customer Insight",
-    "Media Buying",
-    "Performance Management",
-    "Multi-Channel Marketing",
-    "Acquisition Marketing",
-    "Budgeting",
-    "Customer Analysis",
-    "Analytical Skills"
+    "React",
+    "HTML",
+    "CSS",
+    "MongoDB"
   ],
   "currency": "$",
   "rates": 0.1,
-  "profilePic": "https://media.licdn.com/dms/image/D5635AQHMtnkWJ1lUTQ/profile-framedphoto-shrink_800_800/0/1696309151111?e=1705744800&v=beta&t=XsHBRBXas5LXcGD0UPTEaOJ7A2LFdOjvBP1xA2ptv9U"
-},
-{
-  "userId": "utkarsh12",
-  "name": "Utkarsh Purohit",
-  "price": 10,
-  "role": "Digital marketing consultant",
-  "description": "Certified Digital Marketer|Freelancer|Consultant|Digital Marketing",
-  "country": "india",
-  "balance": 0,
-  "phoneNumber": "+919986259376",
-  "__v": 1,
-  "skills": [
-    "Digital Marketing Experience",
-    "Social Media",
-    "Digital Marketing",
-    "Search Engine Optimization (SEO)",
-    "Social Media Marketing",
-    "Search Engine Marketing (SEM)",
-    "Google Ads",
-    "Google Analytics",
-    "Content Marketing"
-  ],
-  "currency": "$",
-  "rates": 0.1,
-  "profilePic": "https://media.licdn.com/dms/image/C4E03AQEfXynwbnUqgA/profile-displayphoto-shrink_200_200/0/1569515451468?e=1710374400&v=beta&t=Vo-6zyqEgQWjBnu-PQvFDm6sk_7JM_Bcnm85TqDwTss"
-},
-{
-  "userId": "ramya",
-  "name": "Ramya Shree",
-  "price": 10,
-  "role": "Digital marketing consultant",
-  "description": "Digital Marketing consultant",
-  "country": "india",
-  "balance": 0,
-  "phoneNumber": "+919606169288",
-  "__v": 1,
-  "skills": [
-    "Content Creation",
-    "Online Content",
-    "Off-Page SEO",
-    "Social Media Advertising",
-    "Search Engine Optimization (SEO)",
-    "On-Page Optimization",
-    "SEO Copywriting",
-    "Social Media Marketing"
-  ],
-  "currency": "$",
-  "rates": 0.1,
-  "profilePic": "https://media.licdn.com/dms/image/C5603AQEXX1mdG0gAGA/profile-displayphoto-shrink_800_800/0/1623837083055?e=1710374400&v=beta&t=Ezwd4yOr9xEuwqPC5N8xmRlFmPjup0ueEtty1fmTWBA"
-},
-{
-  "userId": "pranav",
-  "name": "Pranav Batra",
-  "price": 10,
-  "role": "Email marketing consultant",
-  "description": "As a skilled email marketer, I take pride in my ability to deliver exceptional results. With 1000+ successfully delivered orders, an impressive 4.9 rating backed by 700+ reviews, and a focus on the deliverability of emails into the inbox, I am highly motivated to help you achieve outstanding email campaign success. Through my expertise and highly professional communication skills, I will ensure that your messages reach the right audience at the right time. Let's collaborate and optimize your email marketing strategy for maximum impact.",
-  "country": "india",
-  "balance": 0,
-  "phoneNumber": "+919654455614",
-  "__v": 1,
-  "skills": [
-    "Content writing",
-    "Blogging",
-    "Blog design",
-    "Training & development",
-    "WordPress",
-    "Articles writing",
-    "Article rewriting",
-    "Social media marketing",
-    "Social media management",
-    "Animation",
-    "SEO"
-  ],
-  "currency": "$",
-  "rates": 0.1,
-  "profilePic": ""
-}]
+  "profilePic": "https://i.ibb.co/PxtQs3H/sam.png"
+}
+]

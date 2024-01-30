@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import serverUrl from './config';
 import callIcon from './assets/icons/call.svg'
 import videoIcon from './assets/icons/video.svg'
+import Footer from './components/Footer';
 
 const BlurredBackground = styled.div`
   position: fixed;
@@ -151,7 +152,7 @@ export default function Profile() {
       return null
     } else {
       console.log(expert.userId)
-      navigate(`profile/${expert.userId}/call`)
+      navigate(`/profile/${expert?.userId}/call`)
     }
   }
 
@@ -200,6 +201,8 @@ export default function Profile() {
           ))}
         </div>
       </div>
+      <Footer style={{marginBottom: '0px'}}/>
     </div>
+    
   );
 }

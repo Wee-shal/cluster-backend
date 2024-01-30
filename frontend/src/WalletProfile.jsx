@@ -4,6 +4,7 @@ import { useEffect, useState, useContext } from 'react';
 import { userContext } from './state/userState'
 import { getUser } from './services/helpers'
 import { getPaymentLink } from './services/paymentService'
+import Footer from './components/Footer';
 import serverUrl from './config'  /*new 23/12/23 */
 export default function WalletProfile() {
   const id = window.localStorage.getItem("id")
@@ -127,6 +128,7 @@ export default function WalletProfile() {
         </div>
         
       </div>
+      <Footer/>
     </div>
   ));
 }

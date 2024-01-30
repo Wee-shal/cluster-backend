@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-// Import CSS file for styling if needed
-
-
 
 const NavbarContainer = styled.div`
 background-color: #333;
@@ -11,11 +8,14 @@ overflow: hidden;
 display: flex;
 justify-content: space-between;
 padding: 0 20px;
+height: 60px; /* Set your desired fixed height for the navbar */
 
-@media (max-width: 768px) {
-    flex-wrap: wrap;
-}
-`;
+    @media (max-width: 768px) {
+        flex-wrap: nowrap; /* Prevent items from wrapping to the next line */
+        overflow-x: auto; /* Enable horizontal scrolling for small screens */
+        padding: 0; /* Remove padding for small screens */
+    }
+`
 
 const NavbarLink = styled.a`
     float: left;
@@ -33,136 +33,95 @@ const NavbarLink = styled.a`
   
 
 `;
-const NavbarList = styled.ul`
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
-`;
-const CategoriesButton = styled.button`
-    background-color: black;
-    color: white;
-    padding: 20px; /* Increase padding for larger size */
-    border: none;
-    cursor: pointer;
-    width: 100%; /* Take the full width of the container */
 
-    &:hover {
-        opacity: 0.8;
-    }
-`;
 function Navbar2({ customSearchFunction }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState(null);
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-  
+    const [activeLink, setActiveLink] = useState(null);
 
     const handleClick = (link) => {
-        if (activeLink === link) {
-            // If the clicked link is already active, reset to show all cards
-            setActiveLink(null);
-            customSearchFunction(null); // Pass null to indicate showing all cards
-        } else {
-            setActiveLink(link);
-            customSearchFunction(link);
+        if(!activeLink){
+        setActiveLink(link);
+        customSearchFunction(link);
         }
-        setIsOpen(false);
+        else{
+            setActiveLink(null);
+        customSearchFunction(null)
+        }
     };
 
-
-  return (
-    <div className="navbar2">
-      <CategoriesButton onClick={toggleDropdown} className="dropdown-btn">
-        Categories
-      </CategoriesButton>
-      {isOpen && (
-        <div className="dropdown-content">
-        
+    return (
         <NavbarContainer className="navbar">
-            <NavbarList>
-            <li><NavbarLink
+            <NavbarLink
                 href="#"
                 onClick={() => handleClick('Graphic Design')}
                 isActive={activeLink === 'Graphic Design'}
             >
                 Graphic Design
-            </NavbarLink></li>
-            <li> <NavbarLink
+            </NavbarLink>
+            <NavbarLink
                 href="#"
                 onClick={() => handleClick('Programming & Tech')}
                 isActive={activeLink === 'Programming & Tech'}
             >
                 Programming & Tech
-            </NavbarLink></li>
-            <li><NavbarLink
+            </NavbarLink>
+            <NavbarLink
                 href="#"
                 onClick={() => handleClick('Digital Marketing')}
                 isActive={activeLink === 'Digital Marketing'}
             >
                 Digital Marketing
-            </NavbarLink></li>
-            <li><NavbarLink
+            </NavbarLink>
+            <NavbarLink
                 href="#"
                 onClick={() => handleClick('Video & Animation')}
                 isActive={activeLink === 'Video & Animation'}
             >
                 Video & Animation
-            </NavbarLink></li>
-            <li><NavbarLink
+            </NavbarLink>
+            <NavbarLink
                 href="#"
                 onClick={() => handleClick('Writing & Translation')}
                 isActive={activeLink === 'Writing & Translation'}
             >
                 Writing & Translation
-            </NavbarLink></li>
-            <li><NavbarLink
+            </NavbarLink>
+            <NavbarLink
                 href="#"
                 onClick={() => handleClick('Music & Video')}
                 isActive={activeLink === 'Music & Video'}
             >
                 Music & Video
-            </NavbarLink></li>
-            <li><NavbarLink
+            </NavbarLink>
+            <NavbarLink
                 href="#"
                 onClick={() => handleClick('Business')}
                 isActive={activeLink === 'Business'}
             >
                 Business
-            </NavbarLink></li>
-            <li><NavbarLink
+            </NavbarLink>
+            <NavbarLink
                 href="#"
                 onClick={() => handleClick('Data')}
                 isActive={activeLink === 'Data'}
             >
                 Data
             </NavbarLink>
-            </li>
-            <li><NavbarLink
+            <NavbarLink
                 href="#"
                 onClick={() => handleClick('Photography')}
                 isActive={activeLink === 'Photography'}
             >
                 Photography
-            </NavbarLink></li>
-            <li><NavbarLink
+            </NavbarLink>
+            <NavbarLink
                 href="#"
                 onClick={() => handleClick('AI Services')}
                 isActive={activeLink === 'AI Services'}
             >
                 AI Services
-            </NavbarLink></li>
-            </NavbarList>
+            </NavbarLink>
         </NavbarContainer>
-    
-        
-        </div>
-      )}
-    </div>
-  );
+    );
 }
 
 Navbar2.propTypes = {

@@ -18,7 +18,6 @@ const Transaction = require('./db/models/transaction')
 const { generateOTP, getUniqueId, endAudioVideoCall } = require('./logic')
 const { getPaymentLink, stripeWebhookHandler } = require('./Payment/index')
 //const authRouter = require('./Router/authRouter')
-
 const app = express()
 const server = http.createServer(app)
 const wss = new WebSocket.Server({ server })

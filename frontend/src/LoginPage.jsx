@@ -1,7 +1,10 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import serverUrl from "./config";
+import logo from "./assets/logo.png"
+
+
 
 const Triangle = styled.div`
   width: 0;
@@ -12,27 +15,40 @@ const Triangle = styled.div`
   transform: rotate(0deg);
   position: absolute;
   z-index: 0;
+  top: 0; /* Add this to position the triangle at the top */
+  left: 0; 
 
   @media (max-width: 768px) {
-    border-width: 40vw 70vw 0 0;
+    border-width: 30vw 60vw 0 0;
   }
 `;
-
+const LogoImage = styled.img`
+  width: 150px; /* Set the width as needed */
+  height: auto; /* Maintain the aspect ratio */
+`;
 const Container = styled.div`
   display: flex;
-  padding-top: 30vh;
-  position: relative;
   justify-content: center;
   flex-direction: column;
   align-items: center;
   margin-bottom: 2rem;
   z-index: 1;
+  background-color: #f5f5f5; /* Add your desired background color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+  border-radius: 10px; /* Add rounded corners */
+  padding: 2rem; /* Add padding for spacing */
+  width: 400px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-bottom: 2rem;
 `;
 
 const HeadingContainer = styled.div`
   display: flex;
   gap: 1rem;
-  align-items: center; /* Ensure inline alignment */
+  align-items: center;
 `;
 
 const Heading = styled.h1`
@@ -50,7 +66,7 @@ const HeadingSeparator = styled.span`
   font-size: 2.5rem;
   font-weight: bolder;
   color: black;
-  display: inline; /* Add for small screens */
+  display: inline;
 
   @media (max-width: 768px) {
     font-size: 2rem;
@@ -76,20 +92,7 @@ const ContactNumberContainer = styled.input`
   }
 `;
 
-const Verify = styled.button`
-  cursor: pointer;
-  background-color: black;
-  color: white;
-  outline: 1px solid black;
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 1rem;
-  margin-top: 1rem;
 
-  @media (max-width: 768px) {
-    margin-top: 0.5rem;
-  }
-`;
 
 const OTPContainer = styled.input`
   outline: 2px solid black;
@@ -147,6 +150,30 @@ const OTPErrorMessage = styled(ErrorMessage)`
   margin-bottom: 0;
 `;
 
+const Verify = styled.button`
+  cursor: pointer;
+  background-color: black;
+  color: white;
+  outline: 1px solid black;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #333; /* Darker color on hover */
+  }
+
+  &:active {
+    background-color: #555; /* Even darker color when pressed */
+  }
+
+  @media (max-width: 768px) {
+    margin-top: 0.5rem;
+  }
+`;
+
 export default function AuthPage() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [username, setUsername] = useState("");
@@ -157,6 +184,19 @@ export default function AuthPage() {
   const [successMessage, setSuccessMessage] = useState("");
   const [isSignIn, setIsSignIn] = useState(false);
   const navigate = useNavigate();
+  const [showResendButton, setShowResendButton] = useState(false);
+
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setShowResendButton(true);
+    }, 10000); // Set timeout to 20 seconds
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+
+
 
   const validatePhoneNumber = (input) => {
     if (!input.startsWith("+")) {
@@ -165,17 +205,17 @@ export default function AuthPage() {
 
     const digitsAfterFirstThree = input.slice(3).replace(/\D/g, "");
     if (input.length > 3 && digitsAfterFirstThree.length < 10) {
-      return "Valid contact number to be inserted after country code.";
+      return "Valid contact number to be inserted after the country code.";
     }
 
     if (!/^\+[\d]+$/.test(input)) {
-      return "Please enter a valid number with country code.";
+      return "Please enter a valid number with the country code.";
     }
 
     return "";
   };
 
-  const handleVerify = async (e) => {
+  const handleVerify = async (e, resend = false) => {
     e.preventDefault();
     setErrorMessage("");
     setSuccessMessage("");
@@ -186,6 +226,7 @@ export default function AuthPage() {
       if (validationError) {
         throw new Error(validationError);
       }
+
       let requestBody;
       if (isSignIn) {
         requestBody = { phoneNumber, otp };
@@ -193,7 +234,9 @@ export default function AuthPage() {
         requestBody = { phoneNumber, username, otp };
       }
 
-      const response = await fetch(`${serverUrl}/send-otp`, {
+      const endpoint = resend ? `${serverUrl}/resend-otp` : `${serverUrl}/send-otp`;
+
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -209,9 +252,6 @@ export default function AuthPage() {
       } else {
         setErrorMessage(`${data.message}\nCheck the number or country code!`);
       }
-    } catch (error) {
-      console.error("Error sending OTP:", error.message);
-      setErrorMessage(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -246,7 +286,7 @@ export default function AuthPage() {
       if (result.success) {
         console.log("OTP verification successful");
         window.localStorage.setItem("id", result.userId);
-        navigate("/", { replace: true });
+        navigate("/");
         window.location.reload();
       } else {
         setErrorMessage("Invalid OTP");
@@ -256,6 +296,21 @@ export default function AuthPage() {
       setErrorMessage("Error during OTP verification. Please try again.");
     }
   };
+  const HeadingContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-top:1rem;
+  /* Added margin to create space between Clustle and the rest of the content */
+`;
+
+const ClustleHeading = styled.h1`
+  font-size: 3rem;
+  font-weight: bold;
+  color: #333; /* Adjust color to your preference */ /* Remove default margin */
+  margin:0 auto; 
+`;
 
   const handlePhoneNumberChange = (e) => {
     let input = e.target.value;
@@ -274,9 +329,15 @@ export default function AuthPage() {
     setErrorMessage("");
   };
 
+  const handleClick = () => {
+    window.location.href = '/';
+  };
   return (
-    <>
-      <Triangle></Triangle>
+    <><Triangle></Triangle>
+            <HeadingContainer>
+          <ClustleHeading style={{cursor: 'pointer'}}><LogoImage onClick={handleClick} src={logo} alt="Clustle Logo" /></ClustleHeading>
+        </HeadingContainer>
+
       <Container>
         <HeadingContainer>
           <Heading onClick={() => setIsSignIn(false)} selected={!isSignIn}>
@@ -314,9 +375,10 @@ export default function AuthPage() {
                 </div>
               )}
 
-              <Verify onClick={handleVerify} disabled={isLoading}>
+              <Verify onClick={(e) => handleVerify(e, false)} disabled={isLoading}>
                 {isLoading ? "Verifying..." : "Verify"}
               </Verify>
+
             </div>
           )}
           {isPhoneVerified && (
@@ -330,7 +392,41 @@ export default function AuthPage() {
               {errorMessage && (
                 <OTPErrorMessage>{errorMessage}</OTPErrorMessage>
               )}
-              <SubmitButton>Submit</SubmitButton>
+              
+              {showResendButton && (
+              <Verify  id='resend'onClick={(e) => handleVerify(e, false)} disabled={isLoading} style={{
+            visibility:  'visible',
+            cursor: 'pointer',
+    backgroundColor: 'black',
+    color: 'white',
+    outline: '1px solid black',
+    border: 'none',
+    padding: '7px',
+    borderRadius: '1rem',
+    transition: 'background-color 0.3s ease',
+  }}
+  onMouseOver={(e) => { e.target.style.backgroundColor = '#333' }}
+  onMouseOut={(e) => { e.target.style.backgroundColor = 'black' }}
+  onMouseDown={(e) => { e.target.style.backgroundColor = '#555' }}
+  onMouseUp={(e) => { e.target.style.backgroundColor = '#333' }}
+      
+          >
+                Resend OTP
+              </Verify>
+)}
+<SubmitButton   style={{
+    cursor: 'pointer',
+    backgroundColor: 'black',
+    color: 'white',
+    outline: '1px solid black',
+    border: 'none',
+    transition: 'background-color 0.3s ease',
+  }}
+  onMouseOver={(e) => { e.target.style.backgroundColor = '#333' }}
+  onMouseOut={(e) => { e.target.style.backgroundColor = 'black' }}
+  onMouseDown={(e) => { e.target.style.backgroundColor = '#555' }}
+  onMouseUp={(e) => { e.target.style.backgroundColor = '#333' }}
+>Submit</SubmitButton>
             </>
           )}
         </Form>

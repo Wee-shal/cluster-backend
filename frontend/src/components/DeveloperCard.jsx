@@ -62,7 +62,7 @@ const BlurredBackground = styled.div`
 
 const Card = styled.div`
   margin-top: 1rem;
-  min-height: 17rem;
+  min-height: 18rem;
   width: 15rem;
   border-radius: 0.1rem;
   outline: 1px solid #b8b8b8;
@@ -104,14 +104,15 @@ const NotificationContainer = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); 
 `
 const Name = styled.h3`
-  margin-top: 0.4rem;
+  margin-top: 0.5rem;
+  margin-bottom:0.3px;
 `
-
+const Role = styled.p`margin-top: 0.25rem`
 const ProfileImage = styled.img.attrs(({ src }) => ({
   src,
 }))`
   width: 30%;
-  margin-top: 1rem;
+  margin-top: 0.4rem;
   border-radius:30px;
 `
 const Description = styled.p`
@@ -252,10 +253,11 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
           )}
           <ProfileImage src={profilePic} />
           <Name>{name}</Name>
+          <Role><b>{hit.role}</b></Role>
           <Description>{description.slice(0, 55)}…</Description>
           <Price>
             <b>Price</b> - {hit.currency}
-            {rates} /min
+            {rates*10} <b>/</b>10 mins
           </Price>
         </ProfileWrapper>
         <Container>
