@@ -47,7 +47,7 @@ const TextLogo = styled.div`
   padding: 0.6vw;
   margin-top: 30px;
   color: white;
-  margin-right:15px;
+  margin-right: 15px;
 
   @media (max-width: 768px) {
     font-size: 1rem;
@@ -63,6 +63,20 @@ const Container = styled.div`
 `;
 
 const BalanceText = styled.div``;
+
+const NavbarContainer = styled.div`
+  background-color: black;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  height: 60px; /* Set your desired fixed height for the navbar */
+
+  @media (max-width: 768px) {
+    flex-direction: column; /* Stack items in a column for small screens */
+    height: auto; /* Allow the height to adjust based on content */
+  }
+`;
 
 export default function SearchBar() {
   const [searchResults, setSearchResults] = useState([]);
@@ -186,7 +200,6 @@ const handleSearch = async (e) => {
           gap: '50px',
           padding: '0 20px 0 20px',
           margin:'0',
-          flexWrap:'wrap',
         }}
       >
         <div style={{ cursor: 'pointer', textDecoration: 'none', marginRight:'10px', margin: 'auto'}} onClick={handleClick}>

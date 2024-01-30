@@ -106,6 +106,13 @@ function Navbar2({ customSearchFunction }) {
             >
                 Writing & Translation
             </NavbarLink>
+            <NavbarLink
+                href="#"
+                onClick={() => handleClick('Health & Fitness')}
+                isActive={activeLink === 'Health & Fitness'}
+            >
+                Health & Fitness
+            </NavbarLink>
         </NavbarContainer>
     );
 }

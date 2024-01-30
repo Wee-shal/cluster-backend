@@ -62,7 +62,7 @@ const BlurredBackground = styled.div`
 
 const Card = styled.div`
   margin-top: 1rem;
-  min-height: 18rem;
+  min-height: 18.3rem;
   width: 15rem;
   border-radius: 0.1rem;
   outline: 1px solid #b8b8b8;

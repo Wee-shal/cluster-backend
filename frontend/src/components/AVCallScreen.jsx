@@ -98,11 +98,6 @@ export default function AVCallScreen({ userId }) {
 		}
 	}
 
-	setInterval(async () => {
-		await disconnect()
-		useNavigate('/')
-	}, 179000)
-
 	const removeTrackFromDiv = (divID, track) => {
 		const div = document.getElementById(divID)
 		const childId = divID + '-child' + (track.kind || track.name)
