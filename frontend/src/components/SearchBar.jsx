@@ -320,7 +320,7 @@ const handleSearch = async (e) => {
       </div>
       <Navbar2 customSearchFunction={customSearchFunction}/>
       <InstantSearch searchClient={searchClient} indexName="newproj">
-        <div>
+        <div style={{minHeight:"100vh"}}>
           <ResultsContainer>
             {searchResults.length > 0 ? (
               <ol>
