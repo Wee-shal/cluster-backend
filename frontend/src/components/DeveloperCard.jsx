@@ -111,9 +111,9 @@ const Role = styled.p`margin-top: 0.25rem`
 const ProfileImage = styled.img.attrs(({ src }) => ({
   src,
 }))`
-  width: 30%;
+  width: 40%;
   margin-top: 0.4rem;
-  border-radius:30px;
+  border-radius:40px;
 `
 const Description = styled.p`
 width: 200px; /* Adjust the width as needed */

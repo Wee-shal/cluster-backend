@@ -20,7 +20,7 @@ const Footer = () => {
   </a>
 </p>
     </footer>
-  );
+  )
 };
 // Styles
 const footerStyle = {
