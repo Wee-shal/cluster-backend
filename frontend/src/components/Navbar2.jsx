@@ -52,66 +52,24 @@ function Navbar2({ customSearchFunction }) {
         <NavbarContainer className="navbar">
             <NavbarLink
                 href="#"
-                onClick={() => handleClick('Graphic Design')}
-                isActive={activeLink === 'Graphic Design'}
+                onClick={() => handleClick('Development & IT')}
+                isActive={activeLink === 'Development & IT'}
             >
-                Graphic Design
+                Development & IT
             </NavbarLink>
             <NavbarLink
                 href="#"
-                onClick={() => handleClick('Programming & Tech')}
-                isActive={activeLink === 'Programming & Tech'}
+                onClick={() => handleClick('Finance & Accounting')}
+                isActive={activeLink === 'Finance & Accounting'}
             >
-                Programming & Tech
+                Finance & Accounting
             </NavbarLink>
             <NavbarLink
                 href="#"
-                onClick={() => handleClick('Digital Marketing')}
-                isActive={activeLink === 'Digital Marketing'}
+                onClick={() => handleClick('Legal')}
+                isActive={activeLink === 'Legal'}
             >
-                Digital Marketing
-            </NavbarLink>
-            <NavbarLink
-                href="#"
-                onClick={() => handleClick('Video & Animation')}
-                isActive={activeLink === 'Video & Animation'}
-            >
-                Video & Animation
-            </NavbarLink>
-            <NavbarLink
-                href="#"
-                onClick={() => handleClick('Writing & Translation')}
-                isActive={activeLink === 'Writing & Translation'}
-            >
-                Writing & Translation
-            </NavbarLink>
-            <NavbarLink
-                href="#"
-                onClick={() => handleClick('Music & Video')}
-                isActive={activeLink === 'Music & Video'}
-            >
-                Music & Video
-            </NavbarLink>
-            <NavbarLink
-                href="#"
-                onClick={() => handleClick('Business')}
-                isActive={activeLink === 'Business'}
-            >
-                Business
-            </NavbarLink>
-            <NavbarLink
-                href="#"
-                onClick={() => handleClick('Data')}
-                isActive={activeLink === 'Data'}
-            >
-                Data
-            </NavbarLink>
-            <NavbarLink
-                href="#"
-                onClick={() => handleClick('Photography')}
-                isActive={activeLink === 'Photography'}
-            >
-                Photography
+                Legal
             </NavbarLink>
             <NavbarLink
                 href="#"
@@ -119,6 +77,34 @@ function Navbar2({ customSearchFunction }) {
                 isActive={activeLink === 'AI Services'}
             >
                 AI Services
+            </NavbarLink>
+            <NavbarLink
+                href="#"
+                onClick={() => handleClick('Marketing & Sales')}
+                isActive={activeLink === 'Marketing & Sales'}
+            >
+                Marketing & Sales
+            </NavbarLink>
+            <NavbarLink
+                href="#"
+                onClick={() => handleClick('Design & UI/UX')}
+                isActive={activeLink === 'Design & UI/UX'}
+            >
+                Design & UI/UX
+            </NavbarLink>
+            <NavbarLink
+                href="#"
+                onClick={() => handleClick('Academics & Tutors')}
+                isActive={activeLink === 'Academics & Tutors'}
+            >
+               Academics & Tutors
+            </NavbarLink>
+            <NavbarLink
+                href="#"
+                onClick={() => handleClick('Writing & Translation')}
+                isActive={activeLink === 'Writing & Translation'}
+            >
+                Writing & Translation
             </NavbarLink>
         </NavbarContainer>
     );
