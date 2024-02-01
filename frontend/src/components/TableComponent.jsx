@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react'
 import { getUser } from '../services/helpers'
 import { userContext } from '../state/userState'
 import serverUrl from '../config'
+import { Link } from 'react-router-dom';
 
 const TableComponent = () => {
 	const [data, setData] = useState([])
@@ -65,24 +66,18 @@ const TableComponent = () => {
 								})}
 							</td>
 							<td style={tdStyle}>
-							{item.helper ? item.helper===id ?(
-								<a
-									href={`${serverUrl}/profile/${item.caller}`}
-									style={{ textDecoration: 'blue', color: 'blue' }}
-								>
-									{item.caller}
-								</a>
-							):(
-								<a
-									href={`${serverUrl}/profile/${item.helper}`}
-									style={{ textDecoration: 'blue', color: 'blue' }}
-								>
-									{item.helper}
-								</a>
-							):(
-								"Recharged"
-							)}
-							</td>
+  {item.helper ? item.helper === id ? (
+    <Link to={`/profile/${item.caller}`} style={{ textDecoration: 'blue', color: 'blue' }}>
+      {item.caller}
+    </Link>
+  ) : (
+    <Link to={`/profile/${item.helper}`} style={{ textDecoration: 'blue', color: 'blue' }}>
+      {item.helper}
+    </Link>
+  ) : (
+    "Recharged"
+  )}
+</td>
 							<td style={tdStyle}>
 								{item?.duration ? formatDuration(item?.duration) : '-'}
 							</td>

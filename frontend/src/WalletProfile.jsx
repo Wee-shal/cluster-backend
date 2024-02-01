@@ -85,11 +85,11 @@ export default function WalletProfile() {
     <div>
       
       <Navbar />
-      <div>
+      <div style={{minHeight:"100vh"}}>
         <h1 style={{ textAlign: 'center', marginTop: '20px',marginBottom:'10px' }}>Wallet</h1>
         
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ justifyContent: 'center', textAlign: 'center', marginTop: '75px', display: 'flex', flexDirection: 'row', textAlign: 'center' }}>{/*wallet icon and image*/}
+        <div style={{ textAlign: 'center'}}>
+          <div style={{ justifyContent: 'center', textAlign: 'center', marginTop: '75px', display: 'flex', flexDirection: 'row', }}>{/*wallet icon and image*/}
             <div style={{marginRight: '10px'}}><h3>Your Balance:</h3></div>
             <div style={{textAlign: 'center'}}><h3 style={dollarSignStyle}>${balance.toFixed(2)}</h3></div>
           </div>

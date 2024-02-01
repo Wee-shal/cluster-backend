@@ -254,7 +254,10 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
           <ProfileImage src={profilePic} />
           <Name>{name}</Name>
           <Role><b>{hit.role}</b></Role>
-          <Description>{description.slice(0, 55)}…</Description>
+          <Description>
+  {description || "No description available"}
+</Description>
+
           <Price>
             <b>Price</b> - {hit.currency}
             {rates*10} <b>/</b>10 mins
@@ -278,7 +281,7 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
 DeveloperCard.propTypes = {
   name: PropTypes.string.isRequired,
   profilePic: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+  description: PropTypes.string,
   rates: PropTypes.number.isRequired,
   developerId: PropTypes.string.isRequired,
   hit: PropTypes.object.isRequired,

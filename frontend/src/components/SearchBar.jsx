@@ -88,7 +88,7 @@ export default function SearchBar() {
   useEffect(() => {
     (async () => {
       try {
-        const allCards = await searchClient.initIndex('newproj').search('');
+        const allCards = await searchClient.initIndex('emortech').search('');
         setSearchResults(allCards.hits);
 
         const id = window.localStorage.getItem('id');
@@ -105,10 +105,10 @@ export default function SearchBar() {
 
     try {
         if (inputValue) {
-            const { hits } = await searchClient.initIndex('newproj').search(inputValue);
+            const { hits } = await searchClient.initIndex('emortech').search(inputValue);
             setSearchResults(hits);
         } else {
-          const allCards = await searchClient.initIndex('newproj').search('');
+          const allCards = await searchClient.initIndex('emortech').search('');
           setSearchResults(allCards.hits);
         }
     } catch (error) {
@@ -122,11 +122,11 @@ const handleSearch = async (e) => {
   try {
     if (inputValue === '') {
       // If the input value is empty, fetch all cards
-      const allCards = await searchClient.initIndex('newproj').search('');
+      const allCards = await searchClient.initIndex('emortech').search('');
       setSearchResults(allCards.hits);
     } else {
       // Otherwise, perform search based on the input value
-      const { hits } = await searchClient.initIndex('newproj').search(inputValue);
+      const { hits } = await searchClient.initIndex('emortech').search(inputValue);
       setSearchResults(hits);
     }
   } catch (error) {
@@ -319,11 +319,11 @@ const handleSearch = async (e) => {
         </div>
       </div>
       <Navbar2 customSearchFunction={customSearchFunction}/>
-      <InstantSearch searchClient={searchClient} indexName="newproj">
-        <div style={{minHeight:"100vh"}}>
+      <InstantSearch searchClient={searchClient} indexName="emortech">
+        <div style={{minHeight:"200vh"}}>
           <ResultsContainer>
             {searchResults.length > 0 ? (
-              <ol>
+              <ol style={{padding:'0px'}}>
                 {searchResults.map((hit) => (
                   <li key={hit.objectID}>
                     <DeveloperCard

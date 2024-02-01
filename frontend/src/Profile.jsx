@@ -163,7 +163,7 @@ export default function Profile() {
   return (
     <div>
       <Navbar />
-      <div style={{ textAlign: 'center', margin: '60px auto' }}>
+      <div style={{ textAlign: 'center', margin: '60px auto',minHeight:"100vh" }}>
         <img style={{ width: '150px', height: '150px', borderRadius: '50%', marginBottom: '20px', marginTop: '40px' }} src={expert?.profilePic} alt={expert?.name} />
         <div style={{ marginRight: '20%', marginLeft: '20%' }}>
           <h2>{expert?.name}</h2>
