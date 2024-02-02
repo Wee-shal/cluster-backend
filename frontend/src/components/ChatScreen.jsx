@@ -5,30 +5,27 @@ import { userContext } from '../state/userState'
 import crossIcon from '../assets/icons/cross.svg'
 
 const ChatScreenContainer = styled.div`
-	background-color: #b2beb5;
+	background-color: #EFF1ED;
 	flex: 2;
 	position: static;
 	display: flex;
 	flex-direction: column;
 	min-width: 100%;
 	margin: auto;
-	height: 20vh;
-	border-radius: 0;
+	margin-top:10px;
+	height: 33vh;
+	border-radius: 10px;
 	z-index: 10;
 
 	@media (max-width: 768px) {
-		min-height: 100vh;
 		width: 100%;
 		margin: 0 auto;
 		align-items: center;
 		position: absolute;
-		top: 0;
 		left: -1rem;
-		right: 0;
 		bottom: 0;
-		z-index: 9;
 		padding-left: 1rem;
-		padding-right: 1rem;
+		overflow:hidden;
 	}
 `
 
@@ -41,7 +38,7 @@ const Form = styled.form`
 		position: absolute;
 		bottom: 1%;
 		border-radius: 0.2rem;
-		background-color: #b2beb5;
+		background-color: #EFF1ED;
 		width: 90%;
 		height: 5rem;
 		display: flex;
@@ -65,23 +62,39 @@ const MsgContainer = styled.div`
 `
 
 const Input = styled.input`
-	width: 100%;
-	padding: 0.4rem 0; /* Adjust the padding value as needed */
-	border-radius: 10px;
-	border: 3px solid black;
-`
+  width: 100%;
+  padding: 0.4rem 0.5rem; /* Adjust the padding value as needed */
+  border-radius: 10px;
+  background-color: #ffffff; /* Set your desired background color */
+  color: #000000; /* Set your desired text color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+  transition: box-shadow 0.3s ease; /* Add a smooth transition to the box shadow */
+
+  &:focus {
+    outline: none; /* Remove the default focus outline */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase box shadow on focus */
+  }
+`;
+
 
 const SendButton = styled.button`
-	cursor: pointer;
-	padding: 0.4rem 0.5rem;
-	margin-left: 0.3rem;
-	width: auto;
-	height: 2rem;
-	margin-right: 12px;
-	height: 2rem;
-	border-radius: 10px;
-	border: 3px solid black;
-`
+  cursor: pointer;
+  padding: 0.4rem 0.5rem;
+  margin-left: 0.3rem;
+  width: auto;
+  height: 2rem;
+  margin-right: 12px;
+  border-radius: 10px;
+  background-color: #ffffff; /* Set your desired background color */
+  color: #000000; /* Set your desired text color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+  transition: box-shadow 0.3s ease; /* Add a smooth transition to the box shadow */
+
+  &:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase box shadow on hover */
+  }
+`;
+
 
 const Closebutton = styled.div`
 	display: block;
@@ -109,7 +122,7 @@ const ChatMessageWrapper = styled.div`
 	bottom: 0rem;
 	overflow-y: auto;
 	height: 70%;
-	background-color: #b2beb5;
+	background-color: #EFF1ED;
 	@media (max-width: 768px) {
 		position: absolute;
 		bottom: 0;
@@ -240,19 +253,21 @@ export default function ChatScreen({ userId }) {
 					})}
 			</ChatMessageWrapper>
 			<Form onSubmit={sendMessage}>
-				<Input
-					style={{ paddingLeft: '5px' }}
-					type="text"
-					value={inputMessage}
-					onChange={e => {
-						const inputValue = e.target.value
-						if (inputValue.trim() !== '') {
-							setInputMessage(inputValue)
-						}
-					}}
-				/>
-				<SendButton type="submit">Send</SendButton>
-			</Form>
+			<Input
+  style={{}}
+  type="text"
+  value={inputMessage}
+  onChange={(e) => {
+    const inputValue = e.target.value;
+    if (inputValue.trim() !== '' || inputValue === '') {
+      setInputMessage(inputValue);
+    }
+  }}
+/>
+  <SendButton type="submit" disabled={!inputMessage.trim()}>
+    Send
+  </SendButton>
+</Form>
 		</ChatScreenContainer>
 	)
 }

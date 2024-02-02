@@ -6,10 +6,12 @@ import { getUser } from './services/helpers'
 import { getPaymentLink } from './services/paymentService'
 import Footer from './components/Footer';
 import serverUrl from './config'  /*new 23/12/23 */
+import wallet from './assets/profileImages/wallet.png'
+
 export default function WalletProfile() {
   const id = window.localStorage.getItem("id")
   const [balance, setBalance] = useState(0);
-  
+   
     useEffect(() => {
       const fetchBalance = async () => {
         try {
@@ -89,12 +91,28 @@ export default function WalletProfile() {
         <h1 style={{ textAlign: 'center', marginTop: '20px',marginBottom:'10px' }}>Wallet</h1>
         
         <div style={{ textAlign: 'center'}}>
-          <div style={{ justifyContent: 'center', textAlign: 'center', marginTop: '75px', display: 'flex', flexDirection: 'row', }}>{/*wallet icon and image*/}
-            <div style={{marginRight: '10px'}}><h3>Your Balance:</h3></div>
-            <div style={{textAlign: 'center'}}><h3 style={dollarSignStyle}>${balance.toFixed(2)}</h3></div>
+          <div style={{ justifyContent: 'center', textAlign: 'center', marginTop: '50px', display: 'flex', flexDirection: 'row',alignItems:'center' }}>{/*wallet icon and image*/}
+          <div style={{
+  maxWidth: '10%', // Set maximum width to ensure responsiveness
+  textAlign: 'center', // Center the content horizontally
+}}>
+  <img 
+    src={wallet} 
+    alt="Example" 
+    style={{
+      maxWidth: '100%', // Ensure the image scales with its container
+      height: 'auto', // Maintain aspect ratio
+      width: 'auto', // Allow the image to adjust its width
+      
+    }} 
+  />
+</div>
+
+            <div style={{marginRight: '10px',marginTop:'1px'}}><h3>Your Balance:</h3></div>
+            <div style={{textAlign: 'center',marginTop:'2px'}}><h3 style={dollarSignStyle}>${balance.toFixed(2)}</h3></div>
           </div>
         </div>
-        <div  style={{textAlign:'center'}}>
+        <div  style={{textAlign:'center',marginTop:'20px'}}>
           <div>{/*new 23/12/2023 type-submit, form*/}
           <form onSubmit={generatePaymentLink}>
                         {user?.currency}{' '}

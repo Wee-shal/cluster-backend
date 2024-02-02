@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import useState from 'react-usestateref' // see this line
+import video from '../assets/icons/video.svg';
+import videoOff from '../assets/icons/videoOff.svg';
 
 import Video from 'twilio-video'
 import styled from 'styled-components'
@@ -32,6 +34,13 @@ const InCallControlsContainer = styled.div`
 		justify-content: center;
 	}
 `
+const Icon = styled.img`
+  padding: 0.6rem 0.8rem;
+  border-radius: 22%;
+  cursor: pointer;
+  width: ${props => props.width || 'auto'};
+
+`;
 
 
 const ShareScreenToggleButton = styled.button`
@@ -57,6 +66,8 @@ export default function AVCallScreen({ userId }) {
 	const [localScreenTrack, setLocalScreenTrack, localScreenTrackRef] = useState(null)
 	const [localVideoTrack, setLocalVideoTrack, localvideoTrackRef] = useState(null)
 
+
+
 	const handleDisconnected = room => console.log('disconnected ', room)
 
 	const connect = async () => {
@@ -67,7 +78,7 @@ export default function AVCallScreen({ userId }) {
 
 		let twilioRoom
 
-		let token = (await getToken('room9', userId))?.token
+		let token = (await getToken('room5', userId))?.token
 		console.log('Token from server: ', token)
 		twilioRoom = await Video.connect(token)
 		setRoom(twilioRoom)
@@ -98,6 +109,11 @@ export default function AVCallScreen({ userId }) {
 		}
 	}
 
+	setInterval(async () => {
+		await disconnect()
+		useNavigate('/')
+	}, 179000)
+
 	const removeTrackFromDiv = (divID, track) => {
 		const div = document.getElementById(divID)
 		const childId = divID + '-child' + (track.kind || track.name)
@@ -116,9 +132,43 @@ export default function AVCallScreen({ userId }) {
 	// }
 	
 	const attachLocalVideoTrack = async () => {
-        const videoTrack = await Video.createLocalVideoTrack()
-        videoTrack.attach('#localVideo-video')
-	}
+        const videoTrack = await Video.createLocalVideoTrack();
+        setLocalVideoTrack(videoTrack);
+        videoTrack.attach('#localVideo-video');
+        console.log("Local video track attached");
+      };
+      
+      const stopLocalVideo = () => {
+  if (localVideoTrack) {
+    localVideoTrack.stop();
+    room.localParticipant.unpublishTrack(localVideoTrack);
+    setLocalVideoTrack(null); // Reset the state variable
+    console.log("Local video track stopped");
+  }
+};
+
+const startLocalVideo = async () => {
+  try {
+    const videoTrack = await Video.createLocalVideoTrack();
+    setLocalVideoTrack(videoTrack);
+    room.localParticipant.publishTrack(videoTrack);
+    videoTrack.attach('#localVideo-video');
+    console.log("Local video track started");
+  } catch (error) {
+    console.error("Error starting local video track:", error);
+  }
+};
+
+      const toggleLocalVideo = () => {
+        if (localVideoTrack) {
+          stopLocalVideo();
+        } else {
+          startLocalVideo();
+        }
+      };
+      
+      
+    
 
 	const getLocalScreenShareTrack = async () => {
 		try {
@@ -258,15 +308,39 @@ export default function AVCallScreen({ userId }) {
 			console.log('in use effect: ', roomRef.current)
 		})()
 	}, [])
+    useEffect(() => {
+		const handleResize = () => {
+			setIsSmallScreen(window.innerWidth <= 768)
+		}
+
+		window.addEventListener('resize', handleResize)
+
+		return () => {
+			window.removeEventListener('resize', handleResize)
+		}
+	}, [])
+	const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 768)
+
+	useEffect(() => {
+		const handleResize = () => {
+			setIsSmallScreen(window.innerWidth <= 768)
+		}
+
+		window.addEventListener('resize', handleResize)
+
+		return () => {
+			window.removeEventListener('resize', handleResize)
+		}
+	}, [])
 
 	return (
 		<div>
-			<div style={{ display: 'flex', backgroundColor: 'black',height:'100vh' }}>
+			<div style={{ display: isSmallScreen ? 'block' : 'flex', backgroundColor: 'black',height:'100vh' }}>
 				<div
 					style={{
-						flex: 7,
+						flex: isSmallScreen ? 8 : 7,
 						backgroundColor: 'black',
-						height:'80%',
+						height:isSmallScreen?'50%' :'80%',
 						overflow:'hidden',
 						padding:'20px',
 						paddingTop:'40px',
@@ -274,7 +348,7 @@ export default function AVCallScreen({ userId }) {
 					}}
 				>
 					<div
-						id="remoteScreen"s
+						id="remoteScreen"
 						style={{
 							display: isRemoteScreenSharingEnabledRef.current ? 'flex' : 'none',
 						}}
@@ -321,14 +395,16 @@ export default function AVCallScreen({ userId }) {
 				</div>
 				<div
 					style={{
-						flex: 3,
+						flex:isSmallScreen ? 2 : 3 ,
 						display: 'flex',
-						height:'75%',
-						flexDirection: 'column',
+						height:isSmallScreen ? '25%' : '75%',
+						flexDirection: isSmallScreen ? 'row' : 'column',
 						backgroundColor: 'black',
-						width: '33%',
+						width: isSmallScreen ? '93%' :'33%',
 						padding:'10px',
-						paddingTop:'40px'
+						paddingTop:isSmallScreen ? '10px':'40px',
+                        paddingRight:isSmallScreen ? '10px':'10px',
+
 					}}
 				>
 					 {/* Remote Video 2 */}
@@ -371,15 +447,20 @@ export default function AVCallScreen({ userId }) {
         }}
       id="localVideo-video" autoPlay></video>
     </div>
-
-
 					{/* ChatScreen Component */}
-					<div style={{flex:1,display: 'flex', backgroundColor: '#B2BEB5',borderRadius:'10px' }}>
+					<div style={{flex: isSmallScreen ? 'none' : 1,display: 'flex',  }}>
 						<ChatScreen userId={userId || window?.location?.pathname?.split('/')[2]} />
 					</div>
 				</div>
 			</div>
 			<InCallControlsContainer>
+
+            <button style={{borderRadius:'22%'}} onClick={toggleLocalVideo}>
+        {localVideoTrack ? '' : ''}
+        <Icon src={localVideoTrack ? videoOff : video} alt="Video Toggle" />
+      </button>
+
+                        <AudioToggle />
 				<ShareScreenToggleButton
 					onClick={async () => {
 						if (isScreenSharingEnabled) {

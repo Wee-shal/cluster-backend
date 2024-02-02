@@ -56,19 +56,45 @@ const Navbar = () => {
     }
   };
 
+  useEffect(() => {
+		const handleResize = () => {
+			setIsSmallScreen(window.innerWidth <= 768)
+		}
+
+		window.addEventListener('resize', handleResize)
+
+		return () => {
+			window.removeEventListener('resize', handleResize)
+		}
+	}, [])
+	const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 768)
+
+	useEffect(() => {
+		const handleResize = () => {
+			setIsSmallScreen(window.innerWidth <= 768)
+		}
+
+		window.addEventListener('resize', handleResize)
+
+		return () => {
+			window.removeEventListener('resize', handleResize)
+		}
+	}, [])
+
   return (
+   
     <nav style={{ backgroundColor: 'black', padding: '0.5rem', color: 'white', position: 'sticky', top: '0', zIndex: '1000', maxWidth: '100%', overflow: 'hidden' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
         {/* Dummy Logo Text */}
-        <div style={{ cursor: 'pointer', textDecoration: 'none', marginRight:'10px'}} onClick={handleClick}>
-          <img src={ClustleLogo} style={{maxHeight: '40px'}}></img>
+        <div style={{ cursor: 'pointer', textDecoration: 'none', marginRight:'1px'}} onClick={handleClick}>
+          <img src={ClustleLogo} style={{maxHeight:isSmallScreen?'25px':'40px'}}></img>
         </div>
         {/* Search Bar */}
         {/* User Icon and Menu */}
         <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
           {id ? (
             <>
-              <div >
+              <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
                 <Wallet />
               </div>
               <div style={{ margin: '0 10px' }}>
@@ -107,6 +133,7 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
+    
   );
 };
 

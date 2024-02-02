@@ -38,13 +38,12 @@ function Navbar2({ customSearchFunction }) {
     const [activeLink, setActiveLink] = useState(null);
 
     const handleClick = (link) => {
-        if(!activeLink){
-        setActiveLink(link);
-        customSearchFunction(link);
-        }
-        else{
+        if (activeLink === link) {
             setActiveLink(null);
-        customSearchFunction(null)
+            customSearchFunction(null);
+        } else {
+            setActiveLink(link);
+            customSearchFunction(link);
         }
     };
 

@@ -22,6 +22,7 @@ import Footer from "./Footer"
 const searchClient = algoliasearch(algoliaAppId, algoliaSearchApiKey);
 const idFromUrl = window.localStorage.getItem('id');
 
+
 const TopHeader = styled.header`
   background-color: #333;
   height: 1px;
@@ -83,6 +84,7 @@ export default function SearchBar() {
   const { user, setUser } = useContext(userContext);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  
   
 
   useEffect(() => {
@@ -185,6 +187,30 @@ const handleSearch = async (e) => {
       window.location.href = '/';
     }
   };
+  useEffect(() => {
+		const handleResize = () => {
+			setIsSmallScreen(window.innerWidth <= 768)
+		}
+
+		window.addEventListener('resize', handleResize)
+
+		return () => {
+			window.removeEventListener('resize', handleResize)
+		}
+	}, [])
+	const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 768)
+
+	useEffect(() => {
+		const handleResize = () => {
+			setIsSmallScreen(window.innerWidth <= 768)
+		}
+
+		window.addEventListener('resize', handleResize)
+
+		return () => {
+			window.removeEventListener('resize', handleResize)
+		}
+	}, [])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -197,18 +223,29 @@ const handleSearch = async (e) => {
           backgroundColor: 'black',
           display: 'flex',
           justifyContent: 'space-between',
-          gap: '50px',
+          gap:isSmallScreen?'20px':'50px',
           padding: '0 20px 0 20px',
           margin:'0',
         }}
       >
-        <div style={{ cursor: 'pointer', textDecoration: 'none', marginRight:'10px', margin: 'auto'}} onClick={handleClick}>
-          <img src={ClustleLogo} style={{maxHeight: '40px'}}></img>
-        </div>
+        <div style={{ 
+  cursor: 'pointer', 
+  textDecoration: 'none', 
+  marginRight: '0.2px', 
+  margin: 'auto'
+}} onClick={handleClick}>
+  <img 
+    src={ClustleLogo} 
+    style={{ 
+      maxHeight:isSmallScreen?'20px': '40px', // Adjust the maxHeight to make the logo smaller
+    }} 
+    alt="Clustle Logo"
+  />
+</div>
         <div
           style={{
             display:'flex',
-            justifyContent: 'flex-start',
+            
                   boxSizing: 'border-box',
                   padding: '4px',
                   marginBottom: '30px',
@@ -223,7 +260,7 @@ const handleSearch = async (e) => {
             onChange={handleSearch}
             placeholder="Search..."
             disableUnderline={true}
-            style={{ width: '100%', padding: '10', fontSize: '14px' }}
+            style={{ width:isSmallScreen?'100%':'80%', padding: '10', fontSize: '14px' }}
             inputProps={{
               style: {
                 border: 'none',
@@ -248,9 +285,8 @@ const handleSearch = async (e) => {
             <>
               <div
                 style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  padding: '10px',
+                  margin: '0 10px'
+
                 }}
               >
                 <IconButton
@@ -262,7 +298,7 @@ const handleSearch = async (e) => {
                 >
                   <AccountCircleRoundedIcon
                     fontSize="large"
-                    style={{ alignItems: 'center', marginRight: '30px', padding: 0 }}
+                    style={{ alignItems: 'center', padding: 0 }}
                   />
                 </IconButton>
                 <h1 style={{ margin: 0, fontSize: '0.8rem', marginLeft: '4px', color: 'white' }}>
