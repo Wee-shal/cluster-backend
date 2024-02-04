@@ -14,7 +14,7 @@ const Footer = () => {
       <p style={{ copyrightStyle, padding: '0',margin:'0' }}>
   &copy; 2024 Clustle. All rights reserved.
   <a href="../policy" onClick={handleNavigateToPolicy} style={{ textDecoration: 'none',color: 'grey', justifyContent: 'center', marginLeft: '10px' }}>
-    Policy
+    Policies
   </a>
 </p>
 

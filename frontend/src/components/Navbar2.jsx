@@ -100,13 +100,6 @@ function Navbar2({ customSearchFunction }) {
             </NavbarLink>
             <NavbarLink
                 href="#"
-                onClick={() => handleClick('Writing & Translation')}
-                isActive={activeLink === 'Writing & Translation'}
-            >
-                Writing & Translation
-            </NavbarLink>
-            <NavbarLink
-                href="#"
                 onClick={() => handleClick('Health & Fitness')}
                 isActive={activeLink === 'Health & Fitness'}
             >

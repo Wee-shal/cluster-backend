@@ -373,7 +373,7 @@ const handleSearch = async (e) => {
                 ))}
               </ol>
             ) : (
-              <p>{searchTerm && 'No results found'}</p>
+              <p>{searchTerm && 'Coming soon......'}</p>
             )}
           </ResultsContainer>
         </div>

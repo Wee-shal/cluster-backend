@@ -3,6 +3,11 @@ import { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import serverUrl from "./config";
 import logo from "./assets/logo.png"
+import Policy from "./components/policy";
+import { Link } from "react-router-dom";
+
+
+
 
 
 
@@ -20,6 +25,7 @@ const Triangle = styled.div`
 
   @media (max-width: 768px) {
     border-width: 30vw 60vw 0 0;
+    display: none;
   }
 `;
 const LogoImage = styled.img`
@@ -142,6 +148,10 @@ const ErrorMessage = styled.div`
   margin-bottom: 2rem;
   text-align: center;
 `;
+const PolicyLink = styled(Link)`
+  color: blue;
+  justify-content: center;
+`;
 
 const OTPErrorMessage = styled(ErrorMessage)`
   color: red;
@@ -149,10 +159,18 @@ const OTPErrorMessage = styled(ErrorMessage)`
   margin-top: 0;
   margin-bottom: 0;
 `;
+const AcceptRulesCheckbox = styled.input`
+  
+`;
+const AcceptRulesContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+`;
 
 const Verify = styled.button`
-  cursor: pointer;
-  background-color: black;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+  background-color: ${(props) => (props.disabled ? 'grey' : 'black')};
   color: white;
   outline: 1px solid black;
   border: none;
@@ -162,17 +180,18 @@ const Verify = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #333; /* Darker color on hover */
+    background-color: ${(props) => (props.disabled ? 'grey' : '#333')};
   }
 
   &:active {
-    background-color: #555; /* Even darker color when pressed */
+    background-color: ${(props) => (props.disabled ? 'grey' : '#555')};
   }
 
   @media (max-width: 768px) {
     margin-top: 0.5rem;
   }
 `;
+
 
 export default function AuthPage() {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -185,15 +204,22 @@ export default function AuthPage() {
   const [isSignIn, setIsSignIn] = useState(false);
   const navigate = useNavigate();
   const [showResendButton, setShowResendButton] = useState(false);
+  const [isRulesAccepted, setIsRulesAccepted] = useState(false);
 
-
+  const handleNavigateToPolicy = (e) => {
+    e.preventDefault();
+    navigate("../policy");
+  };
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setShowResendButton(true);
-    }, 10000); // Set timeout to 20 seconds
+    }, 20000); // Set timeout to 20 seconds
 
     return () => clearTimeout(timeoutId);
   }, []);
+  const handleCheckboxChange = () => {
+    setIsRulesAccepted(!isRulesAccepted);
+  };
 
 
 
@@ -374,10 +400,30 @@ const ClustleHeading = styled.h1`
                   {successMessage}
                 </div>
               )}
+<AcceptRulesContainer>
+<AcceptRulesCheckbox
+              type="checkbox"
+              id="acceptRulesCheckbox"
+              checked={isRulesAccepted}
+              onChange={handleCheckboxChange}
+            />
+            <label htmlFor="acceptRulesCheckbox">
+    I have read the privacy Policies and accepted,{" "}
+    <PolicyLink to="../policy" onClick={handleNavigateToPolicy}>
+      Policies
+    </PolicyLink>
+  </label>
+            
 
-              <Verify onClick={(e) => handleVerify(e, false)} disabled={isLoading}>
-                {isLoading ? "Verifying..." : "Verify"}
-              </Verify>
+
+            </AcceptRulesContainer>
+
+            <Verify
+              onClick={(e) => handleVerify(e, false)}
+              disabled={isLoading || !isRulesAccepted}
+            >
+              {isLoading ? "Verifying..." : "Verify"}
+            </Verify>
 
             </div>
           )}

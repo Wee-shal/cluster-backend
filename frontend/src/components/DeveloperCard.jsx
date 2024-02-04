@@ -64,15 +64,20 @@ const Card = styled.div`
   margin-top: 1rem;
   min-height: 18.3rem;
   width: 15rem;
-  border-radius: 0.1rem;
-  outline: 1px solid #b8b8b8;
+  border-radius: 0.5rem;
+  background-color: white; /* Dark background color */
+  color: #161a1d; /* Text color */
+  outline: 1px solid #333;
   text-align: center;
   padding-right: 0.2rem;
   position: relative;
-  -webkit-box-shadow: 8px 9px 12px -12px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 8px 9px 12px -12px rgba(0, 0, 0, 0.75);
-  box-shadow: 8px 9px 12px -12px rgba(0, 0, 0, 0.75);
-`
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease-in-out;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+`;
 const CloseButton = styled.button`
   position: absolute;
   top: 0.2rem;
@@ -143,7 +148,8 @@ const TwilioPhoneCall = styled.div`
   align-items: center;
   justify-content: center;
   gap: 0.2rem;
-  background-color: black;
+  background-color:black;
+  border-radius:0 0 0 5px;
   flex: 1;
   text-align: center;
   transition: background-color 0.3s ease;
@@ -258,10 +264,13 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
   {description || "No description available"}
 </Description>
 
-          <Price>
-            <b>Price</b> - {hit.currency}
-            {rates*10} <b>/</b>10 mins
-          </Price>
+<Price>
+<b>Price</b> - {hit.currency}
+{Math.floor(rates * 10)} <b>/</b>10 mins
+
+
+      </Price>
+
         </ProfileWrapper>
         <Container>
           <TwilioPhoneCall onClick={id ? makePhoneCall : () => navigate(`/login`)}>
@@ -269,7 +278,7 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
             Phone Call
           </TwilioPhoneCall>
           <AvPhoneCall onClick={id ? makeAVCall : () => navigate(`/login`)}>
-            <Icon src={video} />
+            <Icon src={video} style={{borderRadius:'0 0 2px 0' }}/>
             AV Call
           </AvPhoneCall>
         </Container>

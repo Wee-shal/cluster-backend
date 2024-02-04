@@ -80,7 +80,7 @@ const Input = styled.input`
 const SendButton = styled.button`
   cursor: pointer;
   padding: 0.4rem 0.5rem;
-  margin-left: 0.3rem;
+  margin-left: 0.2rem;
   width: auto;
   height: 2rem;
   margin-right: 12px;
