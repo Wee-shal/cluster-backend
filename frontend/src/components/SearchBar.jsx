@@ -266,6 +266,7 @@ const handleSearch = async (e) => {
               style: {
                 border: 'none',
                 outline: 'none',
+                width:'100%'
               },
             }}
           />

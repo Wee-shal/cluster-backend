@@ -36,7 +36,7 @@ export default function Signin() {
     <div>
       <Link to="/login">
         <button style={buttonStyle}>
-        {isSmallScreen ? 'Sign up' : 'Sign in/Sign up'}
+        Sign in/Sign up
         </button>
       </Link>
     </div>
