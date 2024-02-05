@@ -247,7 +247,7 @@ const handleSearch = async (e) => {
             display:'flex',
             
                   boxSizing: 'border-box',
-                  padding: '4px',
+                  padding: '0.005px',
                   marginBottom: '30px',
                   backgroundColor: 'white',
             borderRadius: '10px',
@@ -260,7 +260,8 @@ const handleSearch = async (e) => {
             onChange={handleSearch}
             placeholder="Search..."
             disableUnderline={true}
-            style={{ width:isSmallScreen?'100%':'80%', padding: '10', fontSize: '14px' }}
+            style={{width:'100%',maxWidth:'300px', 
+            padding: '10px', fontSize: '14px' }}
             inputProps={{
               style: {
                 border: 'none',

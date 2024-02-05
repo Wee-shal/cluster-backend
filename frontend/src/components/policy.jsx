@@ -1,4 +1,6 @@
 import React from 'react';
+import Navbar from './Navbar';
+import Footer from './Footer';
 
 const policyPageStyles = {
   fontFamily: 'Arial, sans-serif',
@@ -26,6 +28,10 @@ const linkStyles = {
 
 const Policy = () => {
   return (
+    <div>
+      <div style={{position:'sticky'}}>
+    <Navbar />
+    </div>
     <div style={policyPageStyles}>
       <h1 style={headingStyles}>Privacy Policy for Clustle</h1>
 
@@ -66,6 +72,8 @@ const Policy = () => {
       <p>
         This Policy is current as of the Effective Date set forth above. We may change this Policy from time to time, so please be sure to check back periodically. We will post any changes to this Policy on our Site. If we make any changes to this Policy that materially affect our practices with regard to the personal information we have previously collected from you, we will endeavor to provide you with notice in advance of such change by highlighting the change on our Site.
       </p>
+    </div>
+    <Footer/>
     </div>
   );
 };

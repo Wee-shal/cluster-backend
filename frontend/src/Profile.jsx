@@ -169,7 +169,7 @@ export default function Profile() {
           <h2>{expert?.name}</h2>
           <h3>{expert?.role}</h3>
           <p>{expert?.username}</p>
-          <p></p>
+          <p><b>Price :$</b>{Math.ceil(expert?.rates * 10)} <b>/</b>10 mins</p>
           <p>{expert?.location}</p>
           <div style={{marginBottom: "50px"}}>
             <Button variant="contained" style={{ backgroundColor: 'black', color: 'white', fontWeight: 'bold', borderRadius: '0', marginRight: "10px" }} onClick={id ? makePhoneCall : () => navigate(`/login`)}><Icon src={callIcon} />Phone</Button>

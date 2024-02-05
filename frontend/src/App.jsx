@@ -13,6 +13,8 @@ import LoginPage from './LoginPage'
 import AVCallPage from './AVCallPage'
 import GlobalStyles from './components/GlobalStyles'
 import Policy from './components/policy'
+import UserAgreement from './components/userAgreement'
+import CookiePolicy from './components/CookiePolicy'
 import TransactionPage from './TransactionPage'
 import "./global.css"
 const router = createBrowserRouter(
@@ -26,6 +28,8 @@ const router = createBrowserRouter(
 			<Route path="/login" component={LoginPage} />
 			<Route path="/call" component={AVCallPage} />
 			<Route path="/Policy" element={<Policy />} />
+			<Route path='/UserAgreement' element={<UserAgreement/>}/>
+			<Route path='/CookiePolicy'  element={<CookiePolicy/>}/>
 			<Route path="/transactions" element={<TransactionPage />} />
 		</Route>
 	)

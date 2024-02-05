@@ -7,10 +7,6 @@ import Policy from "./components/policy";
 import { Link } from "react-router-dom";
 
 
-
-
-
-
 const Triangle = styled.div`
   width: 0;
   height: 0;
@@ -151,6 +147,17 @@ const ErrorMessage = styled.div`
 const PolicyLink = styled(Link)`
   color: blue;
   justify-content: center;
+  text-decoration:None;
+`;
+const UserAgreementLink = styled(Link)`
+  color: blue;
+  justify-content: center;
+  text-decoration:None;
+`;
+const CookiePolicyLink = styled(Link)`
+  color: blue;
+  justify-content: center;
+  text-decoration:None;
 `;
 
 const OTPErrorMessage = styled(ErrorMessage)`
@@ -166,6 +173,7 @@ const AcceptRulesContainer = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 1rem;
+  margin-left:20px;
 `;
 
 const Verify = styled.button`
@@ -210,6 +218,16 @@ export default function AuthPage() {
     e.preventDefault();
     navigate("../policy");
   };
+
+  const handleNavigateToUserAgreement = (e) => {
+    e.preventDefault();
+    navigate("../UserAgreement");
+  };
+
+  const handleNavigateToCookiePolicy = (e) => {
+    e.preventDefault();
+    navigate("../UserAgreement");
+  };
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setShowResendButton(true);
@@ -220,6 +238,31 @@ export default function AuthPage() {
   const handleCheckboxChange = () => {
     setIsRulesAccepted(!isRulesAccepted);
   };
+
+  useEffect(() => {
+		const handleResize = () => {
+			setIsSmallScreen(window.innerWidth <= 768)
+		}
+
+		window.addEventListener('resize', handleResize)
+
+		return () => {
+			window.removeEventListener('resize', handleResize)
+		}
+	}, [])
+	const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 768)
+
+	useEffect(() => {
+		const handleResize = () => {
+			setIsSmallScreen(window.innerWidth <= 768)
+		}
+
+		window.addEventListener('resize', handleResize)
+
+		return () => {
+			window.removeEventListener('resize', handleResize)
+		}
+	}, [])
 
 
 
@@ -406,12 +449,19 @@ const ClustleHeading = styled.h1`
               id="acceptRulesCheckbox"
               checked={isRulesAccepted}
               onChange={handleCheckboxChange}
+              style={{marginBottom:isSmallScreen?'21px':'21px'}}
             />
             <label htmlFor="acceptRulesCheckbox">
-    I have read the privacy Policies and accepted,{" "}
+    By clicking verify , you agree to the Clustle <UserAgreementLink to="../UserAgreement" onClick={handleNavigateToUserAgreement}>
+      User Agreement
+    </UserAgreementLink>,{' '}
     <PolicyLink to="../policy" onClick={handleNavigateToPolicy}>
-      Policies
-    </PolicyLink>
+      Privacy Policy
+    </PolicyLink>{' '}
+     and{' '}
+     <CookiePolicyLink to="../CookiePolicy" onClick={handleNavigateToCookiePolicy}>
+      Cookie Policy
+    </CookiePolicyLink>
   </label>
             
 
