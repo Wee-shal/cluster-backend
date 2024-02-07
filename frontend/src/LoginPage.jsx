@@ -3,7 +3,6 @@ import { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import serverUrl from "./config";
 import logo from "./assets/logo.png"
-import Policy from "./components/policy";
 import { Link } from "react-router-dom";
 
 
@@ -11,7 +10,7 @@ const Triangle = styled.div`
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 40vw 40vw 0 0;
+  border-width: 35vw 35vw 0 0;
   border-color: #000 transparent transparent transparent;
   transform: rotate(0deg);
   position: absolute;
@@ -36,7 +35,7 @@ const Container = styled.div`
   margin-bottom: 2rem;
   z-index: 1;
   background-color: #f5f5f5; /* Add your desired background color */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5); /* Add a subtle box shadow */
   border-radius: 10px; /* Add rounded corners */
   padding: 2rem; /* Add padding for spacing */
   width: 400px;
@@ -47,33 +46,29 @@ const Container = styled.div`
   margin-bottom: 2rem;
 `;
 
-const HeadingContainer = styled.div`
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-`;
-
 const Heading = styled.h1`
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: bolder;
   cursor: pointer;
-  color: ${(props) => (props.selected ? "black" : "grey")};
+  background-color:${(props) => (props.selected ? "black" : "none")};
+  color: ${(props) => (props.selected ? "white" : "grey")};
+  padding: 10px 20px; /* Adjust padding as needed */
+  border-radius: 10px; /* Adjust border-radius as needed */
+  box-shadow: ${(props) =>
+    props.selected ? "0 0 2px rgba(0, 0, 0, 0.5)" : "none"};
+  transition: all 0.3s ease; /* Add transition for smooth animation */
+
+  &:hover {
+    transform: scale(1.05); /* Increase size on hover */
+  }
 
   @media (max-width: 768px) {
     font-size: 2rem;
   }
 `;
 
-const HeadingSeparator = styled.span`
-  font-size: 2.5rem;
-  font-weight: bolder;
-  color: black;
-  display: inline;
 
-  @media (max-width: 768px) {
-    font-size: 2rem;
-  }
-`;
+
 
 const ContactNumberContainer = styled.input`
   outline: 2px solid black;
@@ -201,6 +196,8 @@ const Verify = styled.button`
 `;
 
 
+
+
 export default function AuthPage() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [username, setUsername] = useState("");
@@ -213,6 +210,8 @@ export default function AuthPage() {
   const navigate = useNavigate();
   const [showResendButton, setShowResendButton] = useState(false);
   const [isRulesAccepted, setIsRulesAccepted] = useState(false);
+  
+
 
   const handleNavigateToPolicy = (e) => {
     e.preventDefault();
@@ -263,6 +262,10 @@ export default function AuthPage() {
 			window.removeEventListener('resize', handleResize)
 		}
 	}, [])
+
+
+  
+
 
 
 
@@ -371,7 +374,6 @@ export default function AuthPage() {
   align-items: center;
   margin-bottom: 1rem;
   margin-top:1rem;
-  /* Added margin to create space between Clustle and the rest of the content */
 `;
 
 const ClustleHeading = styled.h1`
@@ -412,7 +414,6 @@ const ClustleHeading = styled.h1`
           <Heading onClick={() => setIsSignIn(false)} selected={!isSignIn}>
             Sign Up
           </Heading>
-          <HeadingSeparator>/</HeadingSeparator>
           <Heading onClick={() => setIsSignIn(true)} selected={isSignIn}>
             Sign In
           </Heading>
@@ -421,14 +422,14 @@ const ClustleHeading = styled.h1`
           {!isPhoneVerified && (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               {!isSignIn && (
-                <ContactNumberContainer
-                  placeholder="Username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  style={{ marginBottom: '1rem' }}
-                ></ContactNumberContainer>
-              )}
-              <ContactNumberContainer
+  <>
+    <ContactNumberContainer
+      placeholder="Username"
+      value={username}
+      onChange={(e) => setUsername(e.target.value)}
+      style={{ marginBottom: '1rem' }}
+    />
+    <ContactNumberContainer
                 placeholder={isSignIn ? "Phone Number" : "Contact Number"}
                 value={phoneNumber}
                 onChange={handlePhoneNumberChange}
@@ -443,13 +444,13 @@ const ClustleHeading = styled.h1`
                   {successMessage}
                 </div>
               )}
-<AcceptRulesContainer>
+              <AcceptRulesContainer >
 <AcceptRulesCheckbox
               type="checkbox"
               id="acceptRulesCheckbox"
               checked={isRulesAccepted}
               onChange={handleCheckboxChange}
-              style={{marginBottom:isSmallScreen?'21px':'21px'}}
+              style={{marginBottom:isSmallScreen?'24px':'21px'}}
             />
             <label htmlFor="acceptRulesCheckbox">
     By clicking verify , you agree to the Clustle <UserAgreementLink to="../UserAgreement" onClick={handleNavigateToUserAgreement}>
@@ -474,6 +475,35 @@ const ClustleHeading = styled.h1`
             >
               {isLoading ? "Verifying..." : "Verify"}
             </Verify>
+
+    
+  </>
+  
+)}
+{isSignIn && (
+  <>
+    <ContactNumberContainer
+      placeholder="Phone Number"
+      value={phoneNumber}
+      onChange={handlePhoneNumberChange}
+      style={{ marginBottom: '1rem' }}
+      maxLength={13}
+    />
+    {errorMessage && (
+      <ErrorMessage>{errorMessage}</ErrorMessage>
+    )}
+    {successMessage && (
+      <div style={{ color: 'green', marginTop: '0.1rem', marginBottom: '0.5rem', textAlign: 'center' }}>
+        {successMessage}
+      </div>
+    )}
+    <Verify
+      onClick={(e) => handleVerify(e, false)}
+    >
+      {isLoading ? "Verifying..." : "Verify"}
+    </Verify>
+  </>
+)}
 
             </div>
           )}

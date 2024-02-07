@@ -266,7 +266,7 @@ export default function DeveloperCard({ name, profilePic, description, rates, de
 
 <Price>
 <b>Price</b> - {hit.currency}
-{Math.floor(rates * 10)} <b>/</b>10 mins
+{Math.ceil(rates * 10)} <b>/</b>10 mins
 
 
       </Price>

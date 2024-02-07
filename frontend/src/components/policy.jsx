@@ -36,6 +36,7 @@ const Policy = () => {
       <h1 style={headingStyles}>Privacy Policy for Clustle</h1>
 
       <p>
+      We do not record any calls or video calls made through our platform, nor do we save any data related to them. Your privacy during communication sessions is important to us, and we do not retain any recordings or data from these interactions. Any information exchanged during calls or video calls is transient and not stored by us.{""}
         In this Privacy Policy (“Policy”), we describe how Clustle (“we” or “us”) collects, uses, and discloses information that we obtain about visitors to our website <a href="https://clustle.com" style={linkStyles}>https://clustle.com</a> (the “Site,” including subdomains like members and discuss) and the services available through our Site (collectively, the “Services”).
         <p>The Information We Collect About You.</p>
 <h2>Information We Collect Directly From You:</h2>
