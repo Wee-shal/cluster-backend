@@ -89,7 +89,7 @@ const UserAgreement = () => {
           <Section>
             <Title>Effective Date</Title>
             <Paragraph>
-              This Agreement is effective as of [Effective Date]. Last Updated: [Last Update Date].
+              This Agreement is effective as of [10/12/2023]. Last Updated: [29/01/24].
             </Paragraph>
           </Section>
         </Container>
