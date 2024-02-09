@@ -258,7 +258,7 @@ const handleSearch = async (e) => {
         >
           <Input
             onChange={handleSearch}
-            placeholder="Search..."
+            placeholder="Search & instantly call experts"
             disableUnderline={true}
             style={{width:'100%',maxWidth:'300px', 
             padding: '10px', fontSize: '14px' }}

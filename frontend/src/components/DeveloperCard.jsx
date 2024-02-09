@@ -72,6 +72,11 @@ const Card = styled.div`
   padding-right: 0.2rem;
   position: relative;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease-in-out;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
  
 `;
 const CloseButton = styled.button`
