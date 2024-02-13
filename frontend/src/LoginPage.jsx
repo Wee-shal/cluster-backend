@@ -453,8 +453,8 @@ const ClustleHeading = styled.h1`
               style={{marginBottom:isSmallScreen?'24px':'21px'}}
             />
             <label htmlFor="acceptRulesCheckbox">
-    By clicking verify , you agree to the Clustle <UserAgreementLink to="../UserAgreement" onClick={handleNavigateToUserAgreement}>
-      User Agreement
+    By clicking verify, you agree to the Clustle <UserAgreementLink to="../UserAgreement" onClick={handleNavigateToUserAgreement}>
+      Terms of Service
     </UserAgreementLink>,{' '}
     <PolicyLink to="../policy" onClick={handleNavigateToPolicy}>
       Privacy Policy

@@ -14,10 +14,10 @@ const Footer = () => {
     navigate('../userAgreement');
   };
 
-  const handleNavigateToCookiePolicy = (e) => {
-    e.preventDefault();
-    navigate('../CookiePolicy');
-  };
+  // const handleNavigateToCookiePolicy = (e) => {
+  //   e.preventDefault();
+  //   navigate('../CookiePolicy');
+  // };
 
   return (
     <footer style={footerStyle}>
@@ -26,14 +26,13 @@ const Footer = () => {
       <p style={{ ...copyrightStyle, padding: '0', margin: '0' }}>
         &copy; 2024 Clustle. All rights reserved.
         <Link to="../policy" style={linkStyle} onClick={handleNavigateToPolicy}>
-          Privacy policies
+          Privacy policy
         </Link>
         <Link to="../userAgreement" style={linkStyle} onClick={handleNavigateToUserAgreement}>
-          User Agreement
+          Terms of service
         </Link>
-        <Link to="../CookiePolicy" style={linkStyle} onClick={handleNavigateToCookiePolicy}>
-          Cookie Policies
-        </Link>
+
+        <a style={{textDecoration: 'none',color: 'grey',marginLeft: '10px',}} href="mailto:vabhav@clustle.com">Support</a>
       </p>
     </footer>
   );
@@ -67,5 +66,12 @@ const linkStyle = {
   justifyContent: 'center',
   marginLeft: '10px',
 };
+
+const contactStyle = {
+  fontSize: '14px',
+  marginTop: '10px',
+  
+};
+
 
 export default Footer;

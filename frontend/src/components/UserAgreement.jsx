@@ -48,7 +48,7 @@ const UserAgreement = () => {
       <UserAgreementContainer>
         <StickyNavbar />
         <Container>
-          <Title>User Agreement</Title>
+          <Title style={{fontWeight:'bold'}}>Terms of Service</Title>
           
           <Section>
             <Paragraph>
