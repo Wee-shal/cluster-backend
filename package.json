@@ -14,7 +14,6 @@
     "prepare": "husky install",
     "format": "prettier --check",
     "lint": "eslint \"**/*.js\" --quiet",
-	"build": "cd frontend && npm run build",
     "start": "cd frontend && npm i && npm run build && cd .. && node  src/app.js"
   	},
 	"author": "",
