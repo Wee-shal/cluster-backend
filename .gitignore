@@ -1,7 +1,1 @@
-.idea
-node_modules
 .env
-frontend/node_modules
-frontend/build
-src/public
-package-lock.json
