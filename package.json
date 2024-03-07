@@ -14,7 +14,7 @@
     "prepare": "husky install",
     "format": "prettier --check",
     "lint": "eslint \"**/*.js\" --quiet",
-    "start": "cd frontend && npm i && npm run build && cd .. && node --max-old-space-size=8192 src/app.js"
+    "start": "cd frontend && npm i && npm run build && cd .. && node  src/app.js"
   	},
 	"author": "",
 	"license": "UNLICENSED",
