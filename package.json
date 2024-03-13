@@ -7,15 +7,12 @@
 		"node": "20.10.0",
 		"npm": "10.2.3"
 	},
-	
-  "scripts": {
-    "dev": "nodemon src/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky install",
-    "format": "prettier --check",
-    "lint": "eslint \"**/*.js\" --quiet",
-    "start": "cd frontend && npm i && npm run build && cd .. && node  src/app.js"
-  	},
+	"scripts": {
+		"dev": "nodemon src/app.js",
+		"prepare": "husky install",
+		"format": "prettier --check",
+		"lint": "eslint \"**/*.js\" --quiet"
+	},
 	"author": "",
 	"license": "UNLICENSED",
 	"devDependencies": {
