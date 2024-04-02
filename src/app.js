@@ -238,6 +238,26 @@ app.post('/verify-otp', async (req, res) => {
 		}
 	}
 })
+app.post('/send-message', async (req, res) => {
+    try {
+		const { phoneNumber } = req.body;
+        // Replace 'YOUR_BOT_TOKEN' with your actual bot token
+        const botToken = '6943210072:AAG8gsrJ5Vz9FORrK7rE2rs4xMId_ICRJYg';
+        const chatId = '1466215143'; // Replace 'YOUR_CHAT_ID' with the chat ID where you want to send the message
+        const message = `User with phone ${phoneNumber} number has logged in`;;
+
+        // Send message to Telegram using the Bot API
+        await axios.post(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            chat_id: chatId,
+            text: message
+        });
+
+        res.status(200).send('Message sent to Telegram successfully.');
+    } catch (error) {
+        console.error('Error sending message to Telegram:', error);
+        res.status(500).send('Internal server error.');
+    }
+})
 
 app.post('/endAudioVideo', async (req, res) => {
 	console.log('end audio video call hit')
